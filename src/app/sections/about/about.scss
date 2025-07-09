@@ -1,0 +1,114 @@
+/* --------------  Layout & host fixes -------------- */
+
+$nav-height: 96px;     /* adjust to your real value */
+
+:host {
+  display: block;
+  flex: 1 1 100%;
+
+  /* Full viewport height *minus* the fixed navbar  */
+  height: 100vh;
+  margin-top: $nav-height;
+  position: relative;
+}
+
+.about-layout {
+  height: 100%;
+  width: 100%;
+
+  display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+}
+
+.navbar {
+  background: white;       /* or whatever colour fits your design */
+}
+
+/* Left column (free to style however you like) */
+.info {
+  padding: 2rem;
+  overflow-y: auto;        /* scroll if text is very long */
+}
+
+/* Right column – keeps map & photo bar together */
+.map-holder {
+  position: relative;      /* reference for absolutely‑positioned .photo-bar */
+  overflow: hidden;        /* avoids a horizontal scrollbar when .photo-bar slides out */
+}
+
+/* --------------  Map sizing -------------- */
+
+.map-wrapper,
+.leaflet-container {        /* Leaflet injects the second div at runtime */
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+}
+
+/* --------------  Existing photo bar -------------- */
+.photo-bar {
+  width: 600px;
+  height: 300px;                 /* bar‑height drives everything else */
+
+  position: absolute;
+  transform: translate(-50%, calc(-100% - 6px));
+  padding-block: 6px;
+  z-index: 1000;
+  pointer-events: none;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 4px 12px rgba(0,0,0,.35);
+  opacity: 0;
+  transition: opacity .25s ease;
+  align-items: center;
+  &.open { opacity: 1; }
+
+  /* derive frame size from bar‑height */
+  --frame: 300px;
+  --gap:   6px;
+  --count: 1;
+  --duration: 12s;
+  --shift: -300px;
+
+  /*TODO: Fix current trip name*/
+  .trip-label {
+    position: absolute;
+    left: -6px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: center;
+    font: 600 12px/1.1 "Inter", sans-serif;
+    letter-spacing: 0.03em;
+    color: #ffffffd9;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  padding-left: 12px;
+
+  .strip {
+    display: flex;
+    gap: var(--gap);
+    animation: scroll var(--duration) linear infinite;
+    height: 100%;
+    align-items: center;
+  }
+
+  img {
+    flex: 0 0 var(--frame);
+    width: var(--frame);
+    height: var(--frame);
+    object-fit: cover;
+    border-radius: 4px;
+  }
+}
+
+
+/* travel exactly one original copy:  shift already negative */
+@keyframes scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(var(--shift)); }
+}
+

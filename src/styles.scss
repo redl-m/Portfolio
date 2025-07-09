@@ -1,0 +1,43 @@
+/* -------------------------------------------------
+   GLOBAL STYLESHEET  |  src/styles.scss
+   ------------------------------------------------- */
+
+/* … your existing imports & variables … */
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+
+/* ---------- 1.  The vertical snap container ---------- */
+/* We’ll keep <body> itself as the scroller. */
+body {
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;     // snap one full panel at a time
+  font-family: 'Inter', sans-serif;
+}
+
+/* ---------- 2.  Each full-screen section ---------- */
+.section {
+  height: 100vh;                     // fill the viewport
+  scroll-snap-align: start;          // snap the top edge
+  scroll-snap-stop: always;          // resist tiny over‑scrolls          ◀ NEW
+  /* The next line keeps the section from sliding under
+     your fixed nav bars (≈72 px high + 1 rem gap)       */
+  scroll-margin-top: calc(72px + 1rem);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* … the rest of your .hero-panel, .about-panel, .nav, .map‑holder, etc. … */
+
+/* ---------- 3.  Bring nav bars above Leaflet tiles ---------- */
+.nav {
+  /* your existing rules … */
+  z-index: 1000;
+}
