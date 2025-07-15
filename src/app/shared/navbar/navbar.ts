@@ -16,6 +16,7 @@ export class Navbar implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     /* Sections that should trigger the highlight */
+    // TODO: pressing a button currently does not lead to the section perfectly, but offset a bit
     const sectionIds = ['start', 'about', 'projects', 'experience'];
 
     /* Configure & start the observer once the view is ready */

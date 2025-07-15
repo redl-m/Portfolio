@@ -1,23 +1,27 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { Experience } from './experience';
 
-describe('Experience', () => {
+describe('ExperienceComponent', () => {
   let component: Experience;
   let fixture: ComponentFixture<Experience>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Experience]
-    })
-    .compileComponents();
+      declarations: [Experience]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(Experience);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the timeline component', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should render correct number of year ticks', () => {
+    const compiled = fixture.nativeElement;
+    const ticks = compiled.querySelectorAll('.tick');
+    expect(ticks.length).toBe(component.endYear - component.startYear + 2);
   });
 });

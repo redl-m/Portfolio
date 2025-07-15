@@ -25,7 +25,8 @@ export class About implements AfterViewInit {
   @ViewChild('bar', { static: true }) barEl!: ElementRef<HTMLDivElement>;
 
   /** Base map options */
-  options = { zoom: 2, worldCopyJump: true, center: L.latLng(20, 0) };
+    // TODO: make scrollable using Ctrl + Scroll
+  options = { zoom: 2, worldCopyJump: true, center: L.latLng(20, 0), zoomControl: false};
 
   /** Trips and their photos (any length) */
   trips: Trip[] = [
