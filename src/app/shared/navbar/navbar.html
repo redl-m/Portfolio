@@ -1,0 +1,25 @@
+<!-- Contact bar -->
+<nav class="nav nav--left" aria-label="Contact">
+  <a href="mailto:michael.redl14042004@gmail.com" aria-label="E‑mail">
+    <i class="fa-solid fa-envelope"></i>
+  </a>
+  <span class="divider"></span>
+  <a href="https://github.com/redl-m" target="_blank" rel="noopener" aria-label="GitHub">
+    <i class="fa-brands fa-github"></i>
+  </a>
+  <span class="divider"></span>
+  <a href="https://www.instagram.com/redl__m/" target="_blank" rel="noopener" aria-label="Instagram">
+    <i class="fa-brands fa-instagram"></i>
+  </a>
+</nav>
+
+<!-- Page navigation bar -->
+<nav class="nav nav--right" role="navigation" aria-label="Main">
+  <a href="#start"        [class.active]="active === 'start'">Start</a>
+  <span class="divider"></span>
+  <a href="#about"        [class.active]="active === 'about'">About Me</a>
+  <span class="divider"></span>
+  <a href="#projects"     [class.active]="active === 'projects'">Projects</a>
+  <span class="divider"></span>
+  <a href="#experience"   [class.active]="active === 'experience'">Education & Experience</a>
+</nav>

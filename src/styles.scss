@@ -1,0 +1,41 @@
+/* -------------------------------------------------
+                   GLOBAL STYLESHEET
+   ------------------------------------------------- */
+
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+  scroll-behavior: smooth;
+}
+
+/* ---------- 1.  The vertical snap container ---------- */
+body {
+  padding-top: calc(72px + 1.5rem);
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;     // snap one full panel at a time
+  font-family: 'Inter', sans-serif;
+}
+
+/* ---------- 2.  Each full-screen section ---------- */
+.section {
+  height: 100vh;                     // fill the viewport
+  scroll-snap-align: start;          // snap the top edge
+  scroll-snap-stop: always;          // resist tiny over‑scrolls
+  scroll-margin-top: calc(80px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* ---------- 3.  Bring nav bars above Leaflet tiles ---------- */
+.nav {
+  z-index: 1000;
+}
+
+/* ---------- 4.  Fix anchor scroll offset for navbar ---------- */
+[id] {
+  scroll-margin-top: calc(72px + 1rem);
+}

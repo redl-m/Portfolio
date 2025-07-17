@@ -1,0 +1,75 @@
+/* ------------------------------------------------------------ */
+/* existing variables                                           */
+/* ------------------------------------------------------------ */
+$accent: #2d1a61;
+$bar-height: 72px;
+$bar-radius: 56px;
+$bg: rgba(255, 255, 255, 0.92);
+
+/* smooth scrolling for anchor links                            */
+:root { scroll-behavior: smooth; }
+
+/*TODO: Fix mobile view*/
+
+/* ------------------------------------------------------------ */
+/* SHARED look for both bars                                    */
+/* ------------------------------------------------------------ */
+.nav {
+  position: fixed;
+  display: flex;
+  gap: 1rem;
+  height: $bar-height;
+  padding: 0 1.5rem;
+  align-items: center;
+
+  font-weight: 600;
+  font-size: 1.15rem;
+  line-height: 1;
+
+  background: $bg;
+  backdrop-filter: blur(8px);
+  border-radius: $bar-radius;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  z-index: 10000;
+
+  /* links */
+  a {
+    position: relative;
+    padding: 0.35rem 0.65rem;
+    text-decoration: none;
+    color: #222;
+    transition: opacity 0.2s;
+
+    &:hover   { opacity: 0.6; }
+    &.active  { color: $accent; }
+
+    &.active::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: -0.35rem;
+      height: 3px; border-radius: 3px; background: $accent;
+    }
+
+    /* icons a touch bigger than text */
+    i { font-size: 1.25em; }
+  }
+
+  /* vertical bar between items */
+  .divider {
+    width: 2px;
+    height: 1.4em;
+    background: $accent;
+    opacity: 0.5;
+  }
+}
+
+/* ------------------------------------------------------------ */
+/* placement modifiers                                           */
+/* ------------------------------------------------------------ */
+.nav--left  { top: 1rem; left: 2rem;  }
+.nav--right { top: 1rem; right: 2rem; }
+
+/* ------------------------------------------------------------ */
+/* keep content from hiding beneath either bar                  */
+/* ------------------------------------------------------------ */
+body { padding-top: calc($bar-height + 1.5rem); }
