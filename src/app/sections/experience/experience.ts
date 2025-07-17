@@ -131,8 +131,18 @@ export class Experience {
 // --- Data ---
 export const EXPERIENCES: ExperienceItem[] = [
   {
+    startYear: 2020.5,
+    endYear: 2020.8,
+    type: 'work',
+    info: {
+      title: 'Intern at SVS',
+      description: 'First work experience as intern at an insurance company.',
+      links: [{ url: 'https://www.svs.at/', text: 'Company Website' }]
+    }
+  },
+  {
     startYear: 2021.5,
-    endYear: 2021.9,
+    endYear: 2021.8,
     type: 'work',
     info: {
       title: 'Intern at solvistas',
@@ -142,7 +152,7 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     startYear: 2022.5,
-    endYear: 2022.9,
+    endYear: 2022.8,
     type: 'work',
     info: {
       title: 'Software Development Intern at solvistas',
@@ -151,7 +161,26 @@ export const EXPERIENCES: ExperienceItem[] = [
     }
   },
   {
-    startYear: 2018.7,
+    startYear: 2022.9,
+    endYear: 2023.58,
+    type: 'work',
+    info: {
+      title: 'Civil Service in a Kindergarden',
+      description: 'Compulsory civil service in a kindergarden in Enns.',
+    }
+  },
+  {
+    startYear: 2024.5,
+    endYear: 2024.8,
+    type: 'work',
+    info: {
+      title: 'Production Intern at BMW',
+      description: 'Production intern at BMW Group Austria.',
+      links: [{ url: 'https://www.bmwgroup-werke.com/steyr/de.html', text: 'Company Website' }]
+    }
+  },
+  {
+    startYear: 2018.07,
     endYear: 2022.5,
     type: 'education',
     info: {
@@ -161,8 +190,8 @@ export const EXPERIENCES: ExperienceItem[] = [
     }
   },
   {
-    startYear: 2022.8,
-    endYear: 2026,
+    startYear: 2023.8,
+    endYear: 2026.58,
     type: 'education',
     info: {
       title: 'BSc Informatics at TU Wien',

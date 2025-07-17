@@ -1,8 +1,7 @@
 /* -------------------------------------------------
-   GLOBAL STYLESHEET  |  src/styles.scss
+                   GLOBAL STYLESHEET
    ------------------------------------------------- */
 
-/* … your existing imports & variables … */
 
 html,
 body {
@@ -12,8 +11,8 @@ body {
 }
 
 /* ---------- 1.  The vertical snap container ---------- */
-/* We’ll keep <body> itself as the scroller. */
 body {
+  padding-top: calc(72px + 1.5rem);
   overflow-y: scroll;
   scroll-snap-type: y mandatory;     // snap one full panel at a time
   font-family: 'Inter', sans-serif;
@@ -23,21 +22,20 @@ body {
 .section {
   height: 100vh;                     // fill the viewport
   scroll-snap-align: start;          // snap the top edge
-  scroll-snap-stop: always;          // resist tiny over‑scrolls          ◀ NEW
-  /* The next line keeps the section from sliding under
-     your fixed nav bars (≈72 px high + 1 rem gap)       */
-  scroll-margin-top: calc(72px + 1rem);
-
+  scroll-snap-stop: always;          // resist tiny over‑scrolls
+  scroll-margin-top: calc(80px);
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 2rem;
 }
 
-/* … the rest of your .hero-panel, .about-panel, .nav, .map‑holder, etc. … */
-
 /* ---------- 3.  Bring nav bars above Leaflet tiles ---------- */
 .nav {
-  /* your existing rules … */
   z-index: 1000;
+}
+
+/* ---------- 4.  Fix anchor scroll offset for navbar ---------- */
+[id] {
+  scroll-margin-top: calc(72px + 1rem);
 }
