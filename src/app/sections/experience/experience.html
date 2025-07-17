@@ -1,52 +1,55 @@
 <div class="timeline-container">
-  <div class="timeline">
-    <div class="tick-marks">
-      <div class="tick" *ngFor="let year of years">
-        <span class="year-label">{{ year }}</span>
+  <div class="timeline-line"></div>
+
+  <div class="year-ticks">
+    <div *ngFor="let year of years" class="year-tick" [style.left]="(year - startYear) / (endYear - startYear + 1) * 100 + '%'">
+      <div class="tick-line"></div>
+      <div class="tick-label">{{ year }}</div>
+    </div>
+  </div>
+
+  <div class="bars">
+    <div
+      *ngFor="let exp of experiences"
+      class="bar-wrapper"
+      [ngClass]="exp.type"
+      [ngStyle]="getBarStyle(exp.startYear, exp.endYear)"
+      (mouseenter)="onHover(exp)"
+      (mouseleave)="onHover(null)"
+    >
+      <div class="experience-bar" [ngClass]="exp.type"></div>
+    </div>
+  </div>
+
+  <div class="info-window work"
+       [class.visible]="hoveredWorkItem"
+       (mouseenter)="onInfoEnter('work')"
+       (mouseleave)="onInfoLeave('work')">
+    <svg class="info-window-border" preserveAspectRatio="none">
+      <rect width="100%" height="100%" />
+    </svg>
+    <div class="info-window-content" *ngIf="hoveredWorkItem">
+      <h3>{{ hoveredWorkItem.info.title }}</h3>
+      <p>{{ hoveredWorkItem.info.description }}</p>
+      <div class="links" *ngIf="hoveredWorkItem.info.links?.length">
+        <a *ngFor="let link of hoveredWorkItem.info.links" [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
       </div>
     </div>
+  </div>
 
-    <!-- Months can be displayed using their respective share in the year: 05.2025 = 2025.(5/12)-->
-
-    <!-- Work experience bars (above timeline) -->
-    <div
-      class="experience-bar work"
-      [ngStyle]="getBarStyle(2021, 2021)"
-      intersectionObserver
-      #observer="intersectionObserver"
-      (isVisible)="visibleBars['2021'] = $event"
-      [class.visible]="visibleBars['2021']">
-      Intern at solvistas GmbH
-    </div>
-    <div
-      class="experience-bar work"
-      [ngStyle]="getBarStyle(2022, 2022)"
-      intersectionObserver
-      #observer="intersectionObserver"
-      (isVisible)="visibleBars['2022'] = $event"
-      [class.visible]="visibleBars['2022']">
-      Intern at solvistas GmbH
-    </div>
-
-    <!-- Education bars (below timeline)-->
-    <div
-      class="experience-bar education"
-      [ngStyle]="getBarStyle(2018, 2021.4)"
-      intersectionObserver
-      #observer="intersectionObserver"
-      (isVisible)="visibleBars['2018'] = $event"
-      [class.visible]="visibleBars['2018']">
-      High School
-    </div>
-
-    <div
-      class="experience-bar education"
-      [ngStyle]="getBarStyle(2023.83, 2025.5)"
-      intersectionObserver
-      #observer="intersectionObserver"
-      (isVisible)="visibleBars['2023'] = $event"
-      [class.visible]="visibleBars['2023']">
-      BsC Informatics / TU Wien
+  <div class="info-window education"
+       [class.visible]="hoveredEducationItem"
+       (mouseenter)="onInfoEnter('education')"
+       (mouseleave)="onInfoLeave('education')">
+    <svg class="info-window-border" preserveAspectRatio="none">
+      <rect width="100%" height="100%" />
+    </svg>
+    <div class="info-window-content" *ngIf="hoveredEducationItem">
+      <h3>{{ hoveredEducationItem.info.title }}</h3>
+      <p>{{ hoveredEducationItem.info.description }}</p>
+      <div class="links" *ngIf="hoveredEducationItem.info.links?.length">
+        <a *ngFor="let link of hoveredEducationItem.info.links" [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
+      </div>
     </div>
   </div>
 </div>
