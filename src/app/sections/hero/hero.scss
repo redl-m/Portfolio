@@ -1,0 +1,45 @@
+/* ----------------------------------------------------
+   1 · Grid wrapper takes 100% of the section area
+   ---------------------------------------------------- */
+.hero-layout {
+  display: grid;
+  grid-template-columns: 45% 55%;   // text | animation
+  height: 100%;                     // fill the section
+  width: 100%;
+  padding: 0 10vw;                  // keep the nice left gutter
+  align-items: center;              // vertical centring for both cells
+  column-gap: 4rem;
+  box-sizing: border-box;
+
+  /* —— mobile fallback —— */
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;     // single column
+    grid-auto-rows: auto;
+    row-gap: 2rem;
+    padding: 0 10vw;
+  }
+}
+
+/* ----------------------------------------------------
+   2 · Left column (text)
+   ---------------------------------------------------- */
+.hero-copy {
+  h1 { font-size: 4rem; margin-top: 0; margin-bottom: 0; }
+  .tagline { font-size: 1.25rem; opacity: 0.8; }
+
+  @media (max-width: 768px) {
+    text-align: left;
+    margin: 0 auto;
+    padding: 0 6vw;
+  }
+}
+
+/* ----------------------------------------------------
+   3 · Right column (animation)
+   ---------------------------------------------------- */
+.hero-sketch {
+  justify-self: center;
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+}
