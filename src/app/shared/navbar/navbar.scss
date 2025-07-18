@@ -1,19 +1,72 @@
 /* ------------------------------------------------------------ */
-/* existing variables                                           */
+/* Variables                                                    */
 /* ------------------------------------------------------------ */
 $accent: #2d1a61;
 $bar-height: 72px;
 $bar-radius: 56px;
 $bg: rgba(255, 255, 255, 0.92);
+$mobile-breakpoint: 960px; // Breakpoint for switching to mobile nav
 
-/* smooth scrolling for anchor links                            */
+/* ------------------------------------------------------------ */
+/* Hamburger Button (Sass-Burger)                               */
+/* ------------------------------------------------------------ */
+.hamburger-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1.5rem;
+  padding: 15px;
+  display: inline-block;
+  cursor: pointer;
+  background-color: transparent;
+  border: 0;
+  z-index: 10001;
+  transition: transform 0.3s ease;
+
+  .hamburger-box {
+    width: 30px;
+    height: 24px;
+    display: inline-block;
+    position: relative;
+  }
+
+  .hamburger-inner {
+    display: block;
+    top: 50%;
+    margin-top: -2px;
+    &, &::before, &::after {
+      width: 30px;
+      height: 3px;
+      background-color: $accent;
+      border-radius: 4px;
+      position: absolute;
+      transition: transform 0.2s ease-in-out;
+    }
+    &::before, &::after {
+      content: "";
+      display: block;
+    }
+    &::before { top: -10px; }
+    &::after { bottom: -10px; }
+  }
+
+  // Animate to an "X"
+  &.is-active .hamburger-inner {
+    transform: rotate(45deg);
+    &::before { transform: rotate(90deg) translate(-10px, 0px); }
+    &::after { transform: rotate(90deg) translate(10px, 0px); }
+  }
+}
+
+/* ------------------------------------------------------------ */
+/* Base & Desktop Styles                                        */
+/* ------------------------------------------------------------ */
 :root { scroll-behavior: smooth; }
 
-/*TODO: Fix mobile view*/
+.nav-wrapper {
+  // This wrapper is used for desktop positioning and mobile overlay
+  // On desktop, it's just a container.
+}
 
-/* ------------------------------------------------------------ */
-/* SHARED look for both bars                                    */
-/* ------------------------------------------------------------ */
 .nav {
   position: fixed;
   display: flex;
@@ -21,40 +74,33 @@ $bg: rgba(255, 255, 255, 0.92);
   height: $bar-height;
   padding: 0 1.5rem;
   align-items: center;
-
   font-weight: 600;
   font-size: 1.15rem;
   line-height: 1;
-
   background: $bg;
   backdrop-filter: blur(8px);
   border-radius: $bar-radius;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   z-index: 10000;
+  transition: opacity 0.3s, visibility 0.3s;
 
-  /* links */
   a {
     position: relative;
     padding: 0.35rem 0.65rem;
     text-decoration: none;
     color: #222;
     transition: opacity 0.2s;
-
-    &:hover   { opacity: 0.6; }
-    &.active  { color: $accent; }
-
+    &:hover { opacity: 0.6; }
+    &.active { color: $accent; }
     &.active::after {
       content: '';
       position: absolute;
       left: 0; right: 0; bottom: -0.35rem;
       height: 3px; border-radius: 3px; background: $accent;
     }
-
-    /* icons a touch bigger than text */
     i { font-size: 1.25em; }
   }
 
-  /* vertical bar between items */
   .divider {
     width: 2px;
     height: 1.4em;
@@ -63,13 +109,76 @@ $bg: rgba(255, 255, 255, 0.92);
   }
 }
 
-/* ------------------------------------------------------------ */
-/* placement modifiers                                           */
-/* ------------------------------------------------------------ */
-.nav--left  { top: 1rem; left: 2rem;  }
+.nav--left { top: 1rem; left: 2rem; }
 .nav--right { top: 1rem; right: 2rem; }
 
-/* ------------------------------------------------------------ */
-/* keep content from hiding beneath either bar                  */
-/* ------------------------------------------------------------ */
 body { padding-top: calc($bar-height + 1.5rem); }
+
+/* Hide hamburger on desktop */
+.hamburger-btn { display: none; }
+
+
+/* ------------------------------------------------------------ */
+/* Mobile Navigation Styles                                     */
+/* ------------------------------------------------------------ */
+@media (max-width: $mobile-breakpoint) {
+  /* Show hamburger and hide desktop navs */
+  .hamburger-btn { display: block; }
+  .nav {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  /* Style the navigation wrapper as a full-screen overlay when open */
+  .nav-wrapper {
+    &.is-open {
+      .nav {
+        // Reset desktop styles
+        position: static;
+        display: flex;
+        height: auto;
+        padding: 0;
+        background: none;
+        backdrop-filter: none;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        border-radius: 0;
+      }
+
+      // Main nav links become a vertical list
+      .nav--right {
+        flex-direction: column;
+        gap: 2rem;
+        font-size: 1.8rem;
+        font-weight: 700;
+        a.active::after { bottom: -0.5rem; }
+      }
+
+      // Social links become a horizontal list at the bottom
+      .nav--left {
+        flex-direction: row;
+        gap: 1.5rem;
+        margin-bottom: 12rem; // Creates space between contact and main nav
+        .divider { display: none; }
+        a i { font-size: 1.8rem; }
+      }
+    }
+  }
+
+  // The overlay itself
+  .nav-wrapper.is-open {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(5px);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}

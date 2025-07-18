@@ -22,5 +22,5 @@ import { LeafletModule } from '@bluehalo/ngx-leaflet';
   styleUrls: ['./app.scss']
 })
 export class App {
-  protected title = 'my-portfolio';
+  protected title = 'Michael Josef Redl';
 }

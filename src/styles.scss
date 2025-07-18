@@ -39,3 +39,7 @@ body {
 [id] {
   scroll-margin-top: calc(72px + 1rem);
 }
+
+body.no-scroll {
+  overflow: hidden;
+}
