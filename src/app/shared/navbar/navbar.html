@@ -23,3 +23,43 @@
   <span class="divider"></span>
   <a href="#experience"   [class.active]="active === 'experience'">Education & Experience</a>
 </nav>
+<!-- Hamburger Button (Mobile Only) -->
+<button class="hamburger-btn"
+        (click)="toggleMobileMenu()"
+        [class.is-active]="isMobileMenuOpen"
+        aria-label="Toggle Navigation"
+        aria-controls="nav-wrapper"
+        [attr.aria-expanded]="isMobileMenuOpen">
+  <div class="hamburger-box">
+    <div class="hamburger-inner"></div>
+  </div>
+</button>
+
+<!-- Navigation Wrapper -->
+<div id="nav-wrapper" class="nav-wrapper" [class.is-open]="isMobileMenuOpen">
+  <!-- Contact bar -->
+  <nav class="nav nav--left" aria-label="Contact">
+    <a href="mailto:michael.redl14042004@gmail.com" aria-label="E‑mail" (click)="closeMenuAndNavigate()">
+      <i class="fa-solid fa-envelope"></i>
+    </a>
+    <span class="divider"></span>
+    <a href="https://github.com/redl-m" target="_blank" rel="noopener" aria-label="GitHub" (click)="closeMenuAndNavigate()">
+      <i class="fa-brands fa-github"></i>
+    </a>
+    <span class="divider"></span>
+    <a href="https://www.instagram.com/redl__m/" target="_blank" rel="noopener" aria-label="Instagram" (click)="closeMenuAndNavigate()">
+      <i class="fa-brands fa-instagram"></i>
+    </a>
+  </nav>
+
+  <!-- Page navigation bar -->
+  <nav class="nav nav--right" role="navigation" aria-label="Main">
+    <a href="#start"      [class.active]="active === 'start'"      (click)="closeMenuAndNavigate()">Start</a>
+    <span class="divider"></span>
+    <a href="#about"      [class.active]="active === 'about'"      (click)="closeMenuAndNavigate()">About Me</a>
+    <span class="divider"></span>
+    <a href="#projects"   [class.active]="active === 'projects'"   (click)="closeMenuAndNavigate()">Projects</a>
+    <span class="divider"></span>
+    <a href="#experience" [class.active]="active === 'experience'" (click)="closeMenuAndNavigate()">Education & Experience</a>
+  </nav>
+</div>
