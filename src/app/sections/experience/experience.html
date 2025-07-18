@@ -1,55 +1,78 @@
-<div class="timeline-container">
+<!-- DESKTOP TIMELINE -->
+<div *ngIf="!isMobileView" class="timeline-container-desktop">
   <div class="timeline-line"></div>
-
   <div class="year-ticks">
-    <div *ngFor="let year of years" class="year-tick" [style.left]="(year - startYear) / (endYear - startYear + 1) * 100 + '%'">
+    <div *ngFor="let year of years" class="year-tick"
+         [style.left]="(year - startYear) / (endYear - startYear + 1) * 100 + '%'">
       <div class="tick-line"></div>
       <div class="tick-label">{{ year }}</div>
     </div>
   </div>
-
   <div class="bars">
-    <div
-      *ngFor="let exp of experiences"
-      class="bar-wrapper"
-      [ngClass]="exp.type"
-      [ngStyle]="getBarStyle(exp.startYear, exp.endYear)"
-      (mouseenter)="onHover(exp)"
-      (mouseleave)="onHover(null)"
-    >
+    <div *ngFor="let exp of experiences" class="bar-wrapper" [ngClass]="exp.type"
+         [ngStyle]="getDesktopBarStyle(exp.startYear, exp.endYear)" (mouseenter)="onHover(exp)"
+         (mouseleave)="onHover(null)">
       <div class="experience-bar" [ngClass]="exp.type"></div>
     </div>
   </div>
-
-  <div class="info-window work"
-       [class.visible]="hoveredWorkItem"
-       (mouseenter)="onInfoEnter('work')"
+  <!-- Desktop Info Windows -->
+  <div class="info-window work" [class.visible]="hoveredWorkItem" (mouseenter)="onInfoEnter('work')"
        (mouseleave)="onInfoLeave('work')">
     <svg class="info-window-border" preserveAspectRatio="none">
-      <rect width="100%" height="100%" />
+      <rect width="100%" height="100%"/>
     </svg>
     <div class="info-window-content" *ngIf="hoveredWorkItem">
       <h3>{{ hoveredWorkItem.info.title }}</h3>
       <p>{{ hoveredWorkItem.info.description }}</p>
-      <div class="links" *ngIf="hoveredWorkItem.info.links?.length">
-        <a *ngFor="let link of hoveredWorkItem.info.links" [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
-      </div>
+      <div class="links" *ngIf="hoveredWorkItem.info.links?.length"><a *ngFor="let link of hoveredWorkItem.info.links"
+                                                                       [href]="link.url"
+                                                                       target="_blank">{{ link.text }}</a></div>
     </div>
   </div>
-
-  <div class="info-window education"
-       [class.visible]="hoveredEducationItem"
-       (mouseenter)="onInfoEnter('education')"
+  <div class="info-window education" [class.visible]="hoveredEducationItem" (mouseenter)="onInfoEnter('education')"
        (mouseleave)="onInfoLeave('education')">
     <svg class="info-window-border" preserveAspectRatio="none">
-      <rect width="100%" height="100%" />
+      <rect width="100%" height="100%"/>
     </svg>
     <div class="info-window-content" *ngIf="hoveredEducationItem">
       <h3>{{ hoveredEducationItem.info.title }}</h3>
       <p>{{ hoveredEducationItem.info.description }}</p>
-      <div class="links" *ngIf="hoveredEducationItem.info.links?.length">
-        <a *ngFor="let link of hoveredEducationItem.info.links" [href]="link.url" target="_blank" rel="noopener noreferrer">{{ link.text }}</a>
+      <div class="links" *ngIf="hoveredEducationItem.info.links?.length"><a
+        *ngFor="let link of hoveredEducationItem.info.links" [href]="link.url" target="_blank">{{ link.text }}</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE TIMELINE -->
+<div *ngIf="isMobileView" class="timeline-container-mobile">
+  <div class="timeline-line-mobile"></div>
+  <div class="timeline-content">
+    <!-- Year Ticks -->
+    <div *ngFor="let year of years" class="year-tick-mobile" [style.top]="(year - startYear) / (endYear - startYear + 1) * 100 + '%'">
+      <div class="tick-line"></div>
+      <div class="tick-label">{{ year }}</div>
+    </div>
+    <!-- Experience Bars -->
+    <div *ngFor="let exp of experiences" class="bar-wrapper-mobile" [ngClass]="exp.type"
+         [ngStyle]="getMobileBarStyle(exp.startYear, exp.endYear)" (click)="onSelectItem(exp)">
+      <div class="experience-bar-mobile">
+        <span class="bar-title">{{ exp.info.title }}</span>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- MOBILE MODAL -->
+<div class="modal-overlay" *ngIf="selectedExperience" (click)="closeModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    <button class="modal-close-btn" (click)="closeModal()" aria-label="Close details">
+      &times;
+    </button>
+    <h3>{{ selectedExperience.info.title }}</h3>
+    <p>{{ selectedExperience.info.description }}</p>
+    <div class="links" *ngIf="selectedExperience.info.links?.length">
+      <a *ngFor="let link of selectedExperience.info.links" [href]="link.url" target="_blank"
+         rel="noopener noreferrer">{{ link.text }}</a>
     </div>
   </div>
 </div>
