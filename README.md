@@ -13,8 +13,11 @@
     <li>
       <a href="#getting-started">Getting Started</a>
       <ul>
-        <li><a href="#prerequisites">Development Server</a></li>
-        <li><a href="#installation">Installation</a></li>
+        <li><a href="#development-server">Development Server</a></li>
+        <li><a href="#code-scaffolding">Code Scaffolding</a></li>
+        <li><a href="#building">Building</a></li>
+        <li><a href="#running-unit-tests">Running Unit Tests</a></li>
+        <li><a href="#running-end-to-end-tests">Running end-to-end tests</a></li>
       </ul>
     </li>
     <li><a href="#roadmap">Roadmap</a></li>
@@ -73,7 +76,7 @@ To execute unit tests with the [Karma](https://karma-runner.github.io) test runn
 ng test
 ```
 
-## Running end-to-end tests
+### Running end-to-end tests
 
 For end-to-end (e2e) testing, run:
 
@@ -85,8 +88,6 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 ## Additional Resources
 
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a id="readme-top"></a>
 
 <!-- ROADMAP -->
 ## Roadmap
@@ -96,18 +97,13 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 - [ ] Feature 3
     - [ ] Nested Feature
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues)
 
 
 <!-- LICENSE -->
 ## License
 
 Distributed under the project_license. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
 
 
 <!-- CONTACT -->
