@@ -103,12 +103,12 @@ See the [open issues](https://github.com/github_username/repo_name/issues) for a
 <!-- LICENSE -->
 ## License
 
-Distributed under the project_license. See `LICENSE.txt` for more information.
+Distributed under CC-0. See `LICENSE.txt` for more information.
 
 
 <!-- CONTACT -->
 ## Contact
 
-Michael Redl - [@twitter_handle](https://twitter.com/twitter_handle) - michael.redl14042004@gmail.com
+Michael Redl - [@redl_m](https://www.instagram.com/redl__m/) - michael.redl14042004@gmail.com
 
 Project Link: [https://github.com/redl-m/Portfolio]((https://github.com/redl-m/Portfolio))
