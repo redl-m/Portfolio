@@ -121,9 +121,14 @@ $nav-height: 96px;
 }
 
 @keyframes scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(var(--shift)); }
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(var(--shift));
+  }
 }
+
 
 /* ---------------------------------------------------
  * Tile Grid & Tiles
@@ -202,22 +207,20 @@ $nav-height: 96px;
  * Mobile Toggle Button
  * --------------------------------------------------- */
 
-/* This rule was present but unused, keeping it in case you need it. */
 .map-toggle-btn {
   display: none; /* Hidden by default */
 }
 
-/* Style: Updated mobile toggle button */
 .mobile-toggle {
   position: fixed;
   right: 0.5rem;
   top: 50%;
   transform: translateY(-50%);
   z-index: 1000;
-  background: #2d1a61; /* Changed color */
+  background: #2d1a61;
   color: white;
-  padding: 1.2rem 0.6rem; /* Made longer */
-  border-radius: 8px 0 0 8px; /* Softened border radius */
+  padding: 4rem 0.6rem;
+  border-radius: 8px 0 0 8px;
   font-size: 0.9rem;
   font-weight: 600;
   writing-mode: vertical-rl;
@@ -241,14 +244,47 @@ $nav-height: 96px;
 
 @media (max-width: 767px) {
   .about-layout {
-    /* Change to a single column layout */
     grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    height: 95%;
+    width: 100%;
   }
 
-  /* Style: Removed complex display logic, as *ngIf now handles it. */
-  /* This ensures the map fills the container when it's visible on mobile. */
-  .map-holder {
-    align-self: flex-start;
-    height: 80%;
+  .photo-bar {
+    --frame: 80vw;
+    --gap: 4vw;
+    --shift: calc(-1 * var(--frame));
+    --duration: 10s;
+
+    width: 90vw;
+    height: calc(var(--frame) + 2 * var(--gap));
+    padding-block: var(--gap);
+    padding-left: var(--gap);
+    border-radius: 8px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+
+    .strip {
+      display: flex;
+      gap: var(--gap);
+      animation: scroll var(--duration) linear infinite;
+      height: 100%;
+      align-items: center;
+      will-change: transform;
+    }
+
+    img {
+      flex: 0 0 var(--frame);
+      width: var(--frame);
+      height: var(--frame);
+      object-fit: cover;
+      border-radius: 4px;
+    }
+
+    .trip-label {
+      display: none;
+    }
   }
 }
