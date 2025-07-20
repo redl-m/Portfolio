@@ -1,0 +1,162 @@
+/* Define CSS variables for easy theme changes */
+:root {
+  --background-color: #121212;
+  --tile-background-color: #1e1e1e;
+  --primary-text-color: #e0e0e0;
+  --secondary-text-color: #b0b0b0;
+  --accent-color: #007bff;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* Main container for the entire section */
+.projects-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 50px 5%;
+  background-color: var(--background-color);
+  font: 600 12px/1.1 "Inter", sans-serif;
+  color: var(--primary-text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* Header section */
+.projects-header {
+  text-align: center;
+  margin-bottom: 50px;
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--secondary-text-color);
+  }
+}
+
+/* Flexbox layout for dynamic distribution */
+.projects-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; // Centers the group of tiles
+  gap: 30px;
+  width: 100%;
+  max-width: 2000px;
+}
+
+/* Individual project tile styling */
+.project-tile {
+  position: relative;
+  background-color: var(--tile-background-color);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 20px var(--shadow-color);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn-up 0.6s ease forwards;
+  height: 70vh;
+  flex: 1 1 300px;
+  max-width: 500px; // max width of individual tile
+}
+
+/* Hover effect for the tile */
+.project-tile:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 30px var(--shadow-color);
+
+  .project-background {
+    opacity: 0.3;
+    transform: scale(1.05);
+  }
+
+  .project-link {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Content inside the tile (title, description) */
+.project-content {
+  padding: 25px;
+  position: relative;
+  z-index: 2;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+
+  h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: var(--secondary-text-color);
+    line-height: 1.6;
+  }
+}
+
+/* Link to view the project */
+.project-link {
+  display: inline-block;
+  margin-top: 15px;
+  color: var(--accent-color);
+  text-decoration: none;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Background image element */
+.project-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  z-index: 1;
+  opacity: 0.15; /* Semi-transparent effect */
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Keyframe animation for the tiles loading in */
+@keyframes fadeIn-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Media query for mobile devices */
+@media (max-width: 768px) {
+  .projects-container {
+    /* Use a smaller gap on mobile */
+    gap: 30px;
+  }
+
+  .project-tile {
+    flex-basis: 100%;
+    height: auto;
+  }
+
+  .projects-header h2 {
+    font-size: 2rem;
+  }
+
+  .project-link {
+    opacity: 1;
+    transform: none;
+  }
+}
