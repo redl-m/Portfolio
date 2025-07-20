@@ -15,13 +15,13 @@
 
 <!-- Page navigation bar -->
 <nav class="nav nav--right" role="navigation" aria-label="Main">
-  <a href="#start"        [class.active]="active === 'start'">Start</a>
+  <a href="#start" [class.active]="active === 'start'">Start</a>
   <span class="divider"></span>
-  <a href="#about"        [class.active]="active === 'about'">About Me</a>
+  <a href="#about" [class.active]="active === 'about'">About Me</a>
   <span class="divider"></span>
-  <a href="#projects"     [class.active]="active === 'projects'">Projects</a>
+  <a href="#projects" [class.active]="active === 'projects'">Projects</a>
   <span class="divider"></span>
-  <a href="#experience"   [class.active]="active === 'experience'">Education & Experience</a>
+  <a href="#experience" [class.active]="active === 'experience'">Education & Experience</a>
 </nav>
 <!-- Hamburger Button (Mobile Only) -->
 <button class="hamburger-btn"
@@ -43,23 +43,26 @@
       <i class="fa-solid fa-envelope"></i>
     </a>
     <span class="divider"></span>
-    <a href="https://github.com/redl-m" target="_blank" rel="noopener" aria-label="GitHub" (click)="closeMenuAndNavigate()">
+    <a href="https://github.com/redl-m" target="_blank" rel="noopener" aria-label="GitHub"
+       (click)="closeMenuAndNavigate()">
       <i class="fa-brands fa-github"></i>
     </a>
     <span class="divider"></span>
-    <a href="https://www.instagram.com/redl__m/" target="_blank" rel="noopener" aria-label="Instagram" (click)="closeMenuAndNavigate()">
+    <a href="https://www.instagram.com/redl__m/" target="_blank" rel="noopener" aria-label="Instagram"
+       (click)="closeMenuAndNavigate()">
       <i class="fa-brands fa-instagram"></i>
     </a>
   </nav>
 
   <!-- Page navigation bar -->
   <nav class="nav nav--right" role="navigation" aria-label="Main">
-    <a href="#start"      [class.active]="active === 'start'"      (click)="closeMenuAndNavigate()">Start</a>
+    <a href="#start" [class.active]="active === 'start'" (click)="closeMenuAndNavigate()">Start</a>
     <span class="divider"></span>
-    <a href="#about"      [class.active]="active === 'about'"      (click)="closeMenuAndNavigate()">About Me</a>
+    <a href="#about" [class.active]="active === 'about'" (click)="closeMenuAndNavigate()">About Me</a>
     <span class="divider"></span>
-    <a href="#projects"   [class.active]="active === 'projects'"   (click)="closeMenuAndNavigate()">Projects</a>
+    <a href="#projects" [class.active]="active === 'projects'" (click)="closeMenuAndNavigate()">Projects</a>
     <span class="divider"></span>
-    <a href="#experience" [class.active]="active === 'experience'" (click)="closeMenuAndNavigate()">Education & Experience</a>
+    <a href="#experience" [class.active]="active === 'experience'" (click)="closeMenuAndNavigate()">Education &
+      Experience</a>
   </nav>
 </div>
