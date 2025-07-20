@@ -3,7 +3,6 @@ import {
   LottieComponent,
   AnimationOptions
 } from 'ngx-lottie';
-import {AnimationItem} from 'lottie-web';
 
 @Component({
   selector: 'app-hero',
