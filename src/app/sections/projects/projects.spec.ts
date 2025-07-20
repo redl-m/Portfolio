@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { Projects } from './projects';
 
 describe('Projects', () => {
@@ -8,9 +7,10 @@ describe('Projects', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      // For standalone components, you just need to import the component itself
       imports: [Projects]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(Projects);
     component = fixture.componentInstance;
@@ -19,5 +19,10 @@ describe('Projects', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should have a list of projects', () => {
+    expect(component.projects).toBeDefined();
+    expect(component.projects.length).toBeGreaterThan(0);
   });
 });
