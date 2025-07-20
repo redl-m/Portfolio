@@ -14,19 +14,8 @@ import {AnimationItem} from 'lottie-web';
 })
 export class Hero {
   options: AnimationOptions = {
-    path: 'assets/hero/hero.json',   // relative to src/
+    path: 'assets/hero/hero_ver2.json',
     autoplay: true,
     loop: false,
   };
-
-
-  // TODO: working, maybe adjust goToAndStop to -5 or so. Also, the animation shortly disappears
-  /** Called once, right after the SVG/Canvas is created */
-  animationCreated(anim: AnimationItem): void {
-    /* Freeze on the final frame */
-    anim.addEventListener('complete', () => {
-      // frames are 0‑based, so last frame = totalFrames‑1
-      anim.goToAndStop(anim.totalFrames - 10, true);
-    });
-  }
 }
