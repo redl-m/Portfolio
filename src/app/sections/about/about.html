@@ -46,19 +46,24 @@
       class="photo-bar"
       [class.open]="hoveredPhotos.length"
     >
-      <span class="trip-label" *ngIf="currentTripName">
-        {{ currentTripName }}
-      </span>
-      <div class="strip">
-        <img *ngFor="let src of scrollingPhotos" [src]="src" />
+      <div class="trip-label-box" *ngIf="currentTripName">
+        <span class="trip-label">
+          {{ currentTripName }}
+        </span>
+      </div>
+
+      <div class="strip-wrapper">
+        <div class="strip">
+          <img *ngFor="let src of scrollingPhotos" [src]="src" />
+        </div>
       </div>
     </div>
   </div>
 
   <ng-container *ngIf="isAboutSectionVisible">
     <button class="mobile-toggle" (click)="toggleMap()">
-    {{ showMap ? 'Show Tiles' : 'Show Map' }}
-  </button>
+      {{ showMap ? 'Show Tiles' : 'Show Map' }}
+    </button>
   </ng-container>
 
 </div>
