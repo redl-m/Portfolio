@@ -63,6 +63,7 @@ $nav-height: 96px;
  * Photo Bar
  * --------------------------------------------------- */
 
+// The main container for the label and photo strip
 .photo-bar {
   --frame: 300px;
   --gap: 6px;
@@ -71,56 +72,72 @@ $nav-height: 96px;
   --shift: -300px;
 
   position: absolute;
-  width: 600px;
-  height: 300px;
-  padding-block: 6px;
-  padding-left: 12px;
-  background: #000;
-  border-radius: 8px;
-  overflow: hidden;
+  width: auto;
+  height: var(--frame);
+  background: transparent;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+  border-radius: 8px;
   pointer-events: none;
   z-index: 1000;
   opacity: 0;
   transition: opacity 0.25s ease;
   transform: translate(-50%, calc(-100% - 6px));
+  display: flex;
   align-items: center;
+  gap: 10px;
 
   &.open {
     opacity: 1;
-  }
-
-  // TODO: fix trip label
-
-  .trip-label {
-    position: absolute;
-    top: 50%;
-    left: -6px;
-    transform: translateY(-50%) rotate(-90deg);
-    transform-origin: center;
-    font: 600 12px/1.1 "Inter", sans-serif;
-    letter-spacing: 0.03em;
-    color: #ffffffd9;
-    pointer-events: none;
-    white-space: nowrap;
-  }
-
-  .strip {
-    display: flex;
-    gap: var(--gap);
-    animation: scroll var(--duration) linear infinite;
-    height: 100%;
-    align-items: center;
-  }
-
-  img {
-    flex: 0 0 var(--frame);
-    width: var(--frame);
-    height: var(--frame);
-    object-fit: cover;
-    border-radius: 4px;
+    pointer-events: auto;
   }
 }
+
+.trip-label-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  width: fit-content;
+  height: 100%;
+  padding: 0 8px;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.trip-label {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  white-space: nowrap;
+  transform: translateY(-50%) rotate(-90deg);
+}
+
+.strip-wrapper {
+  width: 600px;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 6px;
+  background: #000;
+}
+
+.strip {
+  display: flex;
+  height: 100%;
+  gap: var(--gap);
+  animation: scroll var(--duration) linear infinite;
+  will-change: transform;
+  padding: var(--gap); // This is the correct padding, but not on the left and right
+  box-sizing: border-box;
+}
+
+img {
+  flex: 0 0 calc(var(--frame) - 2 * var(--gap));
+  width: calc(var(--frame) - 2 * var(--gap));
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
 
 @keyframes scroll {
   0% {

@@ -78,6 +78,17 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   onMapReady(map: L.Map) {
     this.map = map;
 
+    // Scrolling using Ctrl + Wheel, not working that great
+    this.map.scrollWheelZoom.disable();
+
+    map.getContainer().addEventListener('wheel', (e: WheelEvent) => {
+      if (e.ctrlKey) {
+        map.scrollWheelZoom.enable();
+      } else {
+        map.scrollWheelZoom.disable();
+      }
+    });
+
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18, attribution: '© OpenStreetMap contributors',
     }).addTo(map);
@@ -130,6 +141,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   }
 
   private showBar(ev: L.LeafletMouseEvent, trip: Trip) {
+
     // Don't proceed if the bar doesn't exist yet
     if (!this.barEl?.nativeElement) {
       console.warn("Bar element doesn't exist yet");
@@ -143,8 +155,11 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     const el = this.barEl.nativeElement;
 
     const frame = 300, gap = 6, count = trip.photos.length;
+
+    // Calculate the image width and shift distance accurately to prevent animation stuttering.
+    const imageWidth = frame - (2 * gap);
+    const shift = -((imageWidth + gap) * count);
     const duration = count * 4.5;
-    const shift = -(frame + gap) * count;
 
     el.style.setProperty('--frame', `${frame}px`);
     el.style.setProperty('--gap', `${gap}px`);
@@ -153,7 +168,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     el.style.setProperty('--shift', `${shift}px`);
 
     if (this.isMobileView) {
-      // On mobile, CSS will handle centering via `position: fixed`
+      // On mobile, CSS will handle centering
       el.style.position = 'fixed';
       el.style.left = '50%';
       el.style.top = '50%';
