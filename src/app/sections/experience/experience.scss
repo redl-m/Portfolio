@@ -439,32 +439,32 @@
         }
       }
     }
+  }
 
-    .experience-header {
-      h2 {
-        font-size: 2.5rem;
-      }
+  .experience-header {
+    h2 {
+      font-size: 2.5rem;
     }
+  }
 
-    .timeline-label.work-label-desktop,
-    .timeline-label.education-label-desktop {
-      position: absolute;
-      z-index: 10;
-      width: auto;
-      padding: 1rem;
-      box-sizing: border-box;
-    }
+  .timeline-label.work-label-desktop,
+  .timeline-label.education-label-desktop {
+    position: absolute;
+    z-index: 10;
+    width: auto;
+    padding: 1rem;
+    box-sizing: border-box;
+  }
 
-    .timeline-label.work-label-desktop {
-      top: 5%;
-      left: 5%;
-      text-align: left;
-    }
+  .timeline-label.work-label-desktop {
+    top: 5%;
+    left: 5%;
+    text-align: left;
+  }
 
-    .timeline-label.education-label-desktop {
-      bottom: 5%;
-      left: 5%;
-      text-align: left;
-    }
+  .timeline-label.education-label-desktop {
+    bottom: 5%;
+    left: 5%;
+    text-align: left;
   }
 }
