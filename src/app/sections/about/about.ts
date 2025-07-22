@@ -249,7 +249,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
       el.style.top = '50%';
       el.style.transform = 'translate(-50%, -50%)';
     } else {
-      // On desktop, position it relative to the map
+      // On desktop, position it relative to the map TODO: add dynamic positioning if photo bar would leave map-wrapper
       const p = this.map.latLngToContainerPoint(ev.latlng);
       el.style.position = 'absolute';
       el.style.left = `${p.x}px`;
