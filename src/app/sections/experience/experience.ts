@@ -156,7 +156,7 @@ export class Experience implements OnInit, OnDestroy {
   }
 
   private scheduleHide(type: 'work' | 'education'): void {
-    const delay = 500; // Shorter delay for a snappier feel
+    const delay = 1500;
     if (type === 'work' && this.hoveredWorkItem && !this.isMouseInsideWorkInfoWindow) {
       this.hideTimeoutWork = setTimeout(() => {
         this.hoveredWorkItem = null;
