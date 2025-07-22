@@ -43,7 +43,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
   /** Trips and their photos */
   trips: Trip[] = [
-    // ... your existing trip data
+
     {name: 'Barcelona 2022', lat: 41.3874, lng: 2.1686, photos: photoManifest['Barcelona'] || []},
     {name: 'Paris 2022', lat: 48.8566, lng: 2.3522, photos: photoManifest['Paris'] || []},
     {name: 'Berlin 2023', lat: 52.52, lng: 13.405, photos: photoManifest['Berlin'] || []},
@@ -77,17 +77,61 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
   onMapReady(map: L.Map) {
     this.map = map;
+    const mapContainer = this.map.getContainer();
 
-    // Scrolling using Ctrl + Wheel, not working that great
+    /** Zoom using Control + Scroll Logic */
+    const overlay = document.createElement('div');
+    overlay.innerHTML = `<div style="color: white; font-family: sans-serif; text-align: center; font-size: 1.2em; text-shadow: 0 1px 4px black;">Use Ctrl + Scroll to Zoom</div>`;
+    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    overlay.style.position = 'absolute';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.width = '100%';
+    overlay.style.height = '100%';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.zIndex = '1000';
+    overlay.style.opacity = '0';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.transition = 'opacity 300ms ease-in-out';
+
+    if (getComputedStyle(mapContainer).position === 'static') {
+      mapContainer.style.position = 'relative';
+    }
+    mapContainer.appendChild(overlay);
+
+    // Disable scroll wheel by default
     this.map.scrollWheelZoom.disable();
 
-    map.getContainer().addEventListener('wheel', (e: WheelEvent) => {
-      if (e.ctrlKey) {
-        map.scrollWheelZoom.enable();
-      } else {
-        map.scrollWheelZoom.disable();
-      }
+    // Variable to hold the timer for hiding the overlay
+    let hideOverlayTimer: any;
+
+    // Hide information on house leave
+    mapContainer.addEventListener('mouseleave', () => {
+      overlay.style.opacity = '0';
+      this.map.scrollWheelZoom.disable();
+      clearTimeout(hideOverlayTimer);
     });
+
+    // Listen for the wheel event on the map container.
+    mapContainer.addEventListener('wheel', (e: WheelEvent) => {
+      // Clear any existing timer every time a wheel event occurs
+      clearTimeout(hideOverlayTimer);
+
+      if (e.ctrlKey) {
+        e.preventDefault();
+        this.map.scrollWheelZoom.enable();
+        overlay.style.opacity = '0';
+      } else {
+        this.map.scrollWheelZoom.disable();
+        overlay.style.opacity = '1';
+        // Set a new timer to hide the overlay after 1 second
+        hideOverlayTimer = setTimeout(() => {
+          overlay.style.opacity = '0';
+        }, 1000);
+      }
+    }, { passive: false });
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18, attribution: '© OpenStreetMap contributors',
@@ -138,6 +182,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(): void {
     // Clean up the observer to prevent memory leaks
     this.intersectionObserver?.disconnect();
+    this.map?.remove();
   }
 
   private showBar(ev: L.LeafletMouseEvent, trip: Trip) {
