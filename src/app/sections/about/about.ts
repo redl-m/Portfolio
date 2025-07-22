@@ -75,13 +75,18 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   constructor(private zone: NgZone) {
   }
 
+
   onMapReady(map: L.Map) {
+
+
     this.map = map;
     const mapContainer = this.map.getContainer();
 
     /** Zoom using Control + Scroll Logic */
+
+    // Overlay
     const overlay = document.createElement('div');
-    overlay.innerHTML = `<div style="color: white; font-family: sans-serif; text-align: center; font-size: 1.2em; text-shadow: 0 1px 4px black;">Use Ctrl + Scroll to Zoom</div>`;
+    overlay.innerHTML = `<div style="color: white; font-family: sans-serif; text-align: center; font-size: 2.5em; text-shadow: 0 1px 4px black;">Use Ctrl + Scroll to Zoom</div>`;
     overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
     overlay.style.position = 'absolute';
     overlay.style.top = '0';
@@ -96,16 +101,35 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     overlay.style.pointerEvents = 'none';
     overlay.style.transition = 'opacity 300ms ease-in-out';
 
+    // Hovering information
+    const info = document.createElement('div');
+    info.innerHTML = `<div style="color: white; font-family: sans-serif; text-align: center; font-size: 2.5em; text-shadow: 0 1px 4px black;">Hover dots to see travel memories</div>`;
+    info.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    info.style.position = 'absolute';
+    info.style.top = '0';
+    info.style.left = '0';
+    info.style.width = '100%';
+    info.style.height = '100%';
+    info.style.display = 'flex';
+    info.style.justifyContent = 'center';
+    info.style.alignItems = 'center';
+    info.style.zIndex = '1000';
+    info.style.opacity = '1';
+    info.style.pointerEvents = 'none';
+    info.style.transition = 'opacity 300ms ease-in-out';
+
     if (getComputedStyle(mapContainer).position === 'static') {
       mapContainer.style.position = 'relative';
     }
     mapContainer.appendChild(overlay);
+    mapContainer.appendChild(info);
 
     // Disable scroll wheel by default
     this.map.scrollWheelZoom.disable();
 
-    // Variable to hold the timer for hiding the overlay
+    // Variable to hold the timer for hiding the overlay and information message
     let hideOverlayTimer: any;
+    let infoOverlayTimer: any;
 
     // Hide information on house leave
     mapContainer.addEventListener('mouseleave', () => {
@@ -113,6 +137,14 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
       this.map.scrollWheelZoom.disable();
       clearTimeout(hideOverlayTimer);
     });
+
+    // Show overlay until first mouse enter
+    mapContainer.addEventListener('mouseenter', (e) => {
+      clearTimeout(hideOverlayTimer);
+      hideOverlayTimer = setTimeout(() => {
+        info.style.opacity = '0';
+      }, 1000);
+    })
 
     // Listen for the wheel event on the map container.
     mapContainer.addEventListener('wheel', (e: WheelEvent) => {
