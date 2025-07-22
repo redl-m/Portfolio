@@ -127,9 +127,8 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     // Disable scroll wheel by default
     this.map.scrollWheelZoom.disable();
 
-    // Variable to hold the timer for hiding the overlay and information message
+    // Variable to hold the timer for hiding the overlay
     let hideOverlayTimer: any;
-    let infoOverlayTimer: any;
 
     // Hide information on house leave
     mapContainer.addEventListener('mouseleave', () => {
@@ -139,9 +138,8 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     });
 
     // Show overlay until first mouse enter
-    mapContainer.addEventListener('mouseenter', (e) => {
-      clearTimeout(hideOverlayTimer);
-      hideOverlayTimer = setTimeout(() => {
+    mapContainer.addEventListener('mouseenter', () => {
+      setTimeout(() => {
         info.style.opacity = '0';
       }, 1000);
     })
