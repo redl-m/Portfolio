@@ -88,7 +88,6 @@ $nav-height: 96px;
 
   &.open {
     opacity: 1;
-    pointer-events: auto;
   }
 }
 
@@ -126,7 +125,7 @@ $nav-height: 96px;
   gap: var(--gap);
   animation: scroll var(--duration) linear infinite;
   will-change: transform;
-  padding: var(--gap); // This is the correct padding, but not on the left and right
+  padding: var(--gap);
   box-sizing: border-box;
 }
 
