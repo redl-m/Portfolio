@@ -84,7 +84,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
     /** Zoom using Control + Scroll Logic */
 
-    // Overlay
+      // Overlay
     const overlay = document.createElement('div');
     overlay.innerHTML = `<div style="color: white; font-family: sans-serif; text-align: center; font-size: 2.5em; text-shadow: 0 1px 4px black;">Use Ctrl + Scroll to Zoom</div>`;
     overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
@@ -161,7 +161,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
           overlay.style.opacity = '0';
         }, 1000);
       }
-    }, { passive: false });
+    }, {passive: false});
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 18, attribution: '© OpenStreetMap contributors',
@@ -249,12 +249,58 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
       el.style.top = '50%';
       el.style.transform = 'translate(-50%, -50%)';
     } else {
-      // On desktop, position it relative to the map TODO: add dynamic positioning if photo bar would leave map-wrapper
+      // Dynamically position the bar to keep it within the map container
+      const mapContainer = this.map.getContainer();
       const p = this.map.latLngToContainerPoint(ev.latlng);
+
+      const barWidth = el.offsetWidth;
+      const barHeight = el.offsetHeight;
+      const mapWidth = mapContainer.clientWidth;
+
+      // Define constants for positioning
+      const padding = 20;
+      const verticalOffset = 80;
+
+      // --- Vertical Positioning ---
+      let top = p.y;
+      let transformY: string;
+
+      if ((p.y - barHeight - verticalOffset) < padding) {
+
+        transformY = `${verticalOffset}px`; // position bar below the marker
+
+      } else {
+
+        transformY = `calc(-100% - ${verticalOffset}px)`; // default: position the bar above the marker
+      }
+
+      // --- Horizontal Positioning ---
+      let left = p.x;
+      let transformX: string;
+
+      const halfBarWidth = barWidth / 2;
+
+      // Check if for overflow to the left
+      if ((p.x - halfBarWidth) < padding) {
+
+        left = padding;
+        transformX = '0%';
+      }
+      // Check if for overflow to the right
+      else if ((p.x + halfBarWidth) > (mapWidth - padding)) {
+        left = mapWidth - padding;
+        transformX = '-100%';
+      }
+      // Default: center it horizontally on the marker
+      else {
+        transformX = '-50%';
+      }
+
+      // Apply calculated styles
       el.style.position = 'absolute';
-      el.style.left = `${p.x}px`;
-      el.style.top = `${p.y}px`;
-      el.style.transform = 'translate(-50%, calc(-100% - 6px))';
+      el.style.left = `${left}px`;
+      el.style.top = `${top}px`;
+      el.style.transform = `translate(${transformX}, ${transformY})`;
     }
   }
 
