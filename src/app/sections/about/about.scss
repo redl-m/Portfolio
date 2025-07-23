@@ -1,3 +1,5 @@
+@use "styles.scss" as *;
+
 /* ---------------------------------------------------
  * Layout & Host Setup
  * --------------------------------------------------- */
@@ -197,28 +199,8 @@ img {
 }
 
 .download-button {
-  text-decoration: none;
-  padding: 0.75rem 1.5rem;
-  font-weight: 600;
-  font-size: 1rem;
-  background: linear-gradient(to right, #2d1a61, #bf30b6);
-  color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
-  display: inline-block;
-  white-space: nowrap;
 
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.25);
-  }
-
-  &.disabled {
-    background: #aaa;
-    cursor: not-allowed;
-    pointer-events: none;
-  }
+  @include btn-gradient;
 }
 
 /* ---------------------------------------------------
