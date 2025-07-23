@@ -13,7 +13,7 @@ import {
 })
 export class Hero {
   options: AnimationOptions = {
-    path: 'assets/hero/hero_ver2.json',
+    path: 'assets/hero/hero_v3.json',
     autoplay: true,
     loop: false,
   };
