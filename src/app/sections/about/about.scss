@@ -13,6 +13,7 @@ $nav-height: 96px;
   margin-top: $nav-height;
   position: relative;
   overflow-y: auto;
+  --tile-bg: white;
 
   @media (min-width: 768px) {
     overflow-y: hidden;
@@ -37,7 +38,6 @@ $nav-height: 96px;
   position: relative;
   overflow: hidden;
 
-  /* Style: Add padding on desktop to make the map smaller and contained */
   @media (min-width: 768px) {
     padding: 2rem;
   }
@@ -52,6 +52,7 @@ $nav-height: 96px;
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 10px;
+    color: var(--text-color);
   }
 }
 
@@ -72,6 +73,61 @@ $nav-height: 96px;
   height: 100%;
   flex: 1 1 auto;
 }
+
+/* ---------------------------------------------------
+ * Leaflet Map Dark‑Mode Filters
+ * --------------------------------------------------- */
+:host-context(.dark) {
+  /* Invert the map imagery */
+  .map-wrapper,
+  .leaflet-container {
+    filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%);
+  }
+
+  /* Reset the controls back to normal colors */
+  .leaflet-control-zoom-in,
+  .leaflet-control-zoom-out,
+  .leaflet-control-attribution,
+  .leaflet-control-layers-toggle,
+  .leaflet-control-scale,
+  .leaflet-control-container > * {
+    filter: invert(100%) hue-rotate(180deg) brightness(100%) contrast(100%);
+  }
+}
+
+/* ---------------------------------------------------
+ * Map Overlay & Info Styling — theme‑aware
+ * --------------------------------------------------- */
+
+.map-overlay {
+  position: absolute;
+  inset: 0;               // shorthand for top/right/bottom/left = 0
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  transition: opacity 300ms ease-in-out;
+  opacity: 0;
+
+  // default (light mode)
+  background-color: rgba(168, 168, 168, 0.6);
+  color: #222;
+  font-family: sans-serif;
+  font-size: 2.5em;
+  font-weight: 550;
+
+  &.map-info {
+    opacity: 1;  // your “always‑on” info panel
+  }
+}
+
+/* Dark overrides: when <html> or <body> has .dark */
+:host-context(.dark) .map-overlay {
+  background-color: rgba(239, 229, 255, 0.5);
+  color: #eee;
+  text-shadow: 0 1px 4px black;
+}
+
 
 /* ---------------------------------------------------
  * Photo Bar
@@ -161,21 +217,20 @@ img {
   }
 }
 
-
 /* ---------------------------------------------------
- * Tile Grid & Tiles
+ * Tile Grid & Tiles (Light Mode)
  * --------------------------------------------------- */
-
 .tile {
   background: white;
+  color: var(--text-color);
   border-radius: 12px;
   padding: 1.5rem;
-  border-left: 5px solid #2d1a61;
+  border-left: 5px solid var(--accent-color);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   animation: fadeInSlide 0.8s ease forwards;
   opacity: 0;
   transform: translateY(20px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, background 0.3s ease;
 
   &:not(:last-child) {
     margin-bottom: 1.5rem;
@@ -189,7 +244,7 @@ img {
   h3 {
     font-size: 1.3rem;
     margin-bottom: 0.75rem;
-    color: #2d1a61;
+    color: var(--accent-color);
   }
 
   p {
@@ -204,6 +259,29 @@ img {
     transform: translateY(0);
   }
 }
+
+/* ---------------------------------------------------
+ * Dark Mode Overrides for Tiles
+ * --------------------------------------------------- */
+:host-context(.dark) .tile {
+  background: #1e1e24;
+  color: var(--text-color);
+  border-left-color: var(--accent-color);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+:host-context(.dark) .tile h3 {
+  color: var(--accent-color);
+}
+
+:host-context(.dark) .tile p {
+  color: var(--text-color);
+}
+
+
+/* ---------------------------------------------------
+ * Download Buttons
+ * --------------------------------------------------- */
 
 .download-buttons {
   display: flex;

@@ -1,61 +1,72 @@
-import { AfterViewInit, Component, OnDestroy } from '@angular/core';
+import {AfterViewInit, Component, OnDestroy} from '@angular/core';
+import {NgClass} from '@angular/common';
+import { ThemeService } from '../../services/theme.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   standalone: true,
   templateUrl: './navbar.html',
+  imports: [NgClass],
   styleUrl: './navbar.scss'
 })
 export class Navbar implements AfterViewInit, OnDestroy {
-
   // id of the section that is currently in view
   active = '';
 
   // Tracks the state of the mobile menu
   isMobileMenuOpen = false;
 
+  /** track theme state */
+  isDarkMode = false;
+
+  /** subscription to theme changes */
+  private themeSub!: Subscription;
+
   // private IntersectionObserver
   #io?: IntersectionObserver;
 
-  /**
-   * Toggles the mobile navigation menu open/closed.
-   */
+  constructor(private themeService: ThemeService) {
+    // subscribe to theme changes
+    this.themeSub = this.themeService.darkMode$.subscribe(isDark => {
+      this.isDarkMode = isDark;
+      document.documentElement.classList.toggle('dark', isDark);
+    });
+
+    // on init, sync HTML class with current theme
+    document.documentElement.classList.toggle('dark', this.themeService.isDarkMode);
+  }
+
+  /** Toggles the mobile navigation menu open/closed. */
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
     document.body.classList.toggle('no-scroll', this.isMobileMenuOpen);
   }
 
-  /**
-   * Closes the mobile menu if it's open.
-   * This is called when a navigation link is clicked.
-   */
+  /** Closes the mobile menu if it's open. */
   closeMenuAndNavigate(): void {
     if (this.isMobileMenuOpen) {
       this.toggleMobileMenu();
     }
   }
 
-  ngAfterViewInit(): void {
-    // Sections that should trigger the highlight
-    const sectionIds = ['start', 'about', 'projects', 'experience'];
+  /** flip theme and persist via service */
+  toggleDarkMode(): void {
+    this.themeService.setDarkMode(!this.isDarkMode);
+  }
 
-    // Configure & start the observer once the view is ready
+  ngAfterViewInit(): void {
+    const sectionIds = ['start', 'about', 'projects', 'experience'];
     this.#io = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
           if (entry.isIntersecting) {
-            this.active = entry.target.id; // triggers [class.active] binding
+            this.active = entry.target.id;
           }
         }
       },
-      {
-        root: null,
-        rootMargin: '-30% 0px -70% 0px',
-        threshold: 0
-      }
+      { root: null, rootMargin: '-30% 0px -70% 0px', threshold: 0 }
     );
-
-    // Observe each section if it exists in the DOM
     for (const id of sectionIds) {
       const el = document.getElementById(id);
       if (el) { this.#io.observe(el); }
@@ -64,7 +75,7 @@ export class Navbar implements AfterViewInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.#io?.disconnect();
-    // Ensure the scroll lock is removed if the component is destroyed
     document.body.classList.remove('no-scroll');
+    this.themeSub.unsubscribe();
   }
 }
