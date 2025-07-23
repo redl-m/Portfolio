@@ -9,8 +9,22 @@
   </div>
 
   <!-- Right Column: 55% -->
-  <ng-lottie
-    class="hero-sketch"
-    [options]="options">>
-  </ng-lottie>
+  <!-- hero.html -->
+  <div class="hero-sketch">
+    <!-- Light version -->
+    <ng-lottie
+      #lightLottie
+      [options]="lightOptions"
+      (animationCreated)="onLightCreated($event)"
+      [style.display]="isDarkMode ? 'none' : 'block'"
+    ></ng-lottie>
+
+    <!-- Dark version -->
+    <ng-lottie
+      #darkLottie
+      [options]="darkOptions"
+      (animationCreated)="onDarkCreated($event)"
+      [style.display]="isDarkMode ? 'block' : 'none'"
+    ></ng-lottie>
+  </div>
 </div>

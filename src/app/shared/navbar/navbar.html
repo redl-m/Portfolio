@@ -54,6 +54,23 @@
     </a>
   </nav>
 
+  <!-- Theme Toggle -->
+  <nav class="nav nav--mid" aria-label="Toggle">
+    <button
+      class="theme-toggle"
+      aria-label="Toggle light/dark mode"
+      (click)="toggleDarkMode()"
+    >
+      <i
+        class="fa-solid"
+        [ngClass]="{
+          'fa-moon': !isDarkMode,
+         'fa-lightbulb': isDarkMode
+       }"
+      ></i>
+    </button>
+  </nav>
+
   <!-- Page navigation bar -->
   <nav class="nav nav--right" role="navigation" aria-label="Main">
     <a href="#start" [class.active]="active === 'start'" (click)="closeMenuAndNavigate()">Start</a>

@@ -1,11 +1,20 @@
 /* ------------------------------------------------------------ */
-/* Variables                                                    */
+/* Navbar Styles with Light/Dark Mode Variables                  */
 /* ------------------------------------------------------------ */
-$accent: #2d1a61;
+
+/* Height, radius, breakpoint still via SCSS variables */
 $bar-height: 72px;
 $bar-radius: 56px;
-$bg: rgba(255, 255, 255, 0.92);
-$mobile-breakpoint: 960px; // Breakpoint for switching to mobile nav
+$mobile-breakpoint: 960px;
+
+/* Define nav background variable for theme */
+:root {
+  --nav-bg: rgba(255, 255, 255, 0.92);
+}
+
+.dark {
+  --nav-bg: rgba(18, 18, 23, 0.8);
+}
 
 /* ------------------------------------------------------------ */
 /* Hamburger Button (Sass-Burger)                               */
@@ -15,7 +24,6 @@ $mobile-breakpoint: 960px; // Breakpoint for switching to mobile nav
   top: 1rem;
   right: 1.5rem;
   padding: 15px;
-  display: inline-block;
   cursor: pointer;
   background-color: transparent;
   border: 0;
@@ -33,38 +41,51 @@ $mobile-breakpoint: 960px; // Breakpoint for switching to mobile nav
     display: block;
     top: 50%;
     margin-top: -2px;
+
     &, &::before, &::after {
       width: 30px;
       height: 3px;
-      background-color: $accent;
+      background-color: var(--accent-color);
       border-radius: 4px;
       position: absolute;
       transition: transform 0.2s ease-in-out;
     }
+
     &::before, &::after {
       content: "";
       display: block;
     }
-    &::before { top: -10px; }
-    &::after { bottom: -10px; }
+
+    &::before {
+      top: -10px;
+    }
+
+    &::after {
+      bottom: -10px;
+    }
   }
 
-  // Animate to an "X"
   &.is-active .hamburger-inner {
     transform: rotate(45deg);
-    &::before { transform: rotate(90deg) translate(-10px, 0px); }
-    &::after { transform: rotate(90deg) translate(10px, 0px); }
+
+    &::before {
+      transform: rotate(90deg) translate(-10px, 0);
+    }
+
+    &::after {
+      transform: rotate(90deg) translate(10px, 0);
+    }
   }
+
+  /* Hide on desktop by default */
+  display: none;
 }
 
 /* ------------------------------------------------------------ */
 /* Base & Desktop Styles                                        */
 /* ------------------------------------------------------------ */
-:root { scroll-behavior: smooth; }
-
 .nav-wrapper {
-  // This wrapper is used for desktop positioning and mobile overlay
-  // On desktop, it's just a container.
+  /* container for desktop and mobile overlay */
 }
 
 .nav {
@@ -77,8 +98,8 @@ $mobile-breakpoint: 960px; // Breakpoint for switching to mobile nav
   font-weight: 600;
   font-size: 1.15rem;
   line-height: 1;
-  background: $bg;
-  backdrop-filter: blur(8px);
+  background: var(--nav-bg);
+  backdrop-filter: blur(8px); // TODO: only do when dark mode active
   border-radius: $bar-radius;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   z-index: 10000;
@@ -88,92 +109,148 @@ $mobile-breakpoint: 960px; // Breakpoint for switching to mobile nav
     position: relative;
     padding: 0.35rem 0.65rem;
     text-decoration: none;
-    color: #222;
+    color: var(--text-color);
     transition: opacity 0.2s;
-    &:hover { opacity: 0.6; }
-    &.active { color: $accent; }
-    &.active::after {
-      content: '';
-      position: absolute;
-      left: 0; right: 0; bottom: -0.35rem;
-      height: 3px; border-radius: 3px; background: $accent;
+
+    &:hover {
+      opacity: 0.6;
     }
-    i { font-size: 1.25em; }
+
+    &.active {
+      color: var(--accent-color);
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: -0.35rem;
+        height: 3px;
+        border-radius: 3px;
+        background: var(--accent-color);
+      }
+    }
+
+    i {
+      font-size: 1.25em;
+    }
   }
 
   .divider {
     width: 2px;
     height: 1.4em;
-    background: $accent;
+    background: var(--accent-color);
     opacity: 0.5;
   }
 }
 
-.nav--left { top: 1rem; left: 2rem; }
-.nav--right { top: 1rem; right: 2rem; }
+.nav--left {
+  top: 1rem;
+  left: 2rem;
+}
 
-body { padding-top: calc($bar-height + 1.5rem); }
+.nav--right {
+  top: 1rem;
+  right: 2rem;
+}
+
+.nav--mid {
+  top: 1rem;
+  left: 18rem;
+}
+
+body {
+  padding-top: calc($bar-height + 1.5rem);
+}
+
+/* ------------------------------------------------------------ */
+/* Dark Mode Toggle                                             */
+/* ------------------------------------------------------------ */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  padding: 0.35rem 0.65rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  transition: opacity 0.2s;
+
+  i {
+    font-size: 1.25em;
+    color: var(--text-color);
+  }
+
+  &:hover {
+    opacity: 0.6;
+  }
+}
 
 /* Hide hamburger on desktop */
-.hamburger-btn { display: none; }
-
+@media (min-width: $mobile-breakpoint + 1) {
+  .hamburger-btn {
+    display: none;
+  }
+}
 
 /* ------------------------------------------------------------ */
 /* Mobile Navigation Styles                                     */
 /* ------------------------------------------------------------ */
 @media (max-width: $mobile-breakpoint) {
-  /* Show hamburger and hide desktop navs */
-  .hamburger-btn { display: block; }
+  .hamburger-btn {
+    display: inline-block;
+  }
   .nav {
     opacity: 0;
     visibility: hidden;
   }
 
-  /* Style the navigation wrapper as a full-screen overlay when open */
-  .nav-wrapper {
-    &.is-open {
-      .nav {
-        // Reset desktop styles
-        position: static;
-        display: flex;
-        height: auto;
-        padding: 0;
-        background: none;
-        backdrop-filter: none;
-        box-shadow: none;
-        opacity: 1;
-        visibility: visible;
-        border-radius: 0;
+  .nav-wrapper.is-open {
+    .nav {
+      position: static;
+      display: flex;
+      height: auto;
+      padding: 0;
+      background: none;
+      backdrop-filter: none;
+      box-shadow: none;
+      opacity: 1;
+      visibility: visible;
+      border-radius: 0;
+    }
+
+    .nav--right {
+      flex-direction: column;
+      gap: 2rem;
+      font-size: 1.8rem;
+      font-weight: 700;
+
+      a.active::after {
+        bottom: -0.5rem;
+      }
+    }
+
+    .nav--left {
+      flex-direction: row;
+      gap: 1.5rem;
+      margin-bottom: 12rem;
+
+      .divider {
+        display: none;
       }
 
-      // Main nav links become a vertical list
-      .nav--right {
-        flex-direction: column;
-        gap: 2rem;
+      a i {
         font-size: 1.8rem;
-        font-weight: 700;
-        a.active::after { bottom: -0.5rem; }
-      }
-
-      // Social links become a horizontal list at the bottom
-      .nav--left {
-        flex-direction: row;
-        gap: 1.5rem;
-        margin-bottom: 12rem; // Creates space between contact and main nav
-        .divider { display: none; }
-        a i { font-size: 1.8rem; }
       }
     }
   }
 
-  // The overlay itself
   .nav-wrapper.is-open {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.98);
+    background: var(--nav-bg);
     backdrop-filter: blur(5px);
     z-index: 9999;
     display: flex;

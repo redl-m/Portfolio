@@ -82,12 +82,17 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     this.map = map;
     const mapContainer = this.map.getContainer();
 
+    const isDark = document.documentElement.classList.contains('dark');
+    console.log(isDark);
+    const darkBg = 'rgba(239,229,255,0.5)';
+    const lightBg = 'rgba(168,168,168,0.6)';  // or whatever your light‑mode overlay should be
+
     /** Zoom using Control + Scroll Logic */
 
-      // Overlay
+    // Overlay
     const overlay = document.createElement('div');
-    overlay.innerHTML = `<div style="color: white; font-family: sans-serif; text-align: center; font-size: 2.5em; text-shadow: 0 1px 4px black;">Use Ctrl + Scroll to Zoom</div>`;
-    overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    overlay.innerHTML = `<div style="color: ${isDark ? '#eee' : '#222'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Use Ctrl + Scroll to Zoom</div>`;
+    overlay.style.backgroundColor = isDark ? darkBg : lightBg;
     overlay.style.position = 'absolute';
     overlay.style.top = '0';
     overlay.style.left = '0';
@@ -103,8 +108,8 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
     // Hovering information
     const info = document.createElement('div');
-    info.innerHTML = `<div style="color: white; font-family: sans-serif; text-align: center; font-size: 2.5em; text-shadow: 0 1px 4px black;">Hover dots to see travel memories</div>`;
-    info.style.backgroundColor = 'rgba(0, 0, 0, 0.5)';
+    info.innerHTML = `<div style="color: ${isDark ? '#eee' : '#222'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Hover dots to see travel memories</div>`;
+    info.style.backgroundColor = isDark ? darkBg : lightBg;
     info.style.position = 'absolute';
     info.style.top = '0';
     info.style.left = '0';
@@ -121,6 +126,10 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     if (getComputedStyle(mapContainer).position === 'static') {
       mapContainer.style.position = 'relative';
     }
+
+    overlay.classList.add('map-overlay');
+    info.classList.add('map-overlay', 'map-info');
+
     mapContainer.appendChild(overlay);
     mapContainer.appendChild(info);
 
