@@ -1,13 +1,27 @@
 @use "styles.scss" as *;
 
-/* Define CSS variables for easy theme changes */
+// Prevents global styles from overriding
+:host {
+  --tile-glow-color: rgba(100, 125, 255, 0.1);
+  --primary-text-color: #f0f0f0;
+  --secondary-text-color: #c0c0c0;
+  --accent-color: #88a4ff;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --glass-background: rgba(20, 20, 30, 0.5);
+
+  // Base color for the component itself
+  color: var(--primary-text-color);
+}
+
+/* Refined dark theme */
 :root {
   --background-color: #121212;
-  --tile-background-color: #1e1e1e;
-  --primary-text-color: #e0e0e0;
-  --secondary-text-color: #b0b0b0;
-  --accent-color: #007bff;
-  --shadow-color: rgba(0, 0, 0, 0.4);
+  --tile-glow-color: rgba(100, 125, 255, 0.1);
+  --primary-text-color: #f0f0f0;
+  --secondary-text-color: #c0c0c0;
+  --accent-color: #88a4ff;
+  --shadow-color: rgba(0, 0, 0, 0.5);
+  --glass-background: rgba(20, 20, 30, 0.5);
 }
 
 /* Main container for the entire section */
@@ -16,8 +30,8 @@
   min-height: 100vh;
   padding: 50px 5%;
   background-color: var(--background-color);
-  font: 600 12px/1.1 "Inter", sans-serif;
-  color: var(--primary-text-color);
+  font: 400 16px/1.6 "Inter", sans-serif;
+  color: black;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
@@ -28,6 +42,7 @@
 .projects-header {
   text-align: center;
   margin-bottom: 50px;
+  max-width: 600px;
 
   h2 {
     font-size: 2.5rem;
@@ -37,7 +52,7 @@
 
   p {
     font-size: 1.1rem;
-    color: var(--secondary-text-color);
+    color: black;
   }
 }
 
@@ -45,7 +60,7 @@
 .projects-grid {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center; // Centers the group of tiles
+  justify-content: center;
   gap: 30px;
   width: 100%;
   max-width: 2000px;
@@ -54,36 +69,38 @@
 /* Individual project tile styling */
 .project-tile {
   position: relative;
-  background-color: var(--tile-background-color);
-  border-radius: 12px;
+  border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 10px 20px var(--shadow-color);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 8px 25px var(--shadow-color);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
   cursor: pointer;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
+
+  // Initial animation
   opacity: 0;
   transform: translateY(20px);
   animation: fadeIn-up 0.6s ease forwards;
+
+  // Sizing from original file
   height: 70vh;
   flex: 1 1 300px;
-  max-width: 500px; // max width of individual tile
+  max-width: 500px;
 }
 
 /* Hover effect for the tile */
 .project-tile:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 15px 30px var(--shadow-color);
+  transform: translateY(-8px);
+  box-shadow: 0 16px 40px var(--shadow-color), 0 0 20px var(--tile-glow-color);
 
   .project-background {
-    opacity: 0.3;
     transform: scale(1.05);
+    filter: brightness(0.7); // Darkens image slightly to make text pop
   }
 
-  .project-link {
-    opacity: 1;
-    transform: translateY(0);
+  .project-link::after {
+    width: 100%; // Animates the underline on the link
   }
 }
 
@@ -92,28 +109,49 @@
   padding: 25px;
   position: relative;
   z-index: 2;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
+  margin: 15px;
+  border-radius: 12px;
+
+  background: var(--glass-background);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   h3 {
-    font-size: 1.5rem;
+    font-size: 1.75rem; // Larger title
     font-weight: 700;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
+    color: var(--primary-text-color);
   }
 
   p {
-    font-size: 1rem;
+    font-size: 1.05rem;
     color: var(--secondary-text-color);
     line-height: 1.6;
+    margin-bottom: 20px;
   }
 }
 
 /* Link to view the project */
 .project-link {
-  @include btn-gradient;
+  display: inline-block;
+  color: var(--accent-color);
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 4px;
 
-  // Initial animation state
-  opacity: 0;
-  transform: translateY(10px);
+  // Underline for the hover effect
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease-out;
+  }
 }
 
 /* Background image element */
@@ -126,8 +164,8 @@
   background-size: cover;
   background-position: center;
   z-index: 1;
-  opacity: 0.15; /* Semi-transparent effect */
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  opacity: 0.7; // Slightly more visible background
+  transition: opacity 0.4s ease, transform 0.4s ease, filter 0.4s ease;
 }
 
 /* Keyframe animation for the tiles loading in */
@@ -139,23 +177,23 @@
 }
 
 /* Media query for mobile devices */
+// TODO: add mobile style for projects page
 @media (max-width: 768px) {
   .projects-container {
-    /* Use a smaller gap on mobile */
-    gap: 30px;
+    padding: 40px 5%;
   }
 
   .project-tile {
     flex-basis: 100%;
-    height: auto;
+    height: 25vh; // Adjusted for better fit on mobile
   }
 
   .projects-header h2 {
     font-size: 2rem;
   }
 
-  .project-link {
-    opacity: 1;
-    transform: none;
+  // On mobile, the link underline is always visible for better discoverability
+  .project-link::after {
+    width: 100%;
   }
 }
