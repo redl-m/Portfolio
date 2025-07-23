@@ -10,7 +10,7 @@ import { CommonModule } from '@angular/common';
 })
 export class Projects {
 
-  // Array of project objects. Add your projects here!
+  // Array of project objects
   projects = [
     {
       title: 'Project Alpha',
