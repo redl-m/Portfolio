@@ -1,3 +1,5 @@
+@use "styles.scss" as *;
+
 /* Define CSS variables for easy theme changes */
 :root {
   --background-color: #121212;
@@ -107,14 +109,11 @@
 
 /* Link to view the project */
 .project-link {
-  display: inline-block;
-  margin-top: 15px;
-  color: var(--accent-color);
-  text-decoration: none;
-  font-weight: 500;
+  @include btn-gradient;
+
+  // Initial animation state
   opacity: 0;
   transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
 /* Background image element */

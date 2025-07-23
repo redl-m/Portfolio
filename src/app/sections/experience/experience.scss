@@ -1,3 +1,5 @@
+@use "styles.scss" as *;
+
 /* ---------------------------------------------------
             General Host & Base Styling
  * --------------------------------------------------- */
@@ -175,16 +177,7 @@
     margin-top: 1.5rem;
 
     a {
-      color: #a29bfe;
-      margin-right: 20px;
-      text-decoration: none;
-      font-weight: bold;
-      transition: color 0.2s ease;
-
-      &:hover {
-        color: #ffffff;
-        text-decoration: underline;
-      }
+      @include btn-gradient;
     }
   }
 }
@@ -424,18 +417,12 @@
 
       .links {
         margin-top: 1.5rem;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
 
         a {
-          color: #a29bfe;
-          margin-right: 20px;
-          text-decoration: none;
-          font-weight: bold;
-          transition: color 0.2s ease;
-
-          &:hover {
-            color: #ffffff;
-            text-decoration: underline;
-          }
+          @include btn-gradient;
         }
       }
     }
