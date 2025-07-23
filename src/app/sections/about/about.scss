@@ -43,6 +43,18 @@ $nav-height: 96px;
   }
 }
 
+.about-header {
+  text-align: left;
+  margin-left: 5%;
+  margin-bottom: 50px;
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+}
+
 /* ---------------------------------------------------
  * Map & Leaflet Sizing
  * --------------------------------------------------- */
@@ -285,6 +297,12 @@ img {
 
     .trip-label {
       display: none;
+    }
+  }
+
+  .experience-header {
+    h2 {
+      font-size: 1.5rem;
     }
   }
 }
