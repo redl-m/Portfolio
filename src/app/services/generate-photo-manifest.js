@@ -2,9 +2,9 @@ const fs = require('fs');
 const path = require('path');
 
 // The directory where your trip photos are stored
-const assetsDir = path.join(__dirname, 'public', 'assets', 'about', 'trips');
+const assetsDir = path.resolve(__dirname, '../../../public/assets/about/trips');
 // The path for the auto-generated TypeScript file
-const outputPath = path.join(__dirname, 'src', 'app', 'photo-manifest.ts');
+const outputPath = path.join(__dirname, 'photo-manifest.ts');
 
 try {
   // Get all subdirectories in the assets folder (e.g., 'Paris', 'NewYork')

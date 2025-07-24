@@ -18,7 +18,6 @@ export class Hero {
   darkAnim!:  AnimationItem;
 
   isDarkMode = false;
-  // hero.ts
 
   lightOptions: AnimationOptions = {
     path: 'assets/hero/hero_v3.json',
@@ -64,7 +63,5 @@ export class Hero {
     // sync the *incoming* animation to that frame
     const incoming = dark ? this.darkAnim : this.lightAnim;
     incoming.goToAndPlay(currentFrame, true);
-
-    // outgoing remains paused at its frame, but hidden by ngStyle
   }
 }

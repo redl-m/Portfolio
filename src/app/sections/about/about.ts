@@ -5,7 +5,7 @@ import * as L from 'leaflet';
 import {CommonModule} from '@angular/common';
 import {trigger, transition, style, animate} from '@angular/animations';
 import {LeafletModule} from '@bluehalo/ngx-leaflet';
-import {photoManifest} from '../../photo-manifest';
+import {photoManifest} from '../../services/photo-manifest';
 
 interface Trip {
   name: string;
@@ -91,7 +91,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
     // Overlay
     const overlay = document.createElement('div');
-    overlay.innerHTML = `<div style="color: ${isDark ? '#eee' : '#222'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Use Ctrl + Scroll to Zoom</div>`;
+    overlay.innerHTML = `<div style="color: ${isDark ?  '#222': '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Use Ctrl + Scroll to Zoom</div>`;
     overlay.style.backgroundColor = isDark ? darkBg : lightBg;
     overlay.style.position = 'absolute';
     overlay.style.top = '0';
@@ -108,7 +108,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
     // Hovering information
     const info = document.createElement('div');
-    info.innerHTML = `<div style="color: ${isDark ? '#eee' : '#222'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Hover dots to see travel memories</div>`;
+    info.innerHTML = `<div style="color: ${isDark ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Hover dots to see travel memories</div>`;
     info.style.backgroundColor = isDark ? darkBg : lightBg;
     info.style.position = 'absolute';
     info.style.top = '0';

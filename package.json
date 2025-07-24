@@ -7,7 +7,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "generate-photos": "node generate-photo-manifest.js",
+    "generate-photos": "node src/app/services/generate-photo-manifest.js",
     "prestart": "npm run generate-photos",
     "prebuild": "npm run generate-photos",
     "e2e": "ng e2e"
