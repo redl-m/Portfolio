@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { LottieComponent, AnimationOptions } from 'ngx-lottie';
 import { AnimationItem } from 'lottie-web';
 import { ThemeService } from '../../services/theme.service';
