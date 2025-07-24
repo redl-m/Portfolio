@@ -99,7 +99,7 @@ $mobile-breakpoint: 960px;
   font-size: 1.15rem;
   line-height: 1;
   background: var(--nav-bg);
-  backdrop-filter: blur(8px); // TODO: only do when dark mode active
+  backdrop-filter: blur(8px); // TODO: dark mode only
   border-radius: $bar-radius;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   z-index: 10000;
@@ -242,6 +242,11 @@ body {
         font-size: 1.8rem;
       }
     }
+
+    .nav--mid {
+      top: 1rem;
+      left: 18rem;
+    }
   }
 
   .nav-wrapper.is-open {
@@ -257,5 +262,40 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+  }
+
+  .nav--top {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    margin-bottom: 4rem; // spacing before nav--right
+  }
+
+  .nav--left {
+    margin-bottom: 0; // remove large spacing
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+
+    .divider {
+      display: none;
+    }
+
+    a i {
+      font-size: 1.8rem;
+    }
+  }
+
+  .nav--mid {
+    position: relative; // remove top/left offset
+    align-self: flex-start;
+    top: auto;
+    left: auto;
+
+    button.theme-toggle {
+      font-size: 1.6rem;
+    }
   }
 }

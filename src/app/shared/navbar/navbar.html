@@ -38,38 +38,41 @@
 <!-- Navigation Wrapper -->
 <div id="nav-wrapper" class="nav-wrapper" [class.is-open]="isMobileMenuOpen">
   <!-- Contact bar -->
-  <nav class="nav nav--left" aria-label="Contact">
-    <a href="mailto:michael.redl14042004@gmail.com" aria-label="E‑mail" (click)="closeMenuAndNavigate()">
-      <i class="fa-solid fa-envelope"></i>
-    </a>
-    <span class="divider"></span>
-    <a href="https://github.com/redl-m" target="_blank" rel="noopener" aria-label="GitHub"
-       (click)="closeMenuAndNavigate()">
-      <i class="fa-brands fa-github"></i>
-    </a>
-    <span class="divider"></span>
-    <a href="https://www.instagram.com/redl__m/" target="_blank" rel="noopener" aria-label="Instagram"
-       (click)="closeMenuAndNavigate()">
-      <i class="fa-brands fa-instagram"></i>
-    </a>
-  </nav>
+  <div class="nav--top">
+    <nav class="nav nav--left" aria-label="Contact">
+      <a href="mailto:michael.redl14042004@gmail.com" aria-label="E‑mail" (click)="closeMenuAndNavigate()">
+        <i class="fa-solid fa-envelope"></i>
+      </a>
+      <span class="divider"></span>
+      <a href="https://github.com/redl-m" target="_blank" rel="noopener" aria-label="GitHub"
+         (click)="closeMenuAndNavigate()">
+        <i class="fa-brands fa-github"></i>
+      </a>
+      <span class="divider"></span>
+      <a href="https://www.instagram.com/redl__m/" target="_blank" rel="noopener" aria-label="Instagram"
+         (click)="closeMenuAndNavigate()">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+    </nav>
 
-  <!-- Theme Toggle -->
-  <nav class="nav nav--mid" aria-label="Toggle">
-    <button
-      class="theme-toggle"
-      aria-label="Toggle light/dark mode"
-      (click)="toggleDarkMode()"
-    >
-      <i
-        class="fa-solid"
-        [ngClass]="{
+    <!-- Theme Toggle -->
+    <nav class="nav nav--mid" aria-label="Toggle">
+      <button
+        class="theme-toggle"
+        aria-label="Toggle light/dark mode"
+        (click)="toggleDarkMode()"
+      >
+        <i
+          class="fa-solid"
+          [ngClass]="{
           'fa-moon': !isDarkMode,
          'fa-lightbulb': isDarkMode
        }"
-      ></i>
-    </button>
-  </nav>
+        ></i>
+      </button>
+    </nav>
+  </div>
+
 
   <!-- Page navigation bar -->
   <nav class="nav nav--right" role="navigation" aria-label="Main">
