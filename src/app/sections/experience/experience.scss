@@ -242,7 +242,7 @@
 /* ---------------------------------------------------
                   DESKTOP STYLES
  * --------------------------------------------------- */
-@media (min-width: 961px) {
+@media (min-width: $max-mobile-width + 1) {
   .timeline-container-desktop {
     position: relative;
     width: 100%;

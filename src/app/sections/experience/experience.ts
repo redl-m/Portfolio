@@ -1,5 +1,7 @@
-import {Component, OnInit, OnDestroy, NgZone} from '@angular/core';
-import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
+import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
+import { NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { ViewportService } from '../../services/viewport.service';
 
 // --- Data Structures ---
 export interface ExperienceInfo {
@@ -8,8 +10,9 @@ export interface ExperienceInfo {
   links?: { url: string; text: string }[];
 }
 
+// --- Data Structures ---
 export interface ExperienceItem {
-  id: number; // Unique ID for tracking
+  id: number;
   startYear: number;
   endYear: number;
   type: 'work' | 'education';
@@ -27,15 +30,17 @@ export interface ExperienceItem {
 export class Experience implements OnInit, OnDestroy {
   // --- Timeline Configuration ---
   startYear = 2018;
-  endYear = 2026; // This +1 gets displayed on the timeline
+  endYear = 2026;  // This +1 gets displayed on the timeline
   years: number[] = [];
 
   // --- State Management ---
   experiences: ExperienceItem[] = EXPERIENCES;
   hoveredWorkItem: ExperienceItem | null = null;
   hoveredEducationItem: ExperienceItem | null = null;
-  selectedExperience: ExperienceItem | null = null; // For mobile modal
+  selectedExperience: ExperienceItem | null = null;
   isMobileView = false;
+
+  private resizeSubscription: Subscription | null = null;
 
   // --- Hover Persistence Logic ---
   private hideTimeoutWork: any;
@@ -43,45 +48,36 @@ export class Experience implements OnInit, OnDestroy {
   private isMouseInsideWorkInfoWindow = false;
   private isMouseInsideEducationInfoWindow = false;
 
-  constructor(private zone: NgZone) {
+  constructor(private zone: NgZone, private viewportService: ViewportService) {
     this.years = Array.from(
-      {length: this.endYear - this.startYear + 2},
+      { length: this.endYear - this.startYear + 2 },
       (_, i) => this.startYear + i
     );
   }
 
-  // --- Lifecycle Hooks ---
   ngOnInit(): void {
-    this.checkIfMobile(window.innerWidth);
-    window.addEventListener('resize', this.onResize);
-  }
+    this.resizeSubscription = this.viewportService.isMobileView$.subscribe((isMobile) => {
+      this.zone.run(() => {
+        this.isMobileView = isMobile;
 
-  ngOnDestroy(): void {
-    window.removeEventListener('resize', this.onResize);
-  }
-
-  private onResize = (event: UIEvent) => {
-    this.zone.run(() => {
-      this.checkIfMobile((event.target as Window).innerWidth);
+        if (!this.isMobileView) {
+          this.selectedExperience = null;
+          document.body.classList.remove('no-scroll');
+        }
+      });
     });
   }
 
-  private checkIfMobile(width: number): void {
-    this.isMobileView = width <= 960;
-    // If we resize from mobile to desktop, clear any open modals
-    if (!this.isMobileView) {
-      this.selectedExperience = null;
-      document.body.classList.remove('no-scroll');
-    }
+  ngOnDestroy(): void {
+    this.resizeSubscription?.unsubscribe();
   }
 
   // --- Style Calculation ---
-  /** Calculates style for DESKTOP horizontal bars. */
+  /** Calculates style for desktop horizontal bars. */
   getDesktopBarStyle(start: number, end: number): { [key: string]: string } {
     const totalDuration = this.endYear - this.startYear + 1;
     const startPercent = ((start - this.startYear) / totalDuration) * 100;
-    // Use Math.max to ensure a minimum width for very short events
-    const widthPercent = Math.max(((end - start) / totalDuration) * 100, 0.5);
+    const widthPercent = Math.max(((end - start) / totalDuration) * 100, 0.5); // Use Math.max to ensure a minimum width for very short events
 
     return {
       left: `${startPercent}%`,
@@ -89,7 +85,7 @@ export class Experience implements OnInit, OnDestroy {
     };
   }
 
-  /** Calculates style for MOBILE vertical bars. */
+  /** Calculates style for mobile vertical bars. */
   getMobileBarStyle(start: number, end: number): { [key: string]: string } {
     const totalDuration = this.endYear - this.startYear + 1;
     const startPercent = ((start - this.startYear) / totalDuration) * 100;
@@ -102,11 +98,11 @@ export class Experience implements OnInit, OnDestroy {
   }
 
   // --- Event Handlers ---
-  /** Handles CLICK on mobile to open the modal. */
+  /** Handles click on mobile to open the modal. */
   onSelectItem(item: ExperienceItem): void {
     if (!this.isMobileView) return;
     this.selectedExperience = item;
-    document.body.classList.add('no-scroll'); // Prevent background scroll
+    document.body.classList.add('no-scroll');
   }
 
   /** Closes the mobile modal. */
@@ -115,7 +111,7 @@ export class Experience implements OnInit, OnDestroy {
     document.body.classList.remove('no-scroll');
   }
 
-  /** Handles HOVER on desktop to show info windows. */
+  /** Handles hover on desktop to show info windows. */
   onHover(item: ExperienceItem | null): void {
     if (this.isMobileView) return;
 
@@ -179,7 +175,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'Intern at SVS',
       description: 'First work experience as intern at an insurance company.',
-      links: [{url: 'https://www.svs.at/', text: 'Company Website'}]
+      links: [{ url: 'https://www.svs.at/', text: 'Company Website' }]
     }
   },
   {
@@ -190,7 +186,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'Intern at solvistas',
       description: 'Intern in HR, financial and secretarial division.',
-      links: [{url: 'https://www.solvistas.com/', text: 'Company Website'}]
+      links: [{ url: 'https://www.solvistas.com/', text: 'Company Website' }]
     }
   },
   {
@@ -201,7 +197,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'Software Development Intern at solvistas',
       description: 'Development of company intern working hours timekeeping system.',
-      links: [{url: 'https://www.solvistas.com/', text: 'Company Website'}]
+      links: [{ url: 'https://www.solvistas.com/', text: 'Company Website' }]
     }
   },
   {
@@ -209,7 +205,10 @@ export const EXPERIENCES: ExperienceItem[] = [
     startYear: 2022.9,
     endYear: 2023.58,
     type: 'work',
-    info: {title: 'Civil Service in a Kindergarden', description: 'Compulsory civil service in a kindergarden in Enns.'}
+    info: {
+      title: 'Civil Service in a Kindergarden',
+      description: 'Compulsory civil service in a kindergarden in Enns.'
+    }
   },
   {
     id: 5,
@@ -219,7 +218,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'Production Intern at BMW',
       description: 'Production intern at BMW Group Austria.',
-      links: [{url: 'https://www.bmwgroup-werke.com/steyr/de.html', text: 'Company Website'}]
+      links: [{ url: 'https://www.bmwgroup-werke.com/steyr/de.html', text: 'Company Website' }]
     }
   },
   {
@@ -230,7 +229,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'b[r]g Enns',
       description: 'Academic high school with a chosen scientific branch, focus on Informatics and voluntary partly tuition in English.',
-      links: [{url: 'https://www.brgenns.ac.at/', text: 'School Website'}]
+      links: [{ url: 'https://www.brgenns.ac.at/', text: 'School Website' }]
     }
   },
   {
@@ -241,7 +240,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'BSc Informatics at TU Wien',
       description: 'Currently pursuing a Bachelor\'s degree with a focus on Artificial Intelligence and Machine Learning at TU Wien.',
-      links: [{url: 'https://informatics.tuwien.ac.at/bachelor/informatics/', text: 'Study Breakdown and Description'}]
+      links: [{ url: 'https://informatics.tuwien.ac.at/bachelor/informatics/', text: 'Study Breakdown and Description' }]
     }
   }
 ];

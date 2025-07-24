@@ -2,10 +2,14 @@ import {
   Component, ElementRef, ViewChild, NgZone, AfterViewInit, OnInit, OnDestroy,
 } from '@angular/core';
 import * as L from 'leaflet';
-import {CommonModule} from '@angular/common';
-import {trigger, transition, style, animate} from '@angular/animations';
-import {LeafletModule} from '@bluehalo/ngx-leaflet';
-import {photoManifest} from '../../services/photo-manifest';
+import { CommonModule } from '@angular/common';
+import { trigger, transition, style, animate } from '@angular/animations';
+import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { photoManifest } from '../../services/photo-manifest';
+import { ViewportService } from '../../services/viewport.service';
+import { Subscription } from 'rxjs';
+import {Browser} from 'leaflet';
+import mobile = Browser.mobile;
 
 interface Trip {
   name: string;
@@ -18,25 +22,26 @@ interface Trip {
   selector: 'app-about',
   standalone: true,
   imports: [CommonModule, LeafletModule],
-
   templateUrl: './about.html',
   styleUrls: ['./about.scss'],
   animations: [
     trigger('tileFade', [
       transition(':enter', [
-        style({opacity: 0, transform: 'translateY(20px)'}),
-        animate('600ms ease-out', style({opacity: 1, transform: 'translateY(0)'})),
+        style({ opacity: 0, transform: 'translateY(20px)' }),
+        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
       ])
     ])
   ]
 })
 export class About implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild('bar', {static: false}) barEl!: ElementRef<HTMLDivElement>;
+  @ViewChild('bar', { static: false }) barEl!: ElementRef<HTMLDivElement>;
 
   // Mobile view options
   showMap = false;
   isMobileView = false;
-  isAboutSectionVisible = false; // New property to track section visibility
+  isAboutSectionVisible = false;
+
+  private viewportSub?: Subscription;
 
   /** Base map options */
   options = {zoom: 2, worldCopyJump: true, center: L.latLng(20, 0), zoomControl: false};
@@ -72,7 +77,36 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   private map!: L.Map;
   private intersectionObserver?: IntersectionObserver;
 
-  constructor(private zone: NgZone) {
+  constructor(private zone: NgZone, private viewportService: ViewportService) {}
+
+  ngOnInit() {
+    this.viewportSub = this.viewportService.isMobileView$.subscribe(isMobile => {
+      this.isMobileView = isMobile;
+    });
+  }
+
+  ngAfterViewInit() {
+    const aboutSection = document.getElementById('about');
+    if (aboutSection) {
+      this.intersectionObserver = new IntersectionObserver(([entry]) => {
+        this.zone.run(() => {
+          this.isAboutSectionVisible = entry.isIntersecting;
+        });
+      }, { threshold: 0.1 });
+      this.intersectionObserver.observe(aboutSection);
+    }
+
+    this.map?.on('movestart', () => (this.hoveredPhotos = []));
+  }
+
+  ngOnDestroy(): void {
+    this.intersectionObserver?.disconnect();
+    this.map?.remove();
+    this.viewportSub?.unsubscribe();
+  }
+
+  toggleMap() {
+    this.showMap = !this.showMap;
   }
 
 
@@ -108,7 +142,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
     // Hovering information
     const info = document.createElement('div');
-    info.innerHTML = `<div style="color: ${isDark ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Hover dots to see travel memories</div>`;
+    info.innerHTML = `<div style="color: ${isDark ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">${this.isMobileView ? 'Click dots to see travel memories' : 'Hover dots to see travel memories'}</div>`;
     info.style.backgroundColor = isDark ? darkBg : lightBg;
     info.style.position = 'absolute';
     info.style.top = '0';
@@ -130,7 +164,9 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     overlay.classList.add('map-overlay');
     info.classList.add('map-overlay', 'map-info');
 
-    mapContainer.appendChild(overlay);
+    if (!mobile) {
+      mapContainer.appendChild(overlay); // Control + Zoom is only relevant on desktop
+    }
     mapContainer.appendChild(info);
 
     // Disable scroll wheel by default
@@ -202,27 +238,6 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     map.on('movestart', () => this.zone.run(() => (this.hoveredPhotos = [])));
   }
 
-
-  ngAfterViewInit() {
-    this.map?.on('movestart', () => (this.hoveredPhotos = []));
-
-    // Observer to show/hide the mobile toggle button
-    const aboutSection = document.getElementById('about');
-    if (aboutSection) {
-      this.intersectionObserver = new IntersectionObserver(([entry]) => {
-        this.zone.run(() => {
-          this.isAboutSectionVisible = entry.isIntersecting;
-        });
-      }, {threshold: 0.1}); // Button appears when 10% of the section is visible
-      this.intersectionObserver.observe(aboutSection);
-    }
-  }
-
-  ngOnDestroy(): void {
-    // Clean up the observer to prevent memory leaks
-    this.intersectionObserver?.disconnect();
-    this.map?.remove();
-  }
 
   private showBar(ev: L.LeafletMouseEvent, trip: Trip) {
 
@@ -311,19 +326,5 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
       el.style.top = `${top}px`;
       el.style.transform = `translate(${transformX}, ${transformY})`;
     }
-  }
-
-
-  ngOnInit() {
-    this.updateView(window.innerWidth);
-    window.addEventListener('resize', () => this.updateView(window.innerWidth));
-  }
-
-  updateView(width: number) {
-    this.isMobileView = width < 768;
-  }
-
-  toggleMap() {
-    this.showMap = !this.showMap;
   }
 }
