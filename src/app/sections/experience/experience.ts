@@ -27,7 +27,7 @@ export interface ExperienceItem {
 export class Experience implements OnInit, OnDestroy {
   // --- Timeline Configuration ---
   startYear = 2018;
-  endYear = 2026;
+  endYear = 2026; // This +1 gets displayed on the timeline
   years: number[] = [];
 
   // --- State Management ---
