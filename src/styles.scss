@@ -2,6 +2,14 @@
                    GLOBAL STYLESHEET
    ------------------------------------------------- */
 
+// 0. Breakpoints
+$max-mobile-width: 768px;
+
+:root {
+  --max-mobile-width: #{$max-mobile-width}; // for use in plain CSS
+}
+
+
 // 1. Define CSS variables for light & dark themes
 :root {
   /* Light mode colors */
@@ -96,5 +104,12 @@ body.no-scroll {
     pointer-events: none;
     transform: none;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/*  Global mobile media standard*/
+@mixin mobile {
+  @media (max-width: #{$max-mobile-width}) {
+    @content;
   }
 }

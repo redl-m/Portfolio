@@ -173,7 +173,8 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $max-mobile-width) {
+  // TODO: rework mobile view
   .projects-container {
     padding: 40px 5%;
   }

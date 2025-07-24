@@ -15,7 +15,7 @@ $nav-height: 96px;
   overflow-y: auto;
   --tile-bg: white;
 
-  @media (min-width: 768px) {
+  @media (min-width: $max-mobile-width + 1) {
     overflow-y: hidden;
   }
 }
@@ -38,7 +38,7 @@ $nav-height: 96px;
   position: relative;
   overflow: hidden;
 
-  @media (min-width: 768px) {
+  @media (min-width: $max-mobile-width + 1) {
     padding: 2rem;
   }
 }
@@ -324,7 +324,7 @@ img {
     background-color: #bf30b6;
   }
 
-  @media (min-width: 768px) {
+  @media (min-width: $max-mobile-width + 1) {
     display: none;
   }
 }
@@ -333,7 +333,7 @@ img {
  * Mobile Responsiveness
  * --------------------------------------------------- */
 
-@media (max-width: 767px) {
+@media (max-width: $max-mobile-width) {
   .about-layout {
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
@@ -372,10 +372,6 @@ img {
       height: var(--frame);
       object-fit: cover;
       border-radius: 4px;
-    }
-
-    .trip-label {
-      display: none;
     }
   }
 
