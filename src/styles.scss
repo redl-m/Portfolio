@@ -65,6 +65,11 @@ body {
 
 [id] {
   scroll-margin-top: 0 !important;
+
+  @media (max-width: $max-mobile-width) {
+
+    scroll-margin-top: -150px !important;
+  }
 }
 
 body.no-scroll {

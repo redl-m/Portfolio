@@ -223,7 +223,7 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 6,
-    startYear: 2018.07,
+    startYear: 2018,
     endYear: 2022.5,
     type: 'education',
     info: {
