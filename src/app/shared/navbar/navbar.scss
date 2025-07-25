@@ -1,3 +1,5 @@
+@use "styles.scss" as *;
+
 /* ------------------------------------------------------------ */
 /* Navbar Styles with Light/Dark Mode Variables                  */
 /* ------------------------------------------------------------ */
@@ -5,7 +7,6 @@
 /* Height, radius, breakpoint still via SCSS variables */
 $bar-height: 72px;
 $bar-radius: 56px;
-$mobile-breakpoint: 960px;
 
 /* Define nav background variable for theme */
 :root {
@@ -186,7 +187,7 @@ body {
 }
 
 /* Hide hamburger on desktop */
-@media (min-width: $mobile-breakpoint + 1) {
+@media (min-width: $max-mobile-width + 1) {
   .hamburger-btn {
     display: none;
   }
@@ -195,7 +196,7 @@ body {
 /* ------------------------------------------------------------ */
 /* Mobile Navigation Styles                                     */
 /* ------------------------------------------------------------ */
-@media (max-width: $mobile-breakpoint) {
+@media (max-width: $max-mobile-width) {
   .hamburger-btn {
     display: inline-block;
   }
