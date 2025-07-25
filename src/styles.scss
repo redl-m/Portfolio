@@ -35,23 +35,24 @@ html,
 body {
   height: 100%;
   margin: 0;
-  scroll-behavior: smooth;
+  overscroll-behavior-y: none;
+  touch-action: none;
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
 }
 
-/* 1.  The vertical snap container */
 body {
   overflow-y: scroll;
-  scroll-snap-type: y mandatory;
+  /* Let the browser do “soft” snapping when you’re close */
+  scroll-snap-type: y proximity;
 }
 
 /* 2.  Each full-screen section */
 .section {
   height: 100vh;
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
   scroll-margin-top: calc(80px);
   display: flex;
   justify-content: center;
@@ -65,11 +66,6 @@ body {
 
 [id] {
   scroll-margin-top: 0 !important;
-
-  @media (max-width: $max-mobile-width) {
-
-    scroll-margin-top: -150px !important;
-  }
 }
 
 body.no-scroll {
