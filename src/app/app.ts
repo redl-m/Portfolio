@@ -52,7 +52,7 @@ export class App implements AfterViewInit {
     const viewportHeight = window.innerHeight;
 
     // Calculate what fraction of the target is already in view
-    let visibleFraction = 0;
+    let visibleFraction: number;
     if (direction > 0) {
       // Scrolling down: how many pixels of the top of target are inside
       const visiblePx = Math.max(0, viewportHeight - rect.top);
