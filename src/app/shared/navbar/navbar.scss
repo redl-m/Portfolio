@@ -100,11 +100,14 @@ $bar-radius: 56px;
   font-size: 1.15rem;
   line-height: 1;
   background: var(--nav-bg);
-  backdrop-filter: blur(8px); // TODO: dark mode only
   border-radius: $bar-radius;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   z-index: 10000;
   transition: opacity 0.3s, visibility 0.3s;
+
+  :host-context(.dark) .nav {
+    backdrop-filter: blur(12px);
+  }
 
   a {
     position: relative;
