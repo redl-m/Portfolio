@@ -6,9 +6,9 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-navbar',
   standalone: true,
-  templateUrl: './navbar.html',
   imports: [NgClass],
-  styleUrl: './navbar.scss'
+  templateUrl: './navbar.html',
+  styleUrls: ['./navbar.scss']
 })
 export class Navbar implements AfterViewInit, OnDestroy {
   // id of the section that is currently in view
@@ -57,6 +57,8 @@ export class Navbar implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     const sectionIds = ['start', 'about', 'projects', 'experience'];
+
+    // Set up intersection observer to track active section
     this.#io = new IntersectionObserver(
       entries => {
         for (const entry of entries) {
@@ -67,10 +69,28 @@ export class Navbar implements AfterViewInit, OnDestroy {
       },
       { root: null, rootMargin: '-30% 0px -70% 0px', threshold: 0 }
     );
+
     for (const id of sectionIds) {
       const el = document.getElementById(id);
       if (el) { this.#io.observe(el); }
     }
+
+    // Smooth scroll on nav-link clicks
+    const links = document.querySelectorAll('a[href^="#"]');
+    links.forEach(link => {
+      link.addEventListener('click', (event) => {
+        const anchor = event.currentTarget as HTMLAnchorElement;
+        const href = anchor.getAttribute('href');
+        if (href && href.startsWith('#')) {
+          event.preventDefault();
+          this.closeMenuAndNavigate();
+          const targetEl = document.getElementById(href.substring(1));
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
   }
 
   ngOnDestroy(): void {
