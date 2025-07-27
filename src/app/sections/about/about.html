@@ -1,6 +1,7 @@
 <div class="about-layout">
+  <!-- Tiles -->
   <div class="tile-grid-container" *ngIf="!isMobileView || !showMap">
-
+    <!-- Desktop container -->
     <ng-container *ngIf="!isMobileView">
       <div class="tile-grid">
         <div class="about-header">
@@ -36,6 +37,7 @@
       </div>
     </ng-container>
 
+    <!-- Mobile container -->
     <ng-container *ngIf="isMobileView">
       <div class="mobile-tile-view">
         <div class="about-header">
@@ -98,6 +100,7 @@
     </ng-container>
   </div>
 
+  <!-- Leaflet map -->
   <div class="map-holder" *ngIf="!isMobileView || showMap">
     <div
       class="map-wrapper"

@@ -11,50 +11,60 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./navbar.scss']
 })
 export class Navbar implements AfterViewInit, OnDestroy {
-  // id of the section that is currently in view
+
+  // ID of the section that is currently in view
   active = '';
 
-  // Tracks the state of the mobile menu
   isMobileMenuOpen = false;
-
-  /** track theme state */
   isDarkMode = false;
 
-  /** subscription to theme changes */
+  // Subscription for dark mode
   private themeSub!: Subscription;
 
-  // private IntersectionObserver
   #io?: IntersectionObserver;
 
   constructor(private themeService: ThemeService) {
-    // subscribe to theme changes
+    // Subscribe to theme changes
     this.themeSub = this.themeService.darkMode$.subscribe(isDark => {
       this.isDarkMode = isDark;
       document.documentElement.classList.toggle('dark', isDark);
     });
 
-    // on init, sync HTML class with current theme
+    // On init, sync HTML class with current theme
     document.documentElement.classList.toggle('dark', this.themeService.isDarkMode);
   }
 
-  /** Toggles the mobile navigation menu open/closed. */
+
+  /**
+   * Toggles the mobile menu.
+   */
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
     document.body.classList.toggle('no-scroll', this.isMobileMenuOpen);
   }
 
-  /** Closes the mobile menu if it's open. */
+
+  /**
+   * Closes the mobile menu and navigates to the clicked section.
+   */
   closeMenuAndNavigate(): void {
     if (this.isMobileMenuOpen) {
       this.toggleMobileMenu();
     }
   }
 
-  /** flip theme and persist via service */
+
+  /**
+   * Switches theme via service.
+   */
   toggleDarkMode(): void {
     this.themeService.setDarkMode(!this.isDarkMode);
   }
 
+
+  /**
+   * Sets up intersection observer and smooth scrolling.
+   */
   ngAfterViewInit(): void {
     const sectionIds = ['start', 'about', 'projects', 'experience'];
 
@@ -93,6 +103,10 @@ export class Navbar implements AfterViewInit, OnDestroy {
     });
   }
 
+
+  /**
+   * Removes services on destruction.
+   */
   ngOnDestroy(): void {
     this.#io?.disconnect();
     document.body.classList.remove('no-scroll');

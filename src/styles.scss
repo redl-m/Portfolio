@@ -2,7 +2,10 @@
                    GLOBAL STYLESHEET
    ------------------------------------------------- */
 
-// 0. Breakpoints
+/* ---------------------------------------------------
+ * Breakpoints
+ * --------------------------------------------------- */
+
 $max-mobile-width: 768px;
 
 :root {
@@ -10,7 +13,10 @@ $max-mobile-width: 768px;
 }
 
 
-// 1. Define CSS variables for light & dark themes
+/* ---------------------------------------------------
+ * CSS Variables for Dark & Light Mode
+ * --------------------------------------------------- */
+
 :root {
   /* Light mode colors */
   --bg-color: #f4f4f9;
@@ -48,7 +54,10 @@ body {
   scroll-snap-type: y proximity;
 }
 
-/* 2.  Each full-screen section */
+/* ---------------------------------------------------
+ * Full screen sections
+ * --------------------------------------------------- */
+
 .section {
   height: 100vh;
   scroll-snap-align: start;
@@ -59,7 +68,10 @@ body {
   align-items: center;
 }
 
-/* 3.  Bring nav bars above Leaflet tiles */
+/* ---------------------------------------------------
+ * Navigation bars having the highest z-index
+ * --------------------------------------------------- */
+
 .nav {
   z-index: 1000;
 }
@@ -72,7 +84,10 @@ body.no-scroll {
   overflow: hidden;
 }
 
-/* 4.  Global button styling */
+/* ---------------------------------------------------
+ * Global button styling
+ * --------------------------------------------------- */
+
 @mixin btn-gradient {
   display: inline-block;
   text-decoration: none;
@@ -108,7 +123,10 @@ body.no-scroll {
   }
 }
 
-/*  Global mobile media standard*/
+/* ---------------------------------------------------
+ * Global mobile media standard
+ * --------------------------------------------------- */
+
 @mixin mobile {
   @media (max-width: #{$max-mobile-width}) {
     @content;
