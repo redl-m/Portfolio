@@ -10,7 +10,7 @@ $bar-radius: 56px;
 
 /* Define nav background variable for theme */
 :root {
-  --nav-bg: rgba(255, 255, 255, 0.92);
+  --nav-bg: rgba(255, 255, 255, 1);
 }
 
 .dark {
@@ -200,6 +200,11 @@ body {
 /* Mobile Navigation Styles                                     */
 /* ------------------------------------------------------------ */
 @media (max-width: $max-mobile-width) {
+
+  :root {
+    --nav-bg: rgba(255, 255, 255, 0.92);
+  }
+
   .hamburger-btn {
     display: inline-block;
   }

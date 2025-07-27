@@ -14,6 +14,7 @@ export class Hero {
   @ViewChild('lightLottie') lightComp!: LottieComponent;
   @ViewChild('darkLottie')  darkComp!: LottieComponent;
 
+  // Animations for light and dark mode
   lightAnim!: AnimationItem;
   darkAnim!:  AnimationItem;
 
@@ -46,21 +47,27 @@ export class Hero {
   onLightCreated(anim: AnimationItem) { this.lightAnim = anim; }
   onDarkCreated(anim: AnimationItem)  { this.darkAnim  = anim; }
 
+
+  /**
+   * Swaps the dark and light mode animation mid-animation.
+   * @param dark True if dark mode is active, false otherwise.
+   * @private
+   */
   private swap(dark: boolean) {
     this.isDarkMode = dark;
-    // ensure both animations exist
+    // Ensure both animations exist
     if (!this.lightAnim || !this.darkAnim) return;
 
-    // get the current frame from whichever is showing
+    // Get the current frame from whichever is showing
     const currentFrame = dark
       ? this.lightAnim.currentFrame
       : this.darkAnim.currentFrame;
 
-    // pause both
+    // Pause both
     this.lightAnim.pause();
     this.darkAnim.pause();
 
-    // sync the *incoming* animation to that frame
+    // Sync the incoming animation to that frame
     const incoming = dark ? this.darkAnim : this.lightAnim;
     incoming.goToAndPlay(currentFrame, true);
   }

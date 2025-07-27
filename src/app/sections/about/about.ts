@@ -7,6 +7,7 @@ import {trigger, transition, style, animate, stagger, query} from '@angular/anim
 import {LeafletModule} from '@bluehalo/ngx-leaflet';
 import {photoManifest} from '../../services/photo-manifest';
 import {ViewportService} from '../../services/viewport.service';
+import { ThemeService } from '../../services/theme.service';
 import {Subscription} from 'rxjs';
 import {Browser} from 'leaflet';
 import mobile = Browser.mobile;
@@ -52,15 +53,14 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   isMobileView = false;
   isAboutSectionVisible = false;
 
-  // New property to track the selected mobile tile
+  // Property to track the selected mobile tile
   public selectedTile: "tennis" | "causes" | "travelling" | null = null;
-
   private viewportSub?: Subscription;
 
   // Base map options
   options = {zoom: 2, worldCopyJump: true, center: L.latLng(20, 0), zoomControl: false};
 
-  /** Trips and their photos */
+  // Trips and their photos
   trips: Trip[] = [
     {name: 'Barcelona 2022', lat: 41.3874, lng: 2.1686, photos: photoManifest['Barcelona'] || []},
     {name: 'Paris 2022', lat: 48.8566, lng: 2.3522, photos: photoManifest['Paris'] || []},
@@ -88,11 +88,17 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   currentTripName = '';
 
   private map!: L.Map;
-  private intersectionObserver?: IntersectionObserver;
 
-  constructor(private zone: NgZone, private viewportService: ViewportService) {
+  isDarkMode = false;
+
+  constructor(private zone: NgZone, private viewportService: ViewportService, private theme: ThemeService) {
+    this.isDarkMode = this.theme.isDarkMode; // retrieving dark mode from theme service
   }
 
+
+  /**
+   * Initializes the component and updates the isMobileView property based on the viewPortService.
+   */
   ngOnInit() {
     this.viewportSub = this.viewportService.isMobileView$.subscribe(isMobile => {
       this.isMobileView = isMobile;
@@ -103,114 +109,118 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     });
   }
 
-  ngAfterViewInit() {
-    const aboutSection = document.getElementById('about');
-    if (aboutSection) {
-      this.intersectionObserver = new IntersectionObserver(([entry]) => {
-        this.zone.run(() => {
-          this.isAboutSectionVisible = entry.isIntersecting;
-        });
-      }, {threshold: 0.1});
-      this.intersectionObserver.observe(aboutSection);
-    }
 
+  /**
+   * Adds an event listener for the Leaflet map, which sets the hovered photos for the photo strip.
+   */
+  ngAfterViewInit() {
     this.map?.on('movestart', () => (this.hoveredPhotos = []));
   }
 
+
+  /**
+   * Cleans up the component on destroy.
+   */
   ngOnDestroy(): void {
-    this.intersectionObserver?.disconnect();
     this.map?.remove();
     this.viewportSub?.unsubscribe();
   }
 
-  // Toggles between map and tiles on mobile
+
+  /**
+   * Toggles between tiles and map on mobile.
+   */
   toggleMap() {
     this.showMap = !this.showMap;
   }
 
-  // Sets the selected tile for mobile view expansion
+
+  /**
+   * Sets the selected tile for mobile view expansion by title.
+   * @param tile The expanded tile's title.
+   */
   selectTile(tile: 'tennis' | 'causes' | 'travelling' | null) {
     this.selectedTile = tile;
   }
 
 
+  /**
+   * Applies custom settings and event listeners to the Leaflet map after
+   * it has been initialized.
+   * @param map The Leaflet map to be adjusted.
+   */
   onMapReady(map: L.Map) {
-
 
     this.map = map;
     const mapContainer = this.map.getContainer();
 
-    const isDark = document.documentElement.classList.contains('dark');
-    console.log(isDark);
+    // Dark and light mode backgrounds for text
     const darkBg = 'rgba(239,229,255,0.5)';
-    const lightBg = 'rgba(168,168,168,0.6)';  // or whatever your light‑mode overlay should be
+    const lightBg = 'rgba(168,168,168,0.6)';
 
-    /** Zoom using Control + Scroll Logic */
-      // TODO: fix touchpad weirdness
+    // Overlay for Zoom using Control + Scroll
+    const zoomOverlay = document.createElement('div');
+    zoomOverlay.innerHTML = `<div style="color: ${this.isDarkMode ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Use Ctrl + Scroll to Zoom</div>`;
+    zoomOverlay.style.backgroundColor = this.isDarkMode ? darkBg : lightBg;
+    zoomOverlay.style.position = 'absolute';
+    zoomOverlay.style.top = '0';
+    zoomOverlay.style.left = '0';
+    zoomOverlay.style.width = '100%';
+    zoomOverlay.style.height = '100%';
+    zoomOverlay.style.display = 'flex';
+    zoomOverlay.style.justifyContent = 'center';
+    zoomOverlay.style.alignItems = 'center';
+    zoomOverlay.style.zIndex = '1000';
+    zoomOverlay.style.opacity = '0';
+    zoomOverlay.style.pointerEvents = 'none';
+    zoomOverlay.style.transition = 'opacity 300ms ease-in-out';
 
-      // Overlay
-    const overlay = document.createElement('div');
-    overlay.innerHTML = `<div style="color: ${isDark ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Use Ctrl + Scroll to Zoom</div>`;
-    overlay.style.backgroundColor = isDark ? darkBg : lightBg;
-    overlay.style.position = 'absolute';
-    overlay.style.top = '0';
-    overlay.style.left = '0';
-    overlay.style.width = '100%';
-    overlay.style.height = '100%';
-    overlay.style.display = 'flex';
-    overlay.style.justifyContent = 'center';
-    overlay.style.alignItems = 'center';
-    overlay.style.zIndex = '1000';
-    overlay.style.opacity = '0';
-    overlay.style.pointerEvents = 'none';
-    overlay.style.transition = 'opacity 300ms ease-in-out';
-
-    // Hovering information
-    const info = document.createElement('div');
-    info.innerHTML = `<div style="color: ${isDark ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">${this.isMobileView ? 'Click dots to see travel memories' : 'Hover dots to see travel memories'}</div>`;
-    info.style.backgroundColor = isDark ? darkBg : lightBg;
-    info.style.position = 'absolute';
-    info.style.top = '0';
-    info.style.left = '0';
-    info.style.width = '100%';
-    info.style.height = '100%';
-    info.style.display = 'flex';
-    info.style.justifyContent = 'center';
-    info.style.alignItems = 'center';
-    info.style.zIndex = '1000';
-    info.style.opacity = '1';
-    info.style.pointerEvents = 'none';
-    info.style.transition = 'opacity 300ms ease-in-out';
+    // Overlay for hovering / clicking dots
+    const hoverOverlay = document.createElement('div');
+    hoverOverlay.innerHTML = `<div style="color: ${this.isDarkMode ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">${this.isMobileView ? 'Click dots to see travel memories' : 'Hover dots to see travel memories'}</div>`;
+    hoverOverlay.style.backgroundColor = this.isDarkMode ? darkBg : lightBg;
+    hoverOverlay.style.position = 'absolute';
+    hoverOverlay.style.top = '0';
+    hoverOverlay.style.left = '0';
+    hoverOverlay.style.width = '100%';
+    hoverOverlay.style.height = '100%';
+    hoverOverlay.style.display = 'flex';
+    hoverOverlay.style.justifyContent = 'center';
+    hoverOverlay.style.alignItems = 'center';
+    hoverOverlay.style.zIndex = '1000';
+    hoverOverlay.style.opacity = '1';
+    hoverOverlay.style.pointerEvents = 'none';
+    hoverOverlay.style.transition = 'opacity 300ms ease-in-out';
 
     if (getComputedStyle(mapContainer).position === 'static') {
       mapContainer.style.position = 'relative';
     }
 
-    overlay.classList.add('map-overlay');
-    info.classList.add('map-overlay', 'map-info');
+    zoomOverlay.classList.add('map-zoomOverlay');
+    hoverOverlay.classList.add('map-zoomOverlay', 'map-hoverOverlay');
 
     if (!mobile) {
-      mapContainer.appendChild(overlay); // Control + Zoom is only relevant on desktop
+      mapContainer.appendChild(zoomOverlay); // Control + Zoom is only relevant on desktop
     }
-    mapContainer.appendChild(info);
+    mapContainer.appendChild(hoverOverlay);
 
     // Disable scroll wheel by default
     this.map.scrollWheelZoom.disable();
 
-    // Variable to hold the timer for hiding the overlay
+    // Variable to hold the timer for hiding the zoomOverlay
     let hideOverlayTimer: any;
 
     // Hide information on house leave
     mapContainer.addEventListener('mouseleave', () => {
-      overlay.style.opacity = '0';
+      zoomOverlay.style.opacity = '0';
       this.map.scrollWheelZoom.disable();
       clearTimeout(hideOverlayTimer);
     });
 
-    // Show overlay until first mouse enter
+    // Show zoomOverlay until first mouse enter
     mapContainer.addEventListener('mouseenter', () => {
       setTimeout(() => {
-        info.style.opacity = '0';
+        hoverOverlay.style.opacity = '0';
       }, 1000);
     })
 
@@ -222,13 +232,13 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
       if (e.ctrlKey) {
         e.preventDefault();
         this.map.scrollWheelZoom.enable();
-        overlay.style.opacity = '0';
+        zoomOverlay.style.opacity = '0';
       } else {
         this.map.scrollWheelZoom.disable();
-        overlay.style.opacity = '1';
-        // Set a new timer to hide the overlay after 1 second
+        zoomOverlay.style.opacity = '1';
+        // Set a new timer to hide the zoomOverlay after 1 second
         hideOverlayTimer = setTimeout(() => {
-          overlay.style.opacity = '0';
+          zoomOverlay.style.opacity = '0';
         }, 1000);
       }
     }, {passive: false});
@@ -237,11 +247,13 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
       maxZoom: 18, attribution: '© OpenStreetMap contributors',
     }).addTo(map);
 
+    // Vienna Home Marker
     const fg = L.featureGroup().addTo(map);
     L.circleMarker([48.2081, 16.3713], {
       radius: 6, color: '#bf30b6', weight: 2, fillOpacity: 0.9
     }).addTo(fg);
 
+    // Add travel destination markers
     this.zone.runOutsideAngular(() => {
       this.trips.forEach(trip => {
         const marker = L.circleMarker([trip.lat, trip.lng], {
@@ -264,6 +276,12 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   }
 
 
+  /**
+   * Reveals the photo bar showing the rotating photos and trip name.
+   * @param ev The Leaflet mouse event which initiates showing the photo bar.
+   * @param trip The trip to show photos from.
+   * @private
+   */
   private showBar(ev: L.LeafletMouseEvent, trip: Trip) {
 
     // Don't proceed if the bar doesn't exist yet
@@ -285,6 +303,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     const shift = -((imageWidth + gap) * count);
     const duration = count * 4.5;
 
+    // Animation variables
     el.style.setProperty('--frame', `${frame}px`);
     el.style.setProperty('--gap', `${gap}px`);
     el.style.setProperty('--count', String(count));
@@ -329,13 +348,13 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
       const halfBarWidth = barWidth / 2;
 
-      // Check if for overflow to the left
+      // Check for overflow to the left
       if ((p.x - halfBarWidth) < padding) {
 
         left = padding;
         transformX = '0%';
       }
-      // Check if for overflow to the right
+      // Check for overflow to the right
       else if ((p.x + halfBarWidth) > (mapWidth - padding)) {
         left = mapWidth - padding;
         transformX = '-100%';

@@ -26,13 +26,15 @@ interface Project {
 export class Projects {
   public currentIndex = 0;
 
-  // --- Properties for swipe gesture handling ---
+  // Properties for swipe gesture handling
   private startX = 0;
   public currentTranslate = 0;
   public isDragging = false;
   // A swipe of 50px or more will trigger navigation
   private readonly swipeThreshold = 100;
 
+
+  // --- Data ---
   projects = [
 
     {
@@ -67,24 +69,36 @@ export class Projects {
   ];
 
   // --- Navigation Logic ---
-
+  /**
+   * Switches to another project using its index.
+   * @param index The new project's index.
+   */
   goToProject(index: number): void {
     // Prevents navigation while a swipe is in progress
     if (this.isDragging) return;
     this.currentIndex = index;
   }
 
+
+  /**
+   * Switches to the next project in the carousel.
+   */
   nextProject(): void {
     this.currentIndex = (this.currentIndex + 1) % this.projects.length;
   }
 
+
+  /**
+   * Switches to the previous project in the carousel.
+   */
   prevProject(): void {
     this.currentIndex = (this.currentIndex - 1 + this.projects.length) % this.projects.length;
   }
 
+
   /**
-   *  Handles clicks on any card. If it's a preview card,
-   * it becomes the active one.
+   * Handles switching cards if an inactive card gets clicked.
+   * @param index The clicked project's index.
    */
   handleCardClick(index: number): void {
     if (this.isDragging) return; // prevent click after swipe
@@ -93,6 +107,11 @@ export class Projects {
     }
   }
 
+
+  /**
+   * Returns the state of a project card, which can be is-active, is-prev, is-next or is-hidden.
+   * @param index The index of the project, which state needs to be determined.
+   */
   getCardState(index: number): string {
     const prevIndex = (this.currentIndex - 1 + this.projects.length) % this.projects.length;
     const nextIndex = (this.currentIndex + 1) % this.projects.length;
@@ -103,22 +122,35 @@ export class Projects {
     return 'is-hidden'; // Use a specific class for hidden cards
   }
 
-  // --- Swipe Gesture Handlers (no changes to this logic) ---
-
+  // --- Swipe Gesture Handlers ---
+  /**
+   * Enables dragging when card is pointed at.
+   * @param event The pointer event starting the swiping action.
+   */
   onPointerDown(event: PointerEvent): void {
     this.startX = event.clientX;
     this.isDragging = true;
     event.preventDefault();
   }
 
+
+  /**
+   * Calculates translate in x direction after swipe.
+   * @param event The pointer event of the swiping action.
+   */
   onPointerMove(event: PointerEvent): void {
     if (!this.isDragging) return;
     const currentX = event.clientX;
     this.currentTranslate = currentX - this.startX;
   }
 
+
+  /**
+   * Shows next or previous project card based on threshold
+   * and resets calculations when swipe has been ended.
+   */
   @HostListener('window:pointerup', ['$event'])
-  onPointerUp(event: PointerEvent): void {
+  onPointerUp(): void {
     if (!this.isDragging) return;
 
     this.isDragging = false;

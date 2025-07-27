@@ -1,7 +1,7 @@
-import { Component, OnInit, OnDestroy, NgZone } from '@angular/core';
-import { NgClass, NgForOf, NgIf, NgStyle } from '@angular/common';
-import { Subscription } from 'rxjs';
-import { ViewportService } from '../../services/viewport.service';
+import {Component, OnInit, OnDestroy, NgZone} from '@angular/core';
+import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
+import {Subscription} from 'rxjs';
+import {ViewportService} from '../../services/viewport.service';
 
 // --- Data Structures ---
 export interface ExperienceInfo {
@@ -10,7 +10,6 @@ export interface ExperienceInfo {
   links?: { url: string; text: string }[];
 }
 
-// --- Data Structures ---
 export interface ExperienceItem {
   id: number;
   startYear: number;
@@ -28,6 +27,7 @@ export interface ExperienceItem {
   imports: [NgStyle, NgForOf, NgClass, NgIf]
 })
 export class Experience implements OnInit, OnDestroy {
+
   // --- Timeline Configuration ---
   startYear = 2018;
   endYear = 2026;  // This +1 gets displayed on the timeline
@@ -48,13 +48,24 @@ export class Experience implements OnInit, OnDestroy {
   private isMouseInsideWorkInfoWindow = false;
   private isMouseInsideEducationInfoWindow = false;
 
+
+  /**
+   * Constructs the Experience component.
+   * @param zone NgZone to run change detection for subscriptions outside of Angular's context.
+   * @param viewportService Service to detect viewport changes (e.g., mobile vs. desktop).
+   */
   constructor(private zone: NgZone, private viewportService: ViewportService) {
     this.years = Array.from(
-      { length: this.endYear - this.startYear + 2 },
+      {length: this.endYear - this.startYear + 2},
       (_, i) => this.startYear + i
     );
   }
 
+
+  /**
+   * Initializes the component. Subscribes to viewport changes to toggle mobile view
+   * and clean up state when switching from mobile to desktop.
+   */
   ngOnInit(): void {
     this.resizeSubscription = this.viewportService.isMobileView$.subscribe((isMobile) => {
       this.zone.run(() => {
@@ -68,12 +79,22 @@ export class Experience implements OnInit, OnDestroy {
     });
   }
 
+
+  /**
+   * Cleans up the component on destruction. Unsubscribes from observables
+   * to prevent memory leaks.
+   */
   ngOnDestroy(): void {
     this.resizeSubscription?.unsubscribe();
   }
 
-  // --- Style Calculation ---
-  /** Calculates style for desktop horizontal bars. */
+
+  /**
+   * Calculates the dynamic CSS styles for an experience bar in the desktop timeline.
+   * @param start The start year of the experience, can be a float for months in percentages.
+   * @param end The end year of the experience, can be a float for months in percentages.
+   * @returns A style object with `left` and `width` percentages.
+   */
   getDesktopBarStyle(start: number, end: number): { [key: string]: string } {
     const totalDuration = this.endYear - this.startYear + 1;
     const startPercent = ((start - this.startYear) / totalDuration) * 100;
@@ -85,7 +106,13 @@ export class Experience implements OnInit, OnDestroy {
     };
   }
 
-  /** Calculates style for mobile vertical bars. */
+
+  /**
+   * Calculates the dynamic CSS styles for an experience bar in the mobile timeline.
+   * @param start The start year of the experience, can be a float for months in percentages.
+   * @param end The end year of the experience, can be a float for months in percentages.
+   * @returns A style object with `top` and `height` percentages.
+   */
   getMobileBarStyle(start: number, end: number): { [key: string]: string } {
     const totalDuration = this.endYear - this.startYear + 1;
     const startPercent = ((start - this.startYear) / totalDuration) * 100;
@@ -97,21 +124,33 @@ export class Experience implements OnInit, OnDestroy {
     };
   }
 
-  // --- Event Handlers ---
-  /** Handles click on mobile to open the modal. */
+
+  /**
+   * Handles the click event on an experience item in mobile view.
+   * Sets the selected item to display its details in a modal and prevents background scrolling.
+   * @param item The ExperienceItem that was clicked.
+   */
   onSelectItem(item: ExperienceItem): void {
     if (!this.isMobileView) return;
     this.selectedExperience = item;
     document.body.classList.add('no-scroll');
   }
 
-  /** Closes the mobile modal. */
+
+  /**
+   * Closes the experience details modal in mobile view and restores background scrolling.
+   */
   closeModal(): void {
     this.selectedExperience = null;
     document.body.classList.remove('no-scroll');
   }
 
-  /** Handles hover on desktop to show info windows. */
+
+  /**
+   * Handles the mouse hover event on an experience bar in desktop view.
+   * It displays the corresponding info window.
+   * @param item The ExperienceItem being hovered, or null if the mouse leaves all items.
+   */
   onHover(item: ExperienceItem | null): void {
     if (this.isMobileView) return;
 
@@ -129,18 +168,29 @@ export class Experience implements OnInit, OnDestroy {
     }
   }
 
-  /** Handles mouse entering a desktop info window to keep it open. */
+
+  /**
+   * Handles the mouse entering an info window in desktop view.
+   * This cancels any scheduled timeout to hide the window, keeping it visible.
+   * @param type The type of info window ('work' or 'education').
+   */
   onInfoEnter(type: 'work' | 'education'): void {
     if (type === 'work') {
       this.isMouseInsideWorkInfoWindow = true;
       clearTimeout(this.hideTimeoutWork);
     } else {
+      // If the mouse is not over any bar, schedule both info windows to hide.
       this.isMouseInsideEducationInfoWindow = true;
       clearTimeout(this.hideTimeoutEducation);
     }
   }
 
-  /** Handles mouse leaving a desktop info window to schedule its closing. */
+
+  /**
+   * Handles the mouse leaving an info window in desktop view.
+   * This schedules the window to be hidden after a short delay.
+   * @param type The type of info window ('work' or 'education').
+   */
   onInfoLeave(type: 'work' | 'education'): void {
     if (type === 'work') {
       this.isMouseInsideWorkInfoWindow = false;
@@ -151,6 +201,12 @@ export class Experience implements OnInit, OnDestroy {
     }
   }
 
+
+  /**
+   * Schedules an info window to be hidden after a delay. This is only triggered
+   * if the mouse is not over the corresponding experience bar or the info window itself.
+   * @param type The type of info window to schedule for hiding.
+   */
   private scheduleHide(type: 'work' | 'education'): void {
     const delay = 1500;
     if (type === 'work' && this.hoveredWorkItem && !this.isMouseInsideWorkInfoWindow) {
@@ -165,6 +221,7 @@ export class Experience implements OnInit, OnDestroy {
   }
 }
 
+
 // --- Data ---
 export const EXPERIENCES: ExperienceItem[] = [
   {
@@ -175,7 +232,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'Intern at SVS',
       description: 'First work experience as intern at an insurance company.',
-      links: [{ url: 'https://www.svs.at/', text: 'Company Website' }]
+      links: [{url: 'https://www.svs.at/', text: 'Company Website'}]
     }
   },
   {
@@ -186,7 +243,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'Intern at solvistas',
       description: 'Intern in HR, financial and secretarial division.',
-      links: [{ url: 'https://www.solvistas.com/', text: 'Company Website' }]
+      links: [{url: 'https://www.solvistas.com/', text: 'Company Website'}]
     }
   },
   {
@@ -197,7 +254,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'Software Development Intern at solvistas',
       description: 'Development of company intern working hours timekeeping system.',
-      links: [{ url: 'https://www.solvistas.com/', text: 'Company Website' }]
+      links: [{url: 'https://www.solvistas.com/', text: 'Company Website'}]
     }
   },
   {
@@ -218,7 +275,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'Production Intern at BMW',
       description: 'Production intern at BMW Group Austria.',
-      links: [{ url: 'https://www.bmwgroup-werke.com/steyr/de.html', text: 'Company Website' }]
+      links: [{url: 'https://www.bmwgroup-werke.com/steyr/de.html', text: 'Company Website'}]
     }
   },
   {
@@ -229,7 +286,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'b[r]g Enns',
       description: 'Academic high school with a chosen scientific branch, focus on Informatics and voluntary partly tuition in English.',
-      links: [{ url: 'https://www.brgenns.ac.at/', text: 'School Website' }]
+      links: [{url: 'https://www.brgenns.ac.at/', text: 'School Website'}]
     }
   },
   {
@@ -240,7 +297,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'BSc Informatics at TU Wien',
       description: 'Currently pursuing a Bachelor\'s degree with a focus on Artificial Intelligence and Machine Learning at TU Wien.',
-      links: [{ url: 'https://informatics.tuwien.ac.at/bachelor/informatics/', text: 'Study Breakdown and Description' }]
+      links: [{url: 'https://informatics.tuwien.ac.at/bachelor/informatics/', text: 'Study Breakdown and Description'}]
     }
   }
 ];
