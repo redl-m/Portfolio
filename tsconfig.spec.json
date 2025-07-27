@@ -6,7 +6,10 @@
     "outDir": "./out-tsc/spec",
     "types": [
       "jasmine"
-    ]
+    ],
+    "paths": {
+      "/styles.scss": ["./src/styles.scss"]
+    }
   },
   "include": [
     "src/**/*.ts"
