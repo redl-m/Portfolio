@@ -13,12 +13,28 @@ $nav-height: 96px;
   margin-top: $nav-height;
   position: relative;
   overflow-y: auto;
-  --tile-bg: white;
+
+  // Theme variables for the new mobile view
+  --mobile-tile-bg: #ffffff;
+  --mobile-tile-shadow: rgba(0, 0, 0, 0.08);
+  --mobile-overlay-backdrop: rgba(0, 0, 0, 0.4);
+  --mobile-overlay-card-bg: #ffffff;
+  --mobile-overlay-card-shadow: rgba(0, 0, 0, 0.15);
 
   @media (min-width: $max-mobile-width + 1) {
     overflow-y: hidden;
   }
 }
+
+:host-context(.dark) {
+  // Dark mode theme variables
+  --mobile-tile-bg: #2a2a33;
+  --mobile-tile-shadow: rgba(0, 0, 0, 0.4);
+  --mobile-overlay-backdrop: rgba(0, 0, 0, 0.6);
+  --mobile-overlay-card-bg: #1e1e24;
+  --mobile-overlay-card-shadow: rgba(0, 0, 0, 0.5);
+}
+
 
 .about-layout {
   display: grid;
@@ -27,11 +43,21 @@ $nav-height: 96px;
   width: 100%;
 }
 
-/* Left Column */
-.tile-grid {
+/* Container for both desktop and mobile tiles */
+.tile-grid-container {
   padding: 2rem;
   overflow-y: auto;
+  grid-column: 1 / -1; // Default for mobile
+
+  @media (min-width: $max-mobile-width + 1) {
+    grid-column: auto; // Reset for desktop
+  }
 }
+
+.tile-grid {
+  /* Desktop only styles */
+}
+
 
 /* Right Column */
 .map-holder {
@@ -60,11 +86,10 @@ $nav-height: 96px;
  * Map & Leaflet Sizing
  * --------------------------------------------------- */
 
-/* Style: Add visual flair to the map wrapper */
 .map-wrapper {
   border-radius: 12px;
   box-shadow: 0 8px 24px rgba(45, 26, 97, 0.15);
-  overflow: hidden; /* Important for border-radius to apply to map tiles */
+  overflow: hidden;
 }
 
 .map-wrapper,
@@ -79,13 +104,11 @@ $nav-height: 96px;
  * --------------------------------------------------- */
 
 :host-context(.dark) {
-  /* Invert the map imagery */
   .map-wrapper,
   .leaflet-container {
     filter: invert(100%) hue-rotate(180deg) brightness(85%) contrast(90%);
   }
 
-  /* Reset the controls back to normal colors */
   .leaflet-control-zoom-in,
   .leaflet-control-zoom-out,
   .leaflet-control-attribution,
@@ -109,8 +132,6 @@ $nav-height: 96px;
   pointer-events: none;
   transition: opacity 300ms ease-in-out;
   opacity: 0;
-
-  // default (light mode)
   background-color: rgba(168, 168, 168, 0.6);
   color: #222;
   font-family: sans-serif;
@@ -122,7 +143,6 @@ $nav-height: 96px;
   }
 }
 
-/* Dark overrides: when <html> or <body> has .dark */
 :host-context(.dark) .map-overlay {
   background-color: rgba(239, 229, 255, 0.5);
   color: #eee;
@@ -134,7 +154,6 @@ $nav-height: 96px;
  * Photo Bar
  * --------------------------------------------------- */
 
-// The main container for the label and photo strip
 .photo-bar {
   --frame: 300px;
   --gap: 6px;
@@ -290,81 +309,196 @@ img {
 }
 
 .download-button {
-
   @include btn-gradient;
 }
 
 /* ---------------------------------------------------
- * Mobile Toggle Button
+ * Mobile Styles
  * --------------------------------------------------- */
-
-.map-toggle-btn {
-  display: none; /* Hidden by default */
-}
-
-.mobile-toggle {
-  position: fixed;
-  right: 0.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 1000;
-  background: #2d1a61;
-  color: white;
-  padding: 4rem 0.6rem;
-  border-radius: 8px 0 0 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-  writing-mode: vertical-rl;
-  text-orientation: mixed;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: #bf30b6;
-  }
-
-  @media (min-width: $max-mobile-width + 1) {
-    display: none;
-  }
-}
-
-/* ---------------------------------------------------
- * Mobile Responsiveness
- * --------------------------------------------------- */
-
 @media (max-width: $max-mobile-width) {
-
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100vh;
-    overflow: hidden; // lock page scroll
-  }
-
   .about-layout {
-    height: 100vh;
     grid-template-columns: 1fr;
-    grid-template-rows: 1fr;
-    overflow: hidden;
+    height: 100vh;
   }
 
-  .tile-grid {
+  .tile-grid-container {
+    padding: 1rem 1rem 2rem; // Add more bottom padding for the cards
     overflow-y: auto;
-    padding: 1rem;
-    flex: 1;
+  }
+
+  .mobile-tile-view {
     display: flex;
     flex-direction: column;
+    height: 100%;
     gap: 1rem;
   }
 
-  .tile {
-    font-size: 0.9rem;
-    line-height: 1.4;
+  .about-header {
+    margin-left: 0;
+    margin-bottom: 1rem;
+    text-align: center;
+    h2 {
+      font-size: 2rem;
+    }
+  }
+
+  .mobile-tile-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 0.5rem; // Space between grid and cards
+  }
+
+  .mobile-tile-item {
+    aspect-ratio: 1 / 1;
+    background-color: var(--mobile-tile-bg);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--mobile-tile-shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    padding: 0.5rem;
+    text-align: center;
+
+    &:active {
+      transform: scale(0.95);
+      box-shadow: 0 2px 6px var(--mobile-tile-shadow);
+    }
+  }
+
+  .mobile-tile-label {
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  .mobile-download-card,
+  .mobile-action-card {
+    background-color: var(--mobile-tile-bg);
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 4px 12px var(--mobile-tile-shadow);
+    text-align: center;
+
+    h3 {
+      font-size: 1.7rem;
+      margin-top: 0;
+      margin-bottom: 1rem;
+      color: var(--accent-color);
+    }
+  }
+
+  .mobile-action-card {
+    cursor: pointer;
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+
+    h3 {
+      margin-bottom: 0.25rem;
+    }
+    span {
+      font-size: 1.3rem;
+      opacity: 0.8;
+    }
+    &:active {
+      transform: scale(0.98);
+      box-shadow: 0 2px 8px var(--mobile-tile-shadow);
+    }
+  }
+
+  .mobile-map-toggle-card {
+    position: absolute;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 1001; // Above map tiles, below popups
+    background-color: var(--mobile-overlay-card-bg);
+    color: var(--text-color);
+    border-radius: 12px;
     padding: 1rem;
-    border-radius: 8px;
-    background-color: #f5f5f5;
+    box-shadow: 0 4px 15px var(--mobile-overlay-card-shadow);
+    cursor: pointer;
+    text-align: center;
+    animation: fadeInSlide 0.5s ease-out;
+
+    h3 {
+      margin: 0 0 0.25rem 0;
+      font-size: 1.1rem;
+      color: var(--accent-color);
+    }
+    span {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+  }
+
+  // Overlay styles for expanded tile content
+  .mobile-overlay-backdrop {
+    position: fixed;
+    inset: 0;
+    background-color: var(--mobile-overlay-backdrop);
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  .mobile-overlay-card {
+    position: relative;
+    background-color: var(--mobile-overlay-card-bg);
+    color: var(--text-color);
+    border-radius: 16px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 30px var(--mobile-overlay-card-shadow);
+    animation: scaleIn 0.3s ease;
+
+    h3 {
+      font-size: 1.5rem;
+      color: var(--accent-color);
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      line-height: 1.6;
+      margin-bottom: 1rem;
+    }
+  }
+
+  .close-button {
+    position: absolute;
+    top: 8px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    line-height: 1;
+    color: var(--text-color);
+    opacity: 0.7;
+    cursor: pointer;
+    padding: 0.5rem;
+    &:hover {
+      opacity: 1;
+    }
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+  .download-button {
+    font-size: 1.2rem;
+  }
+
+  .download-buttons {
+    justify-content: center; // Center the two download buttons
+    flex-wrap: wrap; // Allow buttons to wrap on smaller screens
   }
 
   .photo-bar {

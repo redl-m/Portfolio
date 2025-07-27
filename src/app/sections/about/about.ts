@@ -2,12 +2,12 @@ import {
   Component, ElementRef, ViewChild, NgZone, AfterViewInit, OnInit, OnDestroy,
 } from '@angular/core';
 import * as L from 'leaflet';
-import { CommonModule } from '@angular/common';
-import { trigger, transition, style, animate } from '@angular/animations';
-import { LeafletModule } from '@bluehalo/ngx-leaflet';
-import { photoManifest } from '../../services/photo-manifest';
-import { ViewportService } from '../../services/viewport.service';
-import { Subscription } from 'rxjs';
+import {CommonModule} from '@angular/common';
+import {trigger, transition, style, animate, stagger, query} from '@angular/animations';
+import {LeafletModule} from '@bluehalo/ngx-leaflet';
+import {photoManifest} from '../../services/photo-manifest';
+import {ViewportService} from '../../services/viewport.service';
+import {Subscription} from 'rxjs';
 import {Browser} from 'leaflet';
 import mobile = Browser.mobile;
 
@@ -27,28 +27,41 @@ interface Trip {
   animations: [
     trigger('tileFade', [
       transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate('600ms ease-out', style({ opacity: 1, transform: 'translateY(0)' })),
+        style({opacity: 0, transform: 'translateY(20px)'}),
+        animate('600ms ease-out', style({opacity: 1, transform: 'translateY(0)'})),
+      ])
+    ]),
+    // Animation for the mobile tile grid
+    trigger('mobileTileAnimation', [
+      transition('* => *', [
+        query(':enter', [
+          style({opacity: 0, transform: 'scale(0.8)'}),
+          stagger('100ms', [
+            animate('300ms ease-out', style({opacity: 1, transform: 'scale(1)'}))
+          ])
+        ], {optional: true})
       ])
     ])
   ]
 })
 export class About implements AfterViewInit, OnInit, OnDestroy {
-  @ViewChild('bar', { static: false }) barEl!: ElementRef<HTMLDivElement>;
+  @ViewChild('bar', {static: false}) barEl!: ElementRef<HTMLDivElement>;
 
   // Mobile view options
   showMap = false;
   isMobileView = false;
   isAboutSectionVisible = false;
 
+  // New property to track the selected mobile tile
+  public selectedTile: "tennis" | "causes" | "travelling" | null = null;
+
   private viewportSub?: Subscription;
 
-  /** Base map options */
+  // Base map options
   options = {zoom: 2, worldCopyJump: true, center: L.latLng(20, 0), zoomControl: false};
 
   /** Trips and their photos */
   trips: Trip[] = [
-
     {name: 'Barcelona 2022', lat: 41.3874, lng: 2.1686, photos: photoManifest['Barcelona'] || []},
     {name: 'Paris 2022', lat: 48.8566, lng: 2.3522, photos: photoManifest['Paris'] || []},
     {name: 'Berlin 2023', lat: 52.52, lng: 13.405, photos: photoManifest['Berlin'] || []},
@@ -69,7 +82,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     {name: 'Copenhagen 2024', lat: 55.6761, lng: 12.5683, photos: photoManifest['Copenhagen'] || []},
   ];
 
-  /** Arrays bound in the template */
+  // Arrays bound in the template
   hoveredPhotos: string[] = [];
   scrollingPhotos: string[] = [];
   currentTripName = '';
@@ -77,11 +90,16 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   private map!: L.Map;
   private intersectionObserver?: IntersectionObserver;
 
-  constructor(private zone: NgZone, private viewportService: ViewportService) {}
+  constructor(private zone: NgZone, private viewportService: ViewportService) {
+  }
 
   ngOnInit() {
     this.viewportSub = this.viewportService.isMobileView$.subscribe(isMobile => {
       this.isMobileView = isMobile;
+      if (!isMobile) {
+        // Ensure tile is deselected when switching to desktop view
+        this.selectedTile = null;
+      }
     });
   }
 
@@ -92,7 +110,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
         this.zone.run(() => {
           this.isAboutSectionVisible = entry.isIntersecting;
         });
-      }, { threshold: 0.1 });
+      }, {threshold: 0.1});
       this.intersectionObserver.observe(aboutSection);
     }
 
@@ -105,8 +123,14 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     this.viewportSub?.unsubscribe();
   }
 
+  // Toggles between map and tiles on mobile
   toggleMap() {
     this.showMap = !this.showMap;
+  }
+
+  // Sets the selected tile for mobile view expansion
+  selectTile(tile: 'tennis' | 'causes' | 'travelling' | null) {
+    this.selectedTile = tile;
   }
 
 
@@ -122,10 +146,11 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     const lightBg = 'rgba(168,168,168,0.6)';  // or whatever your light‑mode overlay should be
 
     /** Zoom using Control + Scroll Logic */
+      // TODO: fix touchpad weirdness
 
-    // Overlay
+      // Overlay
     const overlay = document.createElement('div');
-    overlay.innerHTML = `<div style="color: ${isDark ?  '#222': '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Use Ctrl + Scroll to Zoom</div>`;
+    overlay.innerHTML = `<div style="color: ${isDark ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">Use Ctrl + Scroll to Zoom</div>`;
     overlay.style.backgroundColor = isDark ? darkBg : lightBg;
     overlay.style.position = 'absolute';
     overlay.style.top = '0';

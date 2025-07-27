@@ -1,42 +1,102 @@
 <div class="about-layout">
-  <div class="tile-grid" *ngIf="!isMobileView || !showMap">
+  <div class="tile-grid-container" *ngIf="!isMobileView || !showMap">
 
-    <div class="about-header">
-      <h2>About Me</h2>
-    </div>
-
-    <div class="tile" [@tileFade]>
-      <h3>Tennis 🎾</h3>
-      <p>I've enjoyed playing tennis ever since I was a child and love playing against my friends
-        or other tennis clubs in tennis leagues.</p>
-    </div>
-
-    <div class="tile" [@tileFade]>
-      <h3>Causes 🌍</h3>
-      <p>My greatest causes are sustainability and human equality regarding skin tone,
-        background, gender and sexual orientation.</p>
-    </div>
-
-    <div class="tile" [@tileFade]>
-      <h3>Travelling 🚆</h3>
-      <p>Getting in touch with other cultures and nature is my biggest goal and I love everything about it.
-        Travelling with friends and family is when I'm the happiest.
-        Combining two interests – travelling and sustainability – lead to the goal of reaching as many
-        places as possible by train. I savor the calm atmosphere of train journeys and enjoy organizing trips.
-        This combination led to adventures to Paris, Brussels, Amsterdam, London, Edinburgh, Glasgow, Hamburg,
-        Berlin, Copenhagen, Lund, Ystad, Stockholm, Venice and Milan.</p>
-      <p>Feel free to check out some of my favourite travel memories on the interactive map. :)</p>
-    </div>
-
-    <div class="tile" [@tileFade]>
-      <h3>Downloads 📥</h3>
-      <div class="download-buttons">
-        <a class="download-button" href="/assets/about/downloads/cv/redl_michael_josef_cv.pdf" download target="_blank">📄 My CV</a>
-        <a class="download-button disabled" href="#" title="Coming soon...">🎓 Bachelor’s Thesis</a>
+    <ng-container *ngIf="!isMobileView">
+      <div class="tile-grid">
+        <div class="about-header">
+          <h2>About Me</h2>
+        </div>
+        <div class="tile" [@tileFade]>
+          <h3>Tennis 🎾</h3>
+          <p>I've enjoyed playing tennis ever since I was a child and love playing against my friends
+            or other tennis clubs in tennis leagues.</p>
+        </div>
+        <div class="tile" [@tileFade]>
+          <h3>Causes 🌍</h3>
+          <p>My greatest causes are sustainability and human equality regarding skin tone,
+            background, gender and sexual orientation.</p>
+        </div>
+        <div class="tile" [@tileFade]>
+          <h3>Travelling 🚆</h3>
+          <p>Getting in touch with other cultures and nature is my biggest goal and I love everything about it.
+            Travelling with friends and family is when I'm the happiest.
+            Combining two interests – travelling and sustainability – lead to the goal of reaching as many
+            places as possible by train. I savor the calm atmosphere of train journeys and enjoy organizing trips.
+            This combination led to adventures to Paris, Brussels, Amsterdam, London, Edinburgh, Glasgow, Hamburg,
+            Berlin, Copenhagen, Lund, Ystad, Stockholm, Venice and Milan.</p>
+          <p>Feel free to check out some of my favourite travel memories on the interactive map. :)</p>
+        </div>
+        <div class="tile" [@tileFade]>
+          <h3>Downloads 📥</h3>
+          <div class="download-buttons">
+            <a class="download-button" href="/assets/about/downloads/cv/redl_michael_josef_cv.pdf" download target="_blank">📄 My CV</a>
+            <a class="download-button disabled" href="#" title="Coming soon...">🎓 Bachelor’s Thesis</a>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+    </ng-container>
 
+    <ng-container *ngIf="isMobileView">
+      <div class="mobile-tile-view">
+        <div class="about-header">
+          <h2>About Me</h2>
+        </div>
+
+        <div class="mobile-tile-grid" [@mobileTileAnimation]="''">
+          <div class="mobile-tile-item" (click)="selectTile('tennis')">
+            <span class="mobile-tile-label">Tennis 🎾</span>
+          </div>
+          <div class="mobile-tile-item" (click)="selectTile('causes')">
+            <span class="mobile-tile-label">Causes 🌍</span>
+          </div>
+          <div class="mobile-tile-item" (click)="selectTile('travelling')">
+            <span class="mobile-tile-label">Travel 🚆</span>
+          </div>
+        </div>
+
+        <div class="mobile-download-card" [@tileFade]>
+          <h3>Downloads 📥</h3>
+          <div class="download-buttons">
+            <a class="download-button" href="/assets/about/downloads/cv/redl_michael_josef_cv.pdf" download target="_blank">📄 My CV</a>
+            <a class="download-button disabled" href="#" title="Coming soon...">🎓 Bachelor’s Thesis</a>
+          </div>
+        </div>
+
+        <div class="mobile-action-card" (click)="toggleMap()" [@tileFade]>
+          <h3>Interactive Map 🗺️</h3>
+          <span>Tap to see my travel memories</span>
+        </div>
+      </div>
+
+      <div class="mobile-overlay-backdrop" *ngIf="selectedTile" (click)="selectTile(null)">
+        <div class="mobile-overlay-card" (click)="$event.stopPropagation()">
+          <button class="close-button" (click)="selectTile(null)">&times;</button>
+          <ng-container [ngSwitch]="selectedTile">
+            <div *ngSwitchCase="'tennis'">
+              <h3>Tennis 🎾</h3>
+              <p>I've enjoyed playing tennis ever since I was a child and love playing against my friends
+                or other tennis clubs in tennis leagues.</p>
+            </div>
+            <div *ngSwitchCase="'causes'">
+              <h3>Causes 🌍</h3>
+              <p>My greatest causes are sustainability and human equality regarding skin tone,
+                background, gender and sexual orientation.</p>
+            </div>
+            <div *ngSwitchCase="'travelling'">
+              <h3>Travelling 🚆</h3>
+              <p>Getting in touch with other cultures and nature is my biggest goal and I love everything about it.
+                Travelling with friends and family is when I'm the happiest.
+                Combining two interests – travelling and sustainability – lead to the goal of reaching as many
+                places as possible by train. I savor the calm atmosphere of train journeys and enjoy organizing trips.
+                This combination led to adventures to Paris, Brussels, Amsterdam, London, Edinburgh, Glasgow, Hamburg,
+                Berlin, Copenhagen, Lund, Ystad, Stockholm, Venice and Milan.</p>
+              <p>Feel free to check out some of my favourite travel memories on the interactive map. :)</p>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
+  </div>
 
   <div class="map-holder" *ngIf="!isMobileView || showMap">
     <div
@@ -45,30 +105,21 @@
       [leafletOptions]="options"
       (leafletMapReady)="onMapReady($event)"
     ></div>
-
-    <div
-      #bar
-      class="photo-bar"
-      [class.open]="hoveredPhotos.length"
-    >
+    <div #bar class="photo-bar" [class.open]="hoveredPhotos.length">
       <div class="trip-label-box" *ngIf="currentTripName">
-        <span class="trip-label">
-          {{ currentTripName }}
-        </span>
+        <span class="trip-label">{{ currentTripName }}</span>
       </div>
-
       <div class="strip-wrapper">
         <div class="strip">
           <img *ngFor="let src of scrollingPhotos" [src]="src" />
         </div>
       </div>
     </div>
-  </div>
 
-  <ng-container *ngIf="isAboutSectionVisible">
-    <button class="mobile-toggle" (click)="toggleMap()">
-      {{ showMap ? 'Show Tiles' : 'Show Map' }}
-    </button>
-  </ng-container>
+    <div class="mobile-map-toggle-card" *ngIf="isMobileView && showMap" (click)="toggleMap()">
+      <h3>Back to Info 📝</h3>
+      <span>Tap to see my interests</span>
+    </div>
+  </div>
 
 </div>
