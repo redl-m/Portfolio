@@ -11,6 +11,13 @@
       <div class="project-content">
         <h3>{{ project.title }}</h3>
         <p>{{ project.description }}</p>
+        <ul class="lib-icons">
+          <li *ngFor="let lib of project.techStack">
+            <a [href]="lib.link" target="_blank" rel="noopener">
+              <img [src]="lib.iconUrl" [alt]="lib.name + ' icon'" />
+            </a>
+          </li>
+        </ul>
         <a [href]="project.link" target="_blank" class="project-link">View Project →</a>
       </div>
       <div class="project-background" [style.background-image]="'url(' + project.imageUrl + ')'"></div>
@@ -32,6 +39,13 @@
         <div class="project-content">
           <h3>{{ project.title }}</h3>
           <p>{{ project.description }}</p>
+          <ul class="lib-icons">
+            <li *ngFor="let lib of project.techStack">
+              <a [href]="lib.link" target="_blank" rel="noopener">
+                <img [src]="lib.iconUrl" [alt]="lib.name + ' icon'" />
+              </a>
+            </li>
+          </ul>
           <a [href]="project.link" target="_blank" class="project-link">View Project →</a>
         </div>
         <div class="project-background" [style.background-image]="'url(' + project.imageUrl + ')'"></div>
