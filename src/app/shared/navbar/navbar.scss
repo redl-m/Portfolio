@@ -308,3 +308,34 @@ body {
     }
   }
 }
+
+/* ---------------------------------------------------
+ * Tablet Styles
+ * --------------------------------------------------- */
+@media (min-width: $max-mobile-width + 1) and (max-width: $max-tablet-width) {
+  .nav--left {
+    left: 2rem; // slightly reduce from 2rem
+  }
+
+  .nav--mid {
+    left: 16.5rem; // shift left from 18rem → saves horizontal space
+  }
+
+  .nav--right {
+    right: 2rem; // slightly reduce from 2rem
+  }
+
+  .nav {
+    gap: 0.75rem; // reduce gap between items on all navs
+    padding: 0 1rem; // reduce horizontal padding
+  }
+
+  .theme-toggle {
+    padding: 0.25rem 0.5rem; // tighten up toggle button size
+  }
+
+  .nav a {
+    font-size: 1.15rem; // slightly smaller text if needed
+  }
+}
+
