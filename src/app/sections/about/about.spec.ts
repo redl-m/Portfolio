@@ -111,7 +111,7 @@ describe('About Component', () => {
       component.trips = [];
       component.onMapReady(mockMap as L.Map);
       const overlays = container.querySelectorAll('.map-overlay');
-      expect(overlays.length).toBe(2);
+      expect(overlays.length).toBe(2); // TODO: fix, is 0
     });
   });
 });

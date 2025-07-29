@@ -58,6 +58,9 @@ $nav-height: 96px;
   /* Desktop only styles */
 }
 
+.tablet-only {
+  display: none;
+}
 
 /* Right Column */
 .map-holder {
@@ -283,6 +286,7 @@ img {
 /* ---------------------------------------------------
  * Dark Mode Overrides for Tiles
  * --------------------------------------------------- */
+// TODO: add shadow for dark mode tiles and animation for tiles
 :host-context(.dark) .tile {
   background: #1e1e24;
   color: var(--text-color);
@@ -306,6 +310,7 @@ img {
 .download-buttons {
   display: flex;
   gap: 1rem;
+  padding: 1.5rem;
 }
 
 .download-button {
@@ -337,6 +342,7 @@ img {
     margin-left: 0;
     margin-bottom: 1rem;
     text-align: center;
+
     h2 {
       font-size: 2rem;
     }
@@ -397,10 +403,12 @@ img {
     h3 {
       margin-bottom: 0.25rem;
     }
+
     span {
       font-size: 1.3rem;
       opacity: 0.8;
     }
+
     &:active {
       transform: scale(0.98);
       box-shadow: 0 2px 8px var(--mobile-tile-shadow);
@@ -427,6 +435,7 @@ img {
       font-size: 1.1rem;
       color: var(--accent-color);
     }
+
     span {
       font-size: 0.85rem;
       opacity: 0.8;
@@ -484,13 +493,30 @@ img {
     opacity: 0.7;
     cursor: pointer;
     padding: 0.5rem;
+
     &:hover {
       opacity: 1;
     }
   }
 
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  @keyframes scaleIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  @keyframes scaleIn {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
 
   .download-button {
     font-size: 1.2rem;
@@ -538,6 +564,77 @@ img {
   .experience-header {
     h2 {
       font-size: 1.5rem;
+    }
+  }
+}
+
+
+/* ---------------------------------------------------
+ * Tablet Styles
+ * --------------------------------------------------- */
+@media (min-width: $max-mobile-width + 1) and (max-width: $max-tablet-width) {
+
+
+
+  .about-header {
+    display: none;
+  }
+
+  .tablet-only {
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  .about-layout {
+    display: flex;
+  }
+
+  .tile-grid {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: 1fr 1fr;
+    grid-auto-rows: auto;
+  }
+
+  .tile.full-width {
+    grid-column: 1 / -1;
+  }
+
+
+  .map-holder {
+    width: 100%;
+    display: flex;
+    position: relative;
+  }
+
+  .mobile-map-toggle-card,
+  .tablet-action-card {
+    display: flex;
+    position: relative;
+    bottom: 2rem;
+    left: 1rem;
+    right: 1rem;
+    z-index: 1001;
+    background-color: var(--mobile-overlay-card-bg);
+    color: var(--text-color);
+    border-radius: 12px;
+    padding: 1rem;
+    box-shadow: 0 4px 15px var(--mobile-overlay-card-shadow);
+    cursor: pointer;
+    text-align: center;
+    animation: fadeInSlide 0.5s ease-out;
+    flex-direction: column;
+    gap: 0.25rem;
+
+    h3 {
+      margin: 0;
+      font-size: 1.1rem;
+      color: var(--accent-color);
+    }
+
+    span {
+      font-size: 0.85rem;
+      opacity: 0.8;
     }
   }
 }

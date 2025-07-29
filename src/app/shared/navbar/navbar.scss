@@ -10,7 +10,7 @@ $bar-radius: 56px;
 
 /* Define nav background variable for theme */
 :root {
-  --nav-bg: rgba(255, 255, 255, 1);
+  --nav-bg: rgba(255, 255, 255, 1); // TODO: make fully opaque in light mode
 }
 
 .dark {
