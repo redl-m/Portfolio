@@ -286,7 +286,6 @@ img {
 /* ---------------------------------------------------
  * Dark Mode Overrides for Tiles
  * --------------------------------------------------- */
-// TODO: add shadow for dark mode tiles and animation for tiles
 :host-context(.dark) .tile {
   background: #1e1e24;
   color: var(--text-color);
