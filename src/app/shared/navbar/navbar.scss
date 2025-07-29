@@ -8,15 +8,6 @@
 $bar-height: 72px;
 $bar-radius: 56px;
 
-/* Define nav background variable for theme */
-:root {
-  --nav-bg: rgba(255, 255, 255, 1); // TODO: make fully opaque in light mode
-}
-
-.dark {
-  --nav-bg: rgba(18, 18, 23, 0.8);
-}
-
 /* ------------------------------------------------------------ */
 /* Hamburger Button (Sass-Burger)                               */
 /* ------------------------------------------------------------ */
@@ -163,9 +154,12 @@ $bar-radius: 56px;
   left: 18rem;
 }
 
-body {
-  padding-top: calc($bar-height + 1.5rem);
+@media (min-width: $max-mobile-width + 1) {
+  body {
+    padding-top: calc($bar-height + 1.5rem);
+  }
 }
+
 
 /* ------------------------------------------------------------ */
 /* Dark Mode Toggle                                             */
@@ -201,16 +195,12 @@ body {
 /* ------------------------------------------------------------ */
 @media (max-width: $max-mobile-width) {
 
-  :root {
-    --nav-bg: rgba(255, 255, 255, 0.92);
-  }
-
   .hamburger-btn {
     display: inline-block;
   }
   .nav {
     opacity: 0;
-    visibility: hidden;
+    display: none;
   }
 
   .nav-wrapper.is-open {
@@ -229,7 +219,7 @@ body {
 
     .nav--right {
       flex-direction: column;
-      gap: 2rem;
+      gap: 1rem;
       font-size: 1.8rem;
       font-weight: 700;
 
@@ -279,7 +269,6 @@ body {
     align-items: center;
     justify-content: center;
     gap: 2rem;
-    margin-bottom: 4rem; // spacing before nav--right
   }
 
   .nav--left {
@@ -314,28 +303,27 @@ body {
  * --------------------------------------------------- */
 @media (min-width: $max-mobile-width + 1) and (max-width: $max-tablet-width) {
   .nav--left {
-    left: 2rem; // slightly reduce from 2rem
+    left: 2rem;
   }
 
   .nav--mid {
-    left: 16.5rem; // shift left from 18rem → saves horizontal space
+    left: 16.5rem;
   }
 
   .nav--right {
-    right: 2rem; // slightly reduce from 2rem
+    right: 2rem;
   }
 
   .nav {
-    gap: 0.75rem; // reduce gap between items on all navs
-    padding: 0 1rem; // reduce horizontal padding
+    gap: 0.75rem;
+    padding: 0 1rem;
   }
 
   .theme-toggle {
-    padding: 0.25rem 0.5rem; // tighten up toggle button size
+    padding: 0.25rem 0.5rem;
   }
 
   .nav a {
-    font-size: 1.15rem; // slightly smaller text if needed
+    font-size: 1.15rem;
   }
 }
-

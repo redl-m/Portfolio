@@ -26,6 +26,7 @@ $max-tablet-width: 1440px;
   --gradient-start: #2d1a61;
   --gradient-end: #bf30b6;
   --btn-disabled-bg: #aaa;
+  --nav-bg: rgba(255, 255, 255, 0.6);
 }
 
 .dark {
@@ -36,6 +37,7 @@ $max-tablet-width: 1440px;
   --gradient-start: #4b4071;
   --gradient-end: #7a4fa0;
   --btn-disabled-bg: #555;
+  --nav-bg: rgba(18, 18, 23, 0.5);
 }
 
 html,
