@@ -247,6 +247,12 @@
     position: relative;
     width: 100%;
     height: 100%;
+
+    // Non active bars are getting dimmed
+    &.highlight-work .bar-wrapper.education,
+    &.highlight-education .bar-wrapper.work {
+      opacity: 0.3;
+    }
   }
 
   .timeline-line {
@@ -302,7 +308,8 @@
   .bar-wrapper {
     position: absolute;
     height: 25px;
-    transition: transform 0.2s ease-in-out;
+    // ✨ Add opacity to the transition
+    transition: transform 0.2s ease-in-out, opacity 0.3s ease-in-out;
 
     &:hover {
       transform: scale(1.05);
@@ -433,6 +440,7 @@
     }
   }
 
+  // Label underlines
   .timeline-label.work-label-desktop,
   .timeline-label.education-label-desktop {
     position: absolute;
@@ -440,17 +448,46 @@
     width: auto;
     padding: 1rem;
     box-sizing: border-box;
+    cursor: pointer; // Add cursor pointer
   }
 
   .timeline-label.work-label-desktop {
     top: 5%;
     left: 5%;
-    text-align: left;
   }
 
   .timeline-label.education-label-desktop {
     bottom: 5%;
     left: 5%;
+  }
+
+  // Style the header within the desktop labels
+  .timeline-label.work-label-desktop .experience-header,
+  .timeline-label.education-label-desktop .experience-header {
     text-align: left;
+    position: relative;
+    padding-bottom: 12px; // Make space for the underline
+    margin-bottom: 0; // Override the general margin
+
+    // The underline
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      border-radius: 1.5px;
+    }
+  }
+
+  // Gradient for the Work underline
+  .timeline-label.work-label-desktop .experience-header::after {
+    background: linear-gradient(45deg, #8e44ad, #bf30b6);
+  }
+
+  // Gradient for the Education underline
+  .timeline-label.education-label-desktop .experience-header::after {
+    background: linear-gradient(45deg, #6c5ce7, #2d1a61);
   }
 }

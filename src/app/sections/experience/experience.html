@@ -1,12 +1,17 @@
-<!-- DESKTOP TIMELINE -->
-<!-- Labels for Desktop View -->
-<div *ngIf="!isMobileView" class="timeline-label work-label-desktop">
+<div *ngIf="!isMobileView" class="timeline-label work-label-desktop"
+     (mouseenter)="isWorkLabelHovered = true"
+     (mouseleave)="isWorkLabelHovered = false">
   <div class="experience-header"><h2>Work Experience</h2></div>
 </div>
-<div *ngIf="!isMobileView" class="timeline-label education-label-desktop">
+<div *ngIf="!isMobileView" class="timeline-label education-label-desktop"
+     (mouseenter)="isEducationLabelHovered = true"
+     (mouseleave)="isEducationLabelHovered = false">
   <div class="experience-header"><h2>Education</h2></div>
 </div>
-<div *ngIf="!isMobileView" class="timeline-container-desktop">
+
+<div *ngIf="!isMobileView" class="timeline-container-desktop"
+     [class.highlight-work]="isWorkLabelHovered"
+     [class.highlight-education]="isEducationLabelHovered">
   <div class="timeline-line"></div>
   <div class="year-ticks">
     <div *ngFor="let year of years" class="year-tick"
@@ -22,7 +27,6 @@
       <div class="experience-bar" [ngClass]="exp.type"></div>
     </div>
   </div>
-  <!-- Desktop Info Windows -->
   <div class="info-window work" [class.visible]="hoveredWorkItem" (mouseenter)="onInfoEnter('work')"
        (mouseleave)="onInfoLeave('work')">
     <svg class="info-window-border" preserveAspectRatio="none">
@@ -50,20 +54,16 @@
   </div>
 </div>
 
-<!-- MOBILE TIMELINE -->
-<!-- Labels for Mobile View -->
 <div *ngIf="isMobileView" class="timeline-label work-label-mobile">
   <div class="experience-header"><h2>Work Experience</h2></div>
 </div>
 <div *ngIf="isMobileView" class="timeline-container-mobile">
   <div class="timeline-line-mobile"></div>
   <div class="timeline-content">
-    <!-- Year Ticks -->
     <div *ngFor="let year of years" class="year-tick-mobile" [style.top]="(year - startYear) / (endYear - startYear + 1) * 100 + '%'">
       <div class="tick-line"></div>
       <div class="tick-label">{{ year }}</div>
     </div>
-    <!-- Experience Bars -->
     <div *ngFor="let exp of experiences" class="bar-wrapper-mobile" [ngClass]="exp.type"
          [ngStyle]="getMobileBarStyle(exp.startYear, exp.endYear)" (click)="onSelectItem(exp)">
       <div class="experience-bar-mobile">
@@ -76,7 +76,6 @@
   <div class="experience-header"><h2>Education</h2></div>
 </div>
 
-<!-- MOBILE MODAL -->
 <div class="modal-overlay" *ngIf="selectedExperience" (click)="closeModal()">
   <div class="modal-content" (click)="$event.stopPropagation()">
     <button class="modal-close-btn" (click)="closeModal()" aria-label="Close details">

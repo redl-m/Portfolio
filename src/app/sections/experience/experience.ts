@@ -39,6 +39,8 @@ export class Experience implements OnInit, OnDestroy {
   hoveredEducationItem: ExperienceItem | null = null;
   selectedExperience: ExperienceItem | null = null;
   isMobileView = false;
+  isWorkLabelHovered = false;
+  isEducationLabelHovered = false;
 
   private resizeSubscription: Subscription | null = null;
 
@@ -147,22 +149,49 @@ export class Experience implements OnInit, OnDestroy {
 
 
   /**
-   * Handles the mouse hover event on an experience bar in desktop view.
-   * It displays the corresponding info window.
+   * Handles hover events, treating work and education windows independently.
    * @param item The ExperienceItem being hovered, or null if the mouse leaves all items.
    */
   onHover(item: ExperienceItem | null): void {
     if (this.isMobileView) return;
 
+    const FADE_TRANSITION_DURATION = 200; // in milliseconds
+
+    // Case 1: Mouse is hovering over a timeline bar.
     if (item) {
       if (item.type === 'work') {
-        clearTimeout(this.hideTimeoutWork);
-        this.hoveredWorkItem = item;
-      } else {
-        clearTimeout(this.hideTimeoutEducation);
-        this.hoveredEducationItem = item;
+        clearTimeout(this.hideTimeoutWork); // Stop any pending hide for the work window.
+
+        // If a different work item is already shown, transition to the new one.
+        if (this.hoveredWorkItem && this.hoveredWorkItem.id !== item.id) {
+          this.hoveredWorkItem = null; // Trigger fade-out.
+          setTimeout(() => {
+            this.hoveredWorkItem = item; // After a delay, fade in the new item.
+          }, FADE_TRANSITION_DURATION);
+        } else if (!this.hoveredWorkItem) {
+          // If no work window is visible, just show it.
+          this.hoveredWorkItem = item;
+        }
+        // If hovering the same item, do nothing.
       }
-    } else {
+      else { // item.type === 'education'
+        clearTimeout(this.hideTimeoutEducation); // Stop any pending hide for the education window.
+
+        // If a different education item is already shown, transition.
+        if (this.hoveredEducationItem && this.hoveredEducationItem.id !== item.id) {
+          this.hoveredEducationItem = null; // Trigger fade-out.
+          setTimeout(() => {
+            this.hoveredEducationItem = item; // After a delay, fade in the new item.
+          }, FADE_TRANSITION_DURATION);
+        } else if (!this.hoveredEducationItem) {
+          // If no education window is visible, just show it.
+          this.hoveredEducationItem = item;
+        }
+      }
+    }
+    // Case 2: Mouse has left all timeline bars.
+    else {
+      // Schedule both windows to hide independently after their timers.
       this.scheduleHide('work');
       this.scheduleHide('education');
     }
@@ -179,7 +208,6 @@ export class Experience implements OnInit, OnDestroy {
       this.isMouseInsideWorkInfoWindow = true;
       clearTimeout(this.hideTimeoutWork);
     } else {
-      // If the mouse is not over any bar, schedule both info windows to hide.
       this.isMouseInsideEducationInfoWindow = true;
       clearTimeout(this.hideTimeoutEducation);
     }
