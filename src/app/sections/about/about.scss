@@ -302,6 +302,11 @@ img {
   color: var(--text-color);
 }
 
+:host-context(.dark) .tile:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 40px var(--shadow-color), 0 0 20px var(--tile-glow-color);
+}
+
 
 /* ---------------------------------------------------
  * Download Buttons
