@@ -4,6 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ViewportService {
   private readonly maxMobileWidth = 768;
+  private readonly maxTabletWidth = 1440;
   private _isMobileView = new BehaviorSubject<boolean>(window.innerWidth <= this.maxMobileWidth);
   isMobileView$ = this._isMobileView.asObservable();
 
@@ -19,5 +20,13 @@ export class ViewportService {
 
   get isMobile(): boolean {
     return this._isMobileView.value;
+  }
+
+  get getMaxMobileWidth() {
+    return this.maxMobileWidth;
+  }
+
+  get getMaxTabletWidth() {
+    return this.maxTabletWidth;
   }
 }

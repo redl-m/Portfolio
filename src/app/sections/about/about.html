@@ -1,7 +1,11 @@
 <div class="about-layout">
+  <div class="about-header tablet-only">
+    <h2>About Me</h2>
+  </div>
+
   <!-- Tiles -->
-  <div class="tile-grid-container" *ngIf="!isMobileView || !showMap">
-    <!-- Desktop container -->
+  <div class="tile-grid-container" *ngIf="(isMobileView || isTabletView) ? !showMap : true">
+    <!-- Desktop or tablet container -->
     <ng-container *ngIf="!isMobileView">
       <div class="tile-grid">
         <div class="about-header">
@@ -17,7 +21,7 @@
           <p>My greatest causes are sustainability and human equality regarding skin tone,
             background, gender and sexual orientation.</p>
         </div>
-        <div class="tile" [@tileFade]>
+        <div class="tile full-width" [@tileFade]>
           <h3>Travelling 🚆</h3>
           <p>Getting in touch with other cultures and nature is my biggest goal and I love everything about it.
             Travelling with friends and family is when I'm the happiest.
@@ -33,6 +37,10 @@
             <a class="download-button" href="/assets/about/downloads/cv/redl_michael_josef_cv.pdf" download target="_blank">📄 My CV</a>
             <a class="download-button disabled" href="#" title="Coming soon...">🎓 Bachelor’s Thesis</a>
           </div>
+        </div>
+        <div class="tile" *ngIf="isTabletView && !showMap" (click)="toggleMap()">
+          <h3>Interactive Map 🗺️</h3>
+          <span>Tap to see my travel memories</span>
         </div>
       </div>
     </ng-container>
@@ -101,7 +109,7 @@
   </div>
 
   <!-- Leaflet map -->
-  <div class="map-holder" *ngIf="!isMobileView || showMap">
+  <div class="map-holder" *ngIf="(!isMobileView && !isTabletView) || showMap">
     <div
       class="map-wrapper"
       leaflet
@@ -119,8 +127,8 @@
       </div>
     </div>
 
-    <div class="mobile-map-toggle-card" *ngIf="isMobileView && showMap" (click)="toggleMap()">
-      <h3>Back to Info 📝</h3>
+    <div class="mobile-map-toggle-card" *ngIf="(isMobileView || isTabletView) && showMap" (click)="toggleMap()">
+    <h3>Back to Info 📝</h3>
       <span>Tap to see my interests</span>
     </div>
   </div>

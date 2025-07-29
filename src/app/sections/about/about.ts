@@ -8,9 +8,7 @@ import {LeafletModule} from '@bluehalo/ngx-leaflet';
 import {photoManifest} from '../../services/photo-manifest';
 import {ViewportService} from '../../services/viewport.service';
 import { ThemeService } from '../../services/theme.service';
-import {Subscription} from 'rxjs';
-import {Browser} from 'leaflet';
-import mobile = Browser.mobile;
+import { fromEvent, Subscription} from 'rxjs';
 
 interface Trip {
   name: string;
@@ -51,7 +49,8 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   // Mobile view options
   showMap = false;
   isMobileView = false;
-  isAboutSectionVisible = false;
+  public isTabletView = false;
+  private resizeSub?: Subscription;
 
   // Property to track the selected mobile tile
   public selectedTile: "tennis" | "causes" | "travelling" | null = null;
@@ -107,7 +106,10 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
         this.selectedTile = null;
       }
     });
-  }
+    // New: listen to window resizes for tablet detection
+    this.checkTablet();
+    this.resizeSub = fromEvent(window, 'resize').subscribe(() => this.checkTablet());
+    }
 
 
   /**
@@ -124,6 +126,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.map?.remove();
     this.viewportSub?.unsubscribe();
+    this.resizeSub?.unsubscribe();
   }
 
 
@@ -142,6 +145,18 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   selectTile(tile: 'tennis' | 'causes' | 'travelling' | null) {
     this.selectedTile = tile;
   }
+
+
+  /**
+   *
+   * @private
+   */
+  private checkTablet() {
+    const w = window.innerWidth;
+    // Define breakpoints consistent with scss $max-mobile-width and $max-tablet-width
+    this.isTabletView = w > this.viewportService.getMaxMobileWidth && w <= this.viewportService.getMaxTabletWidth;
+  }
+
 
 
   /**
@@ -177,7 +192,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
 
     // Overlay for hovering / clicking dots
     const hoverOverlay = document.createElement('div');
-    hoverOverlay.innerHTML = `<div style="color: ${this.isDarkMode ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">${this.isMobileView ? 'Click dots to see travel memories' : 'Hover dots to see travel memories'}</div>`;
+    hoverOverlay.innerHTML = `<div style="color: ${this.isDarkMode ? '#222' : '#eee'}; font-family: sans-serif; text-align: center; font-size: 2.5em; font-weight: 550;">${this.isMobileView || this.isTabletView ? 'Click dots to see travel memories' : 'Hover dots to see travel memories'}</div>`;
     hoverOverlay.style.backgroundColor = this.isDarkMode ? darkBg : lightBg;
     hoverOverlay.style.position = 'absolute';
     hoverOverlay.style.top = '0';
@@ -199,7 +214,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     zoomOverlay.classList.add('map-zoomOverlay');
     hoverOverlay.classList.add('map-zoomOverlay', 'map-hoverOverlay');
 
-    if (!mobile) {
+    if (!this.isMobileView && !this.isTabletView) {
       mapContainer.appendChild(zoomOverlay); // Control + Zoom is only relevant on desktop
     }
     mapContainer.appendChild(hoverOverlay);
