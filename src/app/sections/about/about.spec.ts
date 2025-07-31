@@ -107,11 +107,14 @@ describe('About Component', () => {
     });
 
     it('should append two overlays to the map container', () => {
+      // Setup: Ensure we are in desktop view so both overlays are added
       component.isMobileView = false;
-      component.trips = [];
+      component.isTabletView = false;
       component.onMapReady(mockMap as L.Map);
-      const overlays = container.querySelectorAll('.map-overlay');
-      expect(overlays.length).toBe(2); // TODO: fix, is 0
+
+      const overlays = container.querySelectorAll('.map-zoomOverlay');
+
+      expect(overlays.length).toBe(2);
     });
   });
 });
