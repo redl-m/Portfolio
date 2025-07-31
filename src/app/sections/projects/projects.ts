@@ -38,32 +38,33 @@ export class Projects {
   projects = [
 
     {
-      title: 'Emotion Detection',
-      description: 'A web application for data visualization and analysis, built with Angular and D3.js. It helps users to interact with complex datasets through an intuitive interface.',
-      imageUrl: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max',
+      title: 'WIP: Emotion Detection',
+      description: 'Emotion classification using PyTorch, also evaluating emotions\' development over time and visualizing it using D3.',
+      imageUrl: '/assets/projects/neural_net.jpeg',
       link: '#',
       techStack: [
-        { name: 'Angular', iconUrl: '/assets/icons/angular.svg', link: 'https://angular.io' },
-        { name: 'D3.js', iconUrl: '/assets/icons/d3.svg', link: 'https://d3js.org' }
+        { name: 'D3.js', iconUrl: '/assets/icons/d3.svg', link: 'https://d3js.org' },
+        { name: 'PyTorch', iconUrl: '/assets/icons/pytorch.svg', link: 'https://pytorch.org' }
       ]
     },
     {
-      title: 'AI-based candidate preselection',
+      title: 'Coming Soon: AI-based candidate preselection',
       description: 'A system focussing on explainable AI for an AI-based candidate preselection program. The system was implemented and analyzed as part of my Bachelor\'s Thesis on XAI using PyTorch and Captum.',
-      imageUrl: 'https://images.unsplash.com/photo-1522199755839-a2bacb67c546?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max',
+      imageUrl: '/assets/projects/wave_equalizer.jpeg',
       link: '#',
       techStack: [
+        { name: 'Angular', iconUrl: '/assets/icons/angular.svg', link: 'https://angular.io' },
         { name: 'PyTorch', iconUrl: '/assets/icons/pytorch.svg', link: 'https://pytorch.org' },
         { name: 'Captum', iconUrl: '/assets/icons/captum.svg', link: 'https://captum.ai' }
       ]
     },
     {
-      title: 'Project Gamma',
-      description: 'A backend service for a cloud-based IoT system using Node.js and AWS Lambda. It processes real-time data from thousands of connected devices efficiently.',
-      imageUrl: 'https://images.unsplash.com/photo-1605379399642-870262d3d051?ixlib=rb-4.0.3&q=80&fm=jpg&crop=entropy&cs=tinysrgb&w=1080&fit=max',
+      title: 'Coming Soon: Pneumonia Detection',
+      description: 'A FastAI-based pneumonia detection system that analyzes chest X-ray images.',
+      imageUrl: '/assets/projects/pneumonia_detection.jpeg',
       link: '#',
       techStack: [
-        { name: 'Node.js', iconUrl: '/assets/icons/nodejs.svg', link: 'https://nodejs.org' },
+        { name: 'FastAI', iconUrl: '/assets/icons/fastai.svg', link: 'https://fastai1.fast.ai/' },
       ]
     }
   ];
