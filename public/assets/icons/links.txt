@@ -1,0 +1,6 @@
+angular: https://angular.io
+nodejs: https://nodejs.org
+d3: https://d3js.org
+pytorch: https://pytorch.org
+captum: https://captum.ai
+fastai: https://fastai1.fast.ai/
