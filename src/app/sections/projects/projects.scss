@@ -215,7 +215,7 @@
 /* ----------------------------------------------- */
 /* --- Mobile View: Stacked Card Carousel --- */
 /* ----------------------------------------------- */
-@media (max-width: $max-mobile-width) {
+@media (max-width: $max-mobile-width + 200) {
   .desktop-only { display: none; }
 
   .mobile-only {

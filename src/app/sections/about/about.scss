@@ -321,6 +321,36 @@ img {
   @include btn-gradient;
 }
 
+
+/* ---------------------------------------------------
+ * Shared mobile toggle‐card styles
+ * --------------------------------------------------- */
+@mixin toggle-card-base {
+  position: absolute;
+  bottom: 2rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 1001;              // Above map tiles, below popups
+  background-color: var(--mobile-overlay-card-bg);
+  color: var(--text-color);
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 4px 15px var(--mobile-overlay-card-shadow);
+  cursor: pointer;
+  text-align: center;
+  animation: fadeInSlide 0.5s ease-out;
+
+  h3 {
+    margin: 0 0 0.25rem 0;
+    font-size: 1.7rem;
+    color: var(--accent-color);
+  }
+  span {
+    font-size: 1.3rem;
+    opacity: 0.8;
+  }
+}
+
 /* ---------------------------------------------------
  * Mobile Styles
  * --------------------------------------------------- */
@@ -420,30 +450,7 @@ img {
   }
 
   .mobile-map-toggle-card {
-    position: absolute;
-    bottom: 2rem;
-    left: 1rem;
-    right: 1rem;
-    z-index: 1001; // Above map tiles, below popups
-    background-color: var(--mobile-overlay-card-bg);
-    color: var(--text-color);
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: 0 4px 15px var(--mobile-overlay-card-shadow);
-    cursor: pointer;
-    text-align: center;
-    animation: fadeInSlide 0.5s ease-out;
-
-    h3 {
-      margin: 0 0 0.25rem 0;
-      font-size: 1.1rem;
-      color: var(--accent-color);
-    }
-
-    span {
-      font-size: 0.85rem;
-      opacity: 0.8;
-    }
+    @include toggle-card-base;
   }
 
   // Overlay styles for expanded tile content
@@ -500,6 +507,17 @@ img {
 
     &:hover {
       opacity: 1;
+    }
+
+    h3 {
+      margin: 0;
+      font-size: 1.7rem;
+      color: var(--accent-color);
+    }
+
+    span {
+      font-size: 0.85rem;
+      opacity: 1.3;
     }
   }
 
@@ -579,7 +597,6 @@ img {
 @media (min-width: $max-mobile-width + 1) and (max-width: $max-tablet-width) {
 
 
-
   .about-header {
     display: none;
   }
@@ -611,34 +628,20 @@ img {
     position: relative;
   }
 
-  .mobile-map-toggle-card,
-  .tablet-action-card {
+  .tablet-action-card,
+  .mobile-map-toggle-card {  // if you really want them to share the same base
+    @include toggle-card-base;
     display: flex;
-    position: relative;
-    bottom: 2rem;
-    left: 1rem;
-    right: 1rem;
-    z-index: 1001;
-    background-color: var(--mobile-overlay-card-bg);
-    color: var(--text-color);
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: 0 4px 15px var(--mobile-overlay-card-shadow);
-    cursor: pointer;
-    text-align: center;
-    animation: fadeInSlide 0.5s ease-out;
     flex-direction: column;
     gap: 0.25rem;
 
     h3 {
-      margin: 0;
-      font-size: 1.1rem;
-      color: var(--accent-color);
+      /* if you want a slightly different spacing on tablet */
+      margin-bottom: 0;
     }
-
     span {
       font-size: 0.85rem;
-      opacity: 0.8;
+      opacity: 1.3;
     }
   }
 }

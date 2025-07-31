@@ -20,8 +20,7 @@ export class App implements AfterViewInit, OnDestroy {
   private sections: HTMLElement[] = [];
   private isScrolling = false;
   private currentIndex = 0;
-  // How much of the next section must be visible before snapping
-  private readonly VISIBILITY_THRESHOLD = 0.15;
+  private touchStartY = 0;
 
 
   /**
@@ -30,10 +29,13 @@ export class App implements AfterViewInit, OnDestroy {
   ngAfterViewInit(): void {
     this.sections = Array.from(document.querySelectorAll('.section')) as HTMLElement[];
 
-    // Add non-passive wheel listener
+    // Mouse wheel listener
     window.addEventListener('wheel', this.onScroll, { passive: false });
 
-    // Run after a short delay to allow the browser to scroll to a hash (#) on load.
+    // Touch event listeners
+    window.addEventListener('touchstart', this.onTouchStart, { passive: false });
+    window.addEventListener('touchmove', this.onTouchMove, { passive: false });
+
     setTimeout(() => this.updateCurrentSection(), 100);
   }
 
@@ -43,6 +45,8 @@ export class App implements AfterViewInit, OnDestroy {
    */
   ngOnDestroy(): void {
     window.removeEventListener('wheel', this.onScroll);
+    window.removeEventListener('touchstart', this.onTouchStart);
+    window.removeEventListener('touchmove', this.onTouchMove);
   }
 
 
@@ -80,46 +84,71 @@ export class App implements AfterViewInit, OnDestroy {
 
 
   /**
-   * Implements automatic, snappy scrolling behavior per section.
-   * @param event The scrolling wheel event to handle.
+   * Handles scrolling on touch screens.
+   * @param event The touch event to handle.
    */
-  private onScroll = (event: WheelEvent) => {
+  private onTouchStart = (event: TouchEvent) => {
+    if (this.isScrolling) {
+      event.preventDefault();
+      return;
+    }
+    this.touchStartY = event.touches[0].clientY;
+  };
+
+  private onTouchMove = (event: TouchEvent) => {
     if (this.isScrolling) {
       event.preventDefault();
       return;
     }
 
-    const direction = event.deltaY > 0 ? 1 : -1;
-    const targetIndex = this.currentIndex + direction;
+    const touchEndY = event.touches[0].clientY;
+    const swipeDistance = this.touchStartY - touchEndY;
+    const swipeThreshold = 50; // Minimum pixels to count as a swipe
 
+    if (Math.abs(swipeDistance) > swipeThreshold) {
+      // Prevent native scroll and trigger custom scroll
+      event.preventDefault();
+      const direction = swipeDistance > 0 ? 1 : -1;
+      this.scrollToSection(direction);
+      this.touchStartY = touchEndY; // Reset start position to prevent multiple fires
+    }
+  };
+
+
+  /**
+   * Logic for scrolling to a section.
+   * @param direction The direction to scroll to: -1: upwards, 1: downwards
+   * @private
+   */
+  private scrollToSection(direction: number) {
+    if (this.isScrolling) {
+      return;
+    }
+
+    const targetIndex = this.currentIndex + direction;
     if (targetIndex < 0 || targetIndex >= this.sections.length) {
       return;
     }
 
-    const target = this.sections[targetIndex];
-    const rect = target.getBoundingClientRect();
-    const viewportHeight = window.innerHeight;
+    this.isScrolling = true;
+    this.currentIndex = targetIndex;
 
-    let visibleFraction: number;
-    if (direction > 0) {
-      const visiblePx = Math.max(0, viewportHeight - rect.top);
-      visibleFraction = visiblePx / viewportHeight;
-    } else {
-      const visiblePx = Math.max(0, rect.bottom);
-      visibleFraction = visiblePx / viewportHeight;
-    }
+    this.sections[this.currentIndex].scrollIntoView({ behavior: 'smooth' });
 
-    if (visibleFraction >= this.VISIBILITY_THRESHOLD) {
-      event.preventDefault();
-      this.isScrolling = true;
-      this.currentIndex = targetIndex;
+    setTimeout(() => {
+      this.isScrolling = false;
+    }, 900);
+  }
 
-      this.sections[this.currentIndex].scrollIntoView({ behavior: 'smooth' });
 
-      setTimeout(() => {
-        this.isScrolling = false;
-      }, 900);
-    }
+  /**
+   * Refactored logic for determining the scrolling direction and
+   * starting scrolling to a section.
+   * @param event
+   */
+  private onScroll = (event: WheelEvent) => {
+    event.preventDefault();
+    const direction = event.deltaY > 0 ? 1 : -1;
+    this.scrollToSection(direction);
   };
-
 }
