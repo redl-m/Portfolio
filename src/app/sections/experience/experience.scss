@@ -8,7 +8,9 @@
   flex: 1 1 100%;
   height: 100vh;
   position: relative;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: sans-serif;
+  font-size: 2.5em;
+  font-weight: 550;
   overflow: hidden;
 }
 
@@ -308,7 +310,7 @@
   .bar-wrapper {
     position: absolute;
     height: 25px;
-    // ✨ Add opacity to the transition
+    // Add opacity to the transition
     transition: transform 0.2s ease-in-out, opacity 0.3s ease-in-out;
 
     &:hover {
@@ -440,46 +442,65 @@
     }
   }
 
-  // Label underlines
-  .timeline-label.work-label-desktop,
-  .timeline-label.education-label-desktop {
+  // ------------------------------
+  // Combined desktop label
+  // ------------------------------
+  .timeline-label.combined-label-desktop {
     position: absolute;
-    z-index: 10;
-    width: auto;
-    padding: 1rem;
-    box-sizing: border-box;
-    cursor: pointer; // Add cursor pointer
-  }
-
-  .timeline-label.work-label-desktop {
     top: 5%;
     left: 5%;
-  }
-
-  .timeline-label.education-label-desktop {
-    bottom: 5%;
-    left: 5%;
-  }
-
-  // Style the header within the desktop labels
-  .timeline-label.work-label-desktop .experience-header,
-  .timeline-label.education-label-desktop .experience-header {
-    text-align: left;
-    position: relative;
-    padding-bottom: 12px; // Make space for the underline
-    margin-bottom: 0; // Override the general margin
-
-    // The underline
-    &::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 3px;
-      border-radius: 1.5px;
+    z-index: 10;
+    padding: 1rem;
+    cursor: default;
+    .experience-header {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      h2 {
+        display: inline-flex;
+        align-items: center;
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+      span {
+        position: relative;
+        padding-bottom: 12px;
+        margin-right: 0.75rem;
+      }
+      // Education underline & hover
+      .education-sub-label::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        border-radius: 1.5px;
+        background: linear-gradient(45deg, #6c5ce7, #2d1a61);
+      }
+      // Work underline & hover
+      .work-sub-label::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        border-radius: 1.5px;
+        background: linear-gradient(45deg, #8e44ad, #bf30b6);
+      }
+      // Ampersand: no underline, no hover
+      .ampersand {
+        padding: 0 0.75rem;
+        margin-right: 0.75rem;
+        &:hover { /* nothing */ }
+        &::after { display: none; }
+        bottom: 6px;
+      }
     }
   }
+
+
 
   // Gradient for the Work underline
   .timeline-label.work-label-desktop .experience-header::after {

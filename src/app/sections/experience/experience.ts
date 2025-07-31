@@ -266,7 +266,7 @@ export const EXPERIENCES: ExperienceItem[] = [
   {
     id: 2,
     startYear: 2021.5,
-    endYear: 2021.8,
+    endYear: 2021.75,
     type: 'work',
     info: {
       title: 'Intern at solvistas',
@@ -277,7 +277,7 @@ export const EXPERIENCES: ExperienceItem[] = [
   {
     id: 3,
     startYear: 2022.5,
-    endYear: 2022.8,
+    endYear: 2022.75,
     type: 'work',
     info: {
       title: 'Software Development Intern at solvistas',
@@ -287,7 +287,7 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 4,
-    startYear: 2022.9,
+    startYear: 2022.83,
     endYear: 2023.58,
     type: 'work',
     info: {
