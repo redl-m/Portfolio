@@ -1,135 +1,221 @@
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { App } from './app';
-import { ComponentFixture } from '@angular/core/testing';
-import { ɵLOTTIE_OPTIONS } from 'ngx-lottie';
+import { TestBed, fakeAsync, tick, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { App } from './app';
+import { provideLottieOptions } from 'ngx-lottie';
 
 describe('App Component', () => {
   let fixture: ComponentFixture<App>;
   let component: App;
+  let componentAny: any; // To access private members for testing
   let mockSections: HTMLElement[];
 
+  // Helper to create a mock TouchEvent
+  const createTouchEvent = (clientY: number): TouchEvent => {
+    // A simplified mock for Touch and TouchEvent for testing purposes
+    const touch = new Touch({ clientY, identifier: Date.now(), target: document.body });
+    return new TouchEvent('touchevent', {
+      touches: [touch],
+      changedTouches: [touch],
+    });
+  };
+
   beforeEach(async () => {
-    // Create fake section elements
-    mockSections = ['sec0', 'sec1', 'sec2'].map(id => {
+    // Create fake section elements, each with a spyable scrollIntoView method
+    mockSections = ['hero', 'about', 'projects'].map(id => {
       const el = document.createElement('div');
       el.classList.add('section');
       el.id = id;
+      spyOn(el, 'scrollIntoView'); // Spy on the method for each element
       return el;
     });
 
-    // Spy document.querySelectorAll to return our mocks
+    // Spy on document.querySelectorAll to return our mock sections
     spyOn(document, 'querySelectorAll').and.returnValue(mockSections as any);
 
     await TestBed.configureTestingModule({
       imports: [App],
       providers: [
-        { provide: ɵLOTTIE_OPTIONS, useValue: {} }
+        // This provider is ESSENTIAL to fix the "No provider for InjectionToken LottieOptions!" error.
+        provideLottieOptions({
+          player: () => import('lottie-web'),
+        }),
       ],
-      schemas: [NO_ERRORS_SCHEMA]
+      // Use NO_ERRORS_SCHEMA to avoid having to declare all child components (Navbar, etc.)
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(App);
     component = fixture.componentInstance;
+    componentAny = component; // Assign for private access
+
+    // Manually trigger ngAfterViewInit to have full control over the test setup.
+    // In a real scenario with fixture.detectChanges(), this would be called automatically.
+    component.ngAfterViewInit();
   });
 
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('ngAfterViewInit should populate sections', () => {
-    component.ngAfterViewInit();
-    const sections = (component as any).sections;
-    expect(sections.length).toBe(3);
-    expect(sections.map((s: { id: any; }) => s.id)).toEqual(['sec0', 'sec1', 'sec2']);
+  // --- The rest of the test file remains the same ---
+
+  describe('Initialization and Cleanup', () => {
+    it('ngAfterViewInit should initialize sections from the DOM', () => {
+      expect(document.querySelectorAll).toHaveBeenCalledWith('.section');
+      expect(componentAny.sections.length).toBe(3);
+      expect(componentAny.sections[0].id).toBe('hero');
+    });
+
+    it('ngAfterViewInit should add wheel and touch event listeners', () => {
+      spyOn(window, 'addEventListener');
+      component.ngAfterViewInit();
+      expect(window.addEventListener).toHaveBeenCalledWith('wheel', componentAny.onScroll, { passive: false });
+      expect(window.addEventListener).toHaveBeenCalledWith('touchstart', componentAny.onTouchStart, { passive: false });
+      expect(window.addEventListener).toHaveBeenCalledWith('touchmove', componentAny.onTouchMove, { passive: false });
+    });
+
+    it('ngOnDestroy should remove all event listeners', () => {
+      spyOn(window, 'removeEventListener');
+      component.ngOnDestroy();
+      expect(window.removeEventListener).toHaveBeenCalledWith('wheel', componentAny.onScroll);
+      expect(window.removeEventListener).toHaveBeenCalledWith('touchstart', componentAny.onTouchStart);
+      expect(window.removeEventListener).toHaveBeenCalledWith('touchmove', componentAny.onTouchMove);
+    });
   });
 
-  describe('onScroll logic', () => {
-    let event: Partial<WheelEvent>;
-    const MOCK_VIEWPORT_HEIGHT = 800;
-    let threshold: number;
+  describe('Core Scrolling Logic: scrollToSection()', () => {
+    it('should scroll down to the next section and manage isScrolling flag', fakeAsync(() => {
+      componentAny.currentIndex = 0;
+      componentAny.scrollToSection(1);
 
+      // Check immediate effects
+      expect(componentAny.isScrolling).toBeTrue();
+      expect(componentAny.currentIndex).toBe(1);
+      expect(mockSections[1].scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+
+      // Check effects after timeout
+      tick(900);
+      expect(componentAny.isScrolling).toBeFalse();
+    }));
+
+    it('should scroll up to the previous section', fakeAsync(() => {
+      componentAny.currentIndex = 2;
+      componentAny.scrollToSection(-1);
+
+      expect(componentAny.currentIndex).toBe(1);
+      expect(mockSections[1].scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+      tick(900);
+    }));
+
+    it('should not scroll if already scrolling', () => {
+      componentAny.isScrolling = true;
+      componentAny.currentIndex = 0;
+      componentAny.scrollToSection(1);
+
+      expect(componentAny.currentIndex).toBe(0); // Should not change
+      expect(mockSections[1].scrollIntoView).not.toHaveBeenCalled();
+    });
+
+    it('should not scroll if the target index is out of bounds (down)', () => {
+      componentAny.currentIndex = 2; // Last section
+      componentAny.scrollToSection(1); // Try to scroll down
+
+      expect(componentAny.currentIndex).toBe(2);
+      expect(componentAny.isScrolling).toBeFalse();
+    });
+
+    it('should not scroll if the target index is out of bounds (up)', () => {
+      componentAny.currentIndex = 0; // First section
+      componentAny.scrollToSection(-1); // Try to scroll up
+
+      expect(componentAny.currentIndex).toBe(0);
+      expect(componentAny.isScrolling).toBeFalse();
+    });
+  });
+
+  describe('Wheel Event: onScroll()', () => {
+    it('should call scrollToSection with direction 1 on scroll down', () => {
+      spyOn(componentAny, 'scrollToSection');
+      const wheelEvent = new WheelEvent('wheel', { deltaY: 100 });
+      spyOn(wheelEvent, 'preventDefault');
+
+      componentAny.onScroll(wheelEvent);
+
+      expect(wheelEvent.preventDefault).toHaveBeenCalled();
+      expect(componentAny.scrollToSection).toHaveBeenCalledWith(1);
+    });
+
+    it('should call scrollToSection with direction -1 on scroll up', () => {
+      spyOn(componentAny, 'scrollToSection');
+      const wheelEvent = new WheelEvent('wheel', { deltaY: -100 });
+      spyOn(wheelEvent, 'preventDefault');
+
+      componentAny.onScroll(wheelEvent);
+
+      expect(wheelEvent.preventDefault).toHaveBeenCalled();
+      expect(componentAny.scrollToSection).toHaveBeenCalledWith(-1);
+    });
+  });
+
+  describe('Touch Events: onTouchStart() & onTouchMove()', () => {
     beforeEach(() => {
-      // The 'get' is important for getter properties.
-      spyOnProperty(window, 'innerHeight', 'get').and.returnValue(MOCK_VIEWPORT_HEIGHT);
-
-      component.ngAfterViewInit();
-      threshold = (component as any).VISIBILITY_THRESHOLD;
-
-      // Reset component state for each test
-      (component as any).isScrolling = false;
-      (component as any).currentIndex = 0;
-
-      // Create a default event object for scrolling down
-      event = { deltaY: 100, preventDefault: jasmine.createSpy() };
+      spyOn(componentAny, 'scrollToSection');
     });
 
-    it('ignores scroll when already scrolling', () => {
-      (component as any).isScrolling = true;
-      component.onScroll(event as WheelEvent);
-      expect(event.preventDefault).toHaveBeenCalled();
-      expect((component as any).currentIndex).toBe(0);
+    it('onTouchStart should record the initial touch Y position', () => {
+      const touchEvent = createTouchEvent(200);
+      componentAny.onTouchStart(touchEvent);
+      expect(componentAny.touchStartY).toBe(200);
     });
 
-    it('does not snap when target index out of bounds', () => {
-      (component as any).currentIndex = mockSections.length - 1; // Start at the last section
-      component.onScroll(event as WheelEvent);
-      expect((component as any).currentIndex).toBe(mockSections.length - 1);
-      expect(event.preventDefault).not.toHaveBeenCalled();
+    it('onTouchMove should not trigger scroll if swipe distance is below threshold', () => {
+      componentAny.touchStartY = 200;
+      const touchEvent = createTouchEvent(220); // Swipe of 20px
+      spyOn(touchEvent, 'preventDefault');
+
+      componentAny.onTouchMove(touchEvent);
+
+      expect(touchEvent.preventDefault).not.toHaveBeenCalled();
+      expect(componentAny.scrollToSection).not.toHaveBeenCalled();
     });
 
-    it('does not snap if visible fraction below threshold', () => {
-      const target = mockSections[1];
-      // Set the top position so the visible fraction is just below the threshold
-      const rectTop = MOCK_VIEWPORT_HEIGHT - (MOCK_VIEWPORT_HEIGHT * (threshold - 0.01));
-      spyOn(target, 'getBoundingClientRect').and.returnValue({ top: rectTop, bottom: 0 } as any);
+    it('onTouchMove should trigger scroll down on a significant swipe up', () => {
+      componentAny.touchStartY = 200;
+      const touchEvent = createTouchEvent(140); // Swipe up of 60px
+      spyOn(touchEvent, 'preventDefault');
 
-      component.onScroll(event as WheelEvent);
+      componentAny.onTouchMove(touchEvent);
 
-      expect(event.preventDefault).not.toHaveBeenCalled();
-      expect((component as any).currentIndex).toBe(0);
+      expect(touchEvent.preventDefault).toHaveBeenCalled();
+      expect(componentAny.scrollToSection).toHaveBeenCalledWith(1); // Swipe up -> scroll down
+      expect(componentAny.touchStartY).toBe(140); // Start Y should be reset
     });
 
-    it('snaps down when visible fraction above threshold', fakeAsync(() => {
-      const target = mockSections[1]; // Target is the next section
-      spyOn(target, 'scrollIntoView');
+    it('onTouchMove should trigger scroll up on a significant swipe down', () => {
+      componentAny.touchStartY = 200;
+      const touchEvent = createTouchEvent(260); // Swipe down of 60px
+      spyOn(touchEvent, 'preventDefault');
 
-      // Make the target section visible just enough to pass the threshold
-      const rectTop = MOCK_VIEWPORT_HEIGHT - (MOCK_VIEWPORT_HEIGHT * (threshold + 0.1));
-      spyOn(target, 'getBoundingClientRect').and.returnValue({ top: rectTop, bottom: 0 } as any);
+      componentAny.onTouchMove(touchEvent);
 
-      component.onScroll(event as WheelEvent);
+      expect(touchEvent.preventDefault).toHaveBeenCalled();
+      expect(componentAny.scrollToSection).toHaveBeenCalledWith(-1); // Swipe down -> scroll up
+      expect(componentAny.touchStartY).toBe(260);
+    });
 
-      expect(event.preventDefault).toHaveBeenCalled();
-      expect((component as any).isScrolling).toBeTrue();
-      expect((component as any).currentIndex).toBe(1);
-      expect(target.scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
+    it('should not process touch events if already scrolling', () => {
+      componentAny.isScrolling = true;
+      const startEvent = createTouchEvent(200);
+      const moveEvent = createTouchEvent(100);
+      spyOn(startEvent, 'preventDefault');
+      spyOn(moveEvent, 'preventDefault');
 
-      tick(900);
-      expect((component as any).isScrolling).toBeFalse();
-    }));
+      componentAny.onTouchStart(startEvent);
+      componentAny.onTouchMove(moveEvent);
 
-    it('snaps up when scrolling up and visible fraction above threshold', fakeAsync(() => {
-      // Setup initial state: we are on the second section
-      (component as any).currentIndex = 1;
-      // Create an event for scrolling up
-      event = { deltaY: -100, preventDefault: jasmine.createSpy() };
-
-      const target = mockSections[0]; // Target is the previous section
-      spyOn(target, 'scrollIntoView');
-
-      // Make the target section visible just enough to pass the threshold from the bottom
-      const rectBottom = MOCK_VIEWPORT_HEIGHT * (threshold + 0.1);
-      spyOn(target, 'getBoundingClientRect').and.returnValue({ top: 0, bottom: rectBottom } as any);
-
-      component.onScroll(event as WheelEvent);
-
-      expect(event.preventDefault).toHaveBeenCalled();
-      expect((component as any).currentIndex).toBe(0);
-      expect(target.scrollIntoView).toHaveBeenCalledWith({ behavior: 'smooth' });
-
-      tick(900);
-      expect((component as any).isScrolling).toBeFalse();
-    }));
+      expect(startEvent.preventDefault).toHaveBeenCalled();
+      expect(moveEvent.preventDefault).toHaveBeenCalled();
+      expect(componentAny.scrollToSection).not.toHaveBeenCalled();
+    });
   });
 });
