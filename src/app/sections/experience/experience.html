@@ -1,13 +1,26 @@
-<div *ngIf="!isMobileView" class="timeline-label work-label-desktop"
-     (mouseenter)="isWorkLabelHovered = true"
-     (mouseleave)="isWorkLabelHovered = false">
-  <div class="experience-header"><h2>Work Experience</h2></div>
+<div *ngIf="!isMobileView" class="timeline-label combined-label-desktop">
+  <div class="experience-header">
+    <h2>
+      <!-- Education half -->
+      <span
+        class="education-sub-label"
+        (mouseenter)="isEducationLabelHovered = true"
+        (mouseleave)="isEducationLabelHovered = false">
+        Education
+      </span>
+      <!-- Ampersand (no hover/underline) -->
+      <span class="ampersand">&</span>
+      <!-- Work half -->
+      <span
+        class="work-sub-label"
+        (mouseenter)="isWorkLabelHovered = true"
+        (mouseleave)="isWorkLabelHovered = false">
+        Work Experience
+      </span>
+    </h2>
+  </div>
 </div>
-<div *ngIf="!isMobileView" class="timeline-label education-label-desktop"
-     (mouseenter)="isEducationLabelHovered = true"
-     (mouseleave)="isEducationLabelHovered = false">
-  <div class="experience-header"><h2>Education</h2></div>
-</div>
+
 
 <div *ngIf="!isMobileView" class="timeline-container-desktop"
      [class.highlight-work]="isWorkLabelHovered"
