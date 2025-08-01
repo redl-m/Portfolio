@@ -84,10 +84,16 @@ export class App implements AfterViewInit, OnDestroy {
 
 
   /**
-   * Handles scrolling on touch screens.
+   * Handles touch actions on start.
    * @param event The touch event to handle.
    */
   private onTouchStart = (event: TouchEvent) => {
+    // Check if the event target is the map or a child of the map
+    const target = event.target as HTMLElement;
+    if (target.closest('#map-container')) {
+      return; // Do nothing, let the map handle the touch
+    }
+
     if (this.isScrolling) {
       event.preventDefault();
       return;
@@ -95,7 +101,18 @@ export class App implements AfterViewInit, OnDestroy {
     this.touchStartY = event.touches[0].clientY;
   };
 
+
+  /**
+   * Handles touch actions while moving.
+   * @param event The touch event to handle.
+   */
   private onTouchMove = (event: TouchEvent) => {
+    // Check if the event target is the map or a child of the map
+    const target = event.target as HTMLElement;
+    if (target.closest('#map-container')) {
+      return; // Do nothing, let the map handle the movement
+    }
+
     if (this.isScrolling) {
       event.preventDefault();
       return;
@@ -106,11 +123,10 @@ export class App implements AfterViewInit, OnDestroy {
     const swipeThreshold = 50; // Minimum pixels to count as a swipe
 
     if (Math.abs(swipeDistance) > swipeThreshold) {
-      // Prevent native scroll and trigger custom scroll
       event.preventDefault();
       const direction = swipeDistance > 0 ? 1 : -1;
       this.scrollToSection(direction);
-      this.touchStartY = touchEndY; // Reset start position to prevent multiple fires
+      this.touchStartY = touchEndY;
     }
   };
 
@@ -142,11 +158,16 @@ export class App implements AfterViewInit, OnDestroy {
 
 
   /**
-   * Refactored logic for determining the scrolling direction and
-   * starting scrolling to a section.
-   * @param event
+   * Handles mouse wheel scrolling.
+   * @param event The wheel event to handle.
    */
   private onScroll = (event: WheelEvent) => {
+    // Also check for the map container on mouse wheel for zooming
+    const target = event.target as HTMLElement;
+    if (target.closest('#map-container')) {
+      return; // Let the map handle mouse wheel zooming
+    }
+
     event.preventDefault();
     const direction = event.deltaY > 0 ? 1 : -1;
     this.scrollToSection(direction);
