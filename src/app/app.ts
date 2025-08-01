@@ -162,12 +162,6 @@ export class App implements AfterViewInit, OnDestroy {
    * @param event The wheel event to handle.
    */
   private onScroll = (event: WheelEvent) => {
-    // Also check for the map container on mouse wheel for zooming
-    const target = event.target as HTMLElement;
-    if (target.closest('#map-container')) {
-      return; // Let the map handle mouse wheel zooming
-    }
-
     event.preventDefault();
     const direction = event.deltaY > 0 ? 1 : -1;
     this.scrollToSection(direction);
