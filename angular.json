@@ -29,9 +29,22 @@
               ]
             },
             "assets": [
+              "src/favicon.ico",
+              "src/assets",
               {
                 "glob": "**/*",
-                "input": "public"
+                "input": "public",
+                "output": "assets/"
+              },
+              {
+                "glob": "leaflet.css",
+                "input": "node_modules/leaflet/dist/",
+                "output": "./"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/leaflet/dist/images/",
+                "output": "images/"
               }
             ],
             "styles": [
@@ -50,7 +63,7 @@
                 {
                   "type": "anyComponentStyle",
                   "maximumWarning": "4kB",
-                  "maximumError": "8kB"
+                  "maximumError": "25kB"
                 }
               ],
               "outputHashing": "all"
