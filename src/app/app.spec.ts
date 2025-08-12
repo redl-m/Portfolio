@@ -12,11 +12,24 @@ describe('App Component', () => {
   // Helper to create a mock TouchEvent
   const createTouchEvent = (clientY: number): TouchEvent => {
     // A simplified mock for Touch and TouchEvent for testing purposes
-    const touch = new Touch({ clientY, identifier: Date.now(), target: document.body });
-    return new TouchEvent('touchevent', {
+    const touch = new Touch({
+      identifier: Date.now(),
+      target: document.body, // The target of the specific touch point
+      clientY: clientY
+    });
+
+    const touchEvent = new TouchEvent('touchevent', {
       touches: [touch],
       changedTouches: [touch],
+      cancelable: true // Allows preventDefault() to be called without error
     });
+
+    Object.defineProperty(touchEvent, 'target', {
+      writable: false,
+      value: document.body // The element that dispatched the event
+    });
+
+    return touchEvent;
   };
 
   beforeEach(async () => {
@@ -68,10 +81,13 @@ describe('App Component', () => {
 
     it('ngAfterViewInit should add wheel and touch event listeners', () => {
       spyOn(window, 'addEventListener');
-      component.ngAfterViewInit();
-      expect(window.addEventListener).toHaveBeenCalledWith('wheel', componentAny.onScroll, { passive: false });
-      expect(window.addEventListener).toHaveBeenCalledWith('touchstart', componentAny.onTouchStart, { passive: false });
-      expect(window.addEventListener).toHaveBeenCalledWith('touchmove', componentAny.onTouchMove, { passive: false });
+      // We need a fresh component instance for this test, as listeners are added in the root beforeEach
+      const newFixture = TestBed.createComponent(App);
+      const newComponent = newFixture.componentInstance;
+      newComponent.ngAfterViewInit();
+      expect(window.addEventListener).toHaveBeenCalledWith('wheel', (newComponent as any).onScroll, { passive: false });
+      expect(window.addEventListener).toHaveBeenCalledWith('touchstart', (newComponent as any).onTouchStart, { passive: false });
+      expect(window.addEventListener).toHaveBeenCalledWith('touchmove', (newComponent as any).onTouchMove, { passive: false });
     });
 
     it('ngOnDestroy should remove all event listeners', () => {
@@ -170,7 +186,7 @@ describe('App Component', () => {
 
     it('onTouchMove should not trigger scroll if swipe distance is below threshold', () => {
       componentAny.touchStartY = 200;
-      const touchEvent = createTouchEvent(220); // Swipe of 20px
+      const touchEvent = createTouchEvent(220); // Swipe of -20px
       spyOn(touchEvent, 'preventDefault');
 
       componentAny.onTouchMove(touchEvent);
