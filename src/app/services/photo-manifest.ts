@@ -142,9 +142,7 @@ export const photoManifest: { [key: string]: string[] } = {
     "assets/about/trips/NewYork/9.jpg"
   ],
   "Paris": [
-    "assets/about/trips/Paris/0.jpg",
     "assets/about/trips/Paris/1.jpg",
-    "assets/about/trips/Paris/5669883a-e4d4-4b20-939a-0c15ec45efdd.jpg",
     "assets/about/trips/Paris/APC_0417.jpg",
     "assets/about/trips/Paris/APC_0449.jpg",
     "assets/about/trips/Paris/APC_0508.jpg",
@@ -153,9 +151,7 @@ export const photoManifest: { [key: string]: string[] } = {
     "assets/about/trips/Paris/APC_0572.jpg",
     "assets/about/trips/Paris/APC_0573.jpg",
     "assets/about/trips/Paris/APC_0585.jpg",
-    "assets/about/trips/Paris/GPTempDownload.jpg",
-    "assets/about/trips/Paris/IMG_6425.jpg",
-    "assets/about/trips/Paris/IMG_6695.JPG"
+    "assets/about/trips/Paris/IMG_6425.jpg"
   ],
   "Prague": [
     "assets/about/trips/Prague/0.jpg",

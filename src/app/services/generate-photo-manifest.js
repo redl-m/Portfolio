@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // The directory where your trip photos are stored
-const assetsDir = path.resolve(__dirname, '../../../public/assets/about/trips');
+const assetsDir = path.resolve(__dirname, '../../assets/about/trips');
 // The path for the auto-generated TypeScript file
 const outputPath = path.join(__dirname, 'photo-manifest.ts');
 
