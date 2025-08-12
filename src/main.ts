@@ -7,7 +7,6 @@ import * as L from 'leaflet';
 bootstrapApplication(App, appConfig)
   .catch((err) => console.error(err));
 
-// This part is fine to keep!
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 
 L.Icon.Default.mergeOptions({

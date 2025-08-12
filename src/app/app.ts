@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, HostListener, OnDestroy} from '@angular/core';
-import { Navbar } from './shared/navbar/navbar';
-import { Hero } from './sections/hero/hero';
-import { About } from './sections/about/about';
-import { Projects } from './sections/projects/projects';
-import { Experience } from './sections/experience/experience';
-import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import {Navbar} from './shared/navbar/navbar';
+import {Hero} from './sections/hero/hero';
+import {About} from './sections/about/about';
+import {Projects} from './sections/projects/projects';
+import {Experience} from './sections/experience/experience';
+import {LeafletModule} from '@bluehalo/ngx-leaflet';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +21,8 @@ export class App implements AfterViewInit, OnDestroy {
   private isScrolling = false;
   private currentIndex = 0;
   private touchStartY = 0;
+  private lastScrollTime = 0;
+  private readonly SCROLL_LOCK_MS = 900; // match your timeout
 
 
   /**
@@ -30,11 +32,11 @@ export class App implements AfterViewInit, OnDestroy {
     this.sections = Array.from(document.querySelectorAll('.section')) as HTMLElement[];
 
     // Mouse wheel listener
-    window.addEventListener('wheel', this.onScroll, { passive: false });
+    window.addEventListener('wheel', this.onScroll, {passive: false});
 
     // Touch event listeners
-    window.addEventListener('touchstart', this.onTouchStart, { passive: false });
-    window.addEventListener('touchmove', this.onTouchMove, { passive: false });
+    window.addEventListener('touchstart', this.onTouchStart, {passive: false});
+    window.addEventListener('touchmove', this.onTouchMove, {passive: false});
 
     setTimeout(() => this.updateCurrentSection(), 100);
   }
@@ -88,14 +90,12 @@ export class App implements AfterViewInit, OnDestroy {
    * @param event The touch event to handle.
    */
   private onTouchStart = (event: TouchEvent) => {
-    // Check if the event target is the map or a child of the map
     const target = event.target as HTMLElement;
-    if (target.closest('#map-container')) {
-      return; // Do nothing, let the map handle the touch
-    }
+    if (target.closest('#map-container')) return;
 
-    if (this.isScrolling) {
-      event.preventDefault();
+    // avoid attempting to cancel if not cancelable
+    if (this.isScrolling || (Date.now() - this.lastScrollTime) < this.SCROLL_LOCK_MS) {
+      if (event.cancelable) event.preventDefault();
       return;
     }
     this.touchStartY = event.touches[0].clientY;
@@ -107,26 +107,23 @@ export class App implements AfterViewInit, OnDestroy {
    * @param event The touch event to handle.
    */
   private onTouchMove = (event: TouchEvent) => {
-    // Check if the event target is the map or a child of the map
     const target = event.target as HTMLElement;
-    if (target.closest('#map-container')) {
-      return; // Do nothing, let the map handle the movement
-    }
+    if (target.closest('#map-container')) return;
 
-    if (this.isScrolling) {
-      event.preventDefault();
+    if (this.isScrolling || (Date.now() - this.lastScrollTime) < this.SCROLL_LOCK_MS) {
+      if (event.cancelable) event.preventDefault();
       return;
     }
 
     const touchEndY = event.touches[0].clientY;
     const swipeDistance = this.touchStartY - touchEndY;
-    const swipeThreshold = 50; // Minimum pixels to count as a swipe
+    const swipeThreshold = 50;
 
     if (Math.abs(swipeDistance) > swipeThreshold) {
-      event.preventDefault();
+      if (event.cancelable) event.preventDefault();
       const direction = swipeDistance > 0 ? 1 : -1;
       this.scrollToSection(direction);
-      this.touchStartY = touchEndY;
+      this.touchStartY = touchEndY; // avoid repeated triggers from same gesture
     }
   };
 
@@ -137,23 +134,23 @@ export class App implements AfterViewInit, OnDestroy {
    * @private
    */
   private scrollToSection(direction: number) {
-    if (this.isScrolling) {
-      return;
-    }
+    if (this.isScrolling) return;
 
     const targetIndex = this.currentIndex + direction;
-    if (targetIndex < 0 || targetIndex >= this.sections.length) {
-      return;
-    }
+    if (targetIndex < 0 || targetIndex >= this.sections.length) return;
 
     this.isScrolling = true;
     this.currentIndex = targetIndex;
 
-    this.sections[this.currentIndex].scrollIntoView({ behavior: 'smooth' });
+    // lock timestamp so subsequent events are ignored for SCROLL_LOCK_MS
+    this.lastScrollTime = Date.now();
+
+    this.sections[this.currentIndex].scrollIntoView({behavior: 'smooth'});
 
     setTimeout(() => {
       this.isScrolling = false;
-    }, 900);
+      // optionally reset lastScrollTime here if you prefer
+    }, this.SCROLL_LOCK_MS);
   }
 
 
@@ -162,8 +159,27 @@ export class App implements AfterViewInit, OnDestroy {
    * @param event The wheel event to handle.
    */
   private onScroll = (event: WheelEvent) => {
+    // If wheel happened over the map, let the map handle it.
+    const target = event.target as HTMLElement;
+    if (target && target.closest('#map-container')) {
+      return;
+    }
+
+    // If we are already snapping (or locked), ignore additional wheel inputs
+    if (this.isScrolling || (Date.now() - this.lastScrollTime) < this.SCROLL_LOCK_MS) {
+      event.preventDefault();
+      return;
+    }
+
+    // prevent default scroll so the page doesn't subtly move multiple sections
     event.preventDefault();
+
+    // clamp the delta to a single step: only sign matters
     const direction = event.deltaY > 0 ? 1 : -1;
-    this.scrollToSection(direction);
+
+    // If you have a special case (e.g. ctrl+wheel zoom on section 1), keep it:
+    if (!(event.ctrlKey && this.currentIndex === 1)) {
+      this.scrollToSection(direction);
+    }
   };
 }
