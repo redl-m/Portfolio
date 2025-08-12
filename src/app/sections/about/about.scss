@@ -330,7 +330,7 @@ img {
   bottom: 2rem;
   left: 1rem;
   right: 1rem;
-  z-index: 1001;              // Above map tiles, below popups
+  z-index: 1001; // Above map tiles, below popups
   background-color: var(--mobile-overlay-card-bg);
   color: var(--text-color);
   border-radius: 12px;
@@ -428,6 +428,10 @@ img {
       margin-bottom: 1rem;
       color: var(--accent-color);
     }
+  }
+
+  .mobile-download-card {
+    padding: 1rem;
   }
 
   .mobile-action-card {
@@ -541,12 +545,23 @@ img {
   }
 
   .download-button {
-    font-size: 1.2rem;
+    flex: 1 1 0;
+    min-width: 0;
+    padding: 0.55rem 0.75rem;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .download-buttons {
-    justify-content: center; // Center the two download buttons
-    flex-wrap: wrap; // Allow buttons to wrap on smaller screens
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0 0 0;
+    flex-wrap: nowrap;
+    align-items: center;
   }
 
   .photo-bar {
@@ -629,7 +644,7 @@ img {
   }
 
   .tablet-action-card,
-  .mobile-map-toggle-card {  // if you really want them to share the same base
+  .mobile-map-toggle-card { // if you really want them to share the same base
     @include toggle-card-base;
     display: flex;
     flex-direction: column;
@@ -639,6 +654,7 @@ img {
       /* if you want a slightly different spacing on tablet */
       margin-bottom: 0;
     }
+
     span {
       font-size: 0.85rem;
       opacity: 1.3;
