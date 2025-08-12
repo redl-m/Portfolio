@@ -173,8 +173,7 @@ export class Experience implements OnInit, OnDestroy {
           this.hoveredWorkItem = item;
         }
         // If hovering the same item, do nothing.
-      }
-      else { // item.type === 'education'
+      } else { // item.type === 'education'
         clearTimeout(this.hideTimeoutEducation); // Stop any pending hide for the education window.
 
         // If a different education item is already shown, transition.
@@ -247,8 +246,18 @@ export class Experience implements OnInit, OnDestroy {
       }, delay);
     }
   }
-}
 
+
+  /**
+   * Returns true if the duration (end - start) is less than 6 months.
+   * Assumes start/end are years with fractional parts (e.g. 2022.5).
+   */
+  isLabelHidden(start: number, end: number): boolean {
+    const durationYears = Math.max(0, end - start);
+    const durationMonths = durationYears * 12;
+    return durationMonths < 6; // strictly less than 6 months
+  }
+}
 
 // --- Data ---
 export const EXPERIENCES: ExperienceItem[] = [
