@@ -134,6 +134,13 @@
   }
 }
 
+// Hidden label for entries < 6 months
+.bar-wrapper-mobile.short {
+  .bar-title {
+    display: none;
+  }
+}
+
 /* --- Mobile Modal --- */
 .modal-overlay {
   position: fixed;

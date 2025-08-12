@@ -77,12 +77,20 @@
       <div class="tick-line"></div>
       <div class="tick-label">{{ year }}</div>
     </div>
-    <div *ngFor="let exp of experiences" class="bar-wrapper-mobile" [ngClass]="exp.type"
-         [ngStyle]="getMobileBarStyle(exp.startYear, exp.endYear)" (click)="onSelectItem(exp)">
+    <div *ngFor="let exp of experiences"
+         class="bar-wrapper-mobile"
+         [ngClass]="exp.type"
+         [class.short]="isLabelHidden(exp.startYear, exp.endYear)"
+         [ngStyle]="getMobileBarStyle(exp.startYear, exp.endYear)"
+         (click)="onSelectItem(exp)"
+    >
       <div class="experience-bar-mobile">
-        <span class="bar-title">{{ exp.info.title }}</span>
+    <span class="bar-title" [attr.aria-hidden]="isLabelHidden(exp.startYear, exp.endYear) ? 'true' : null">
+      {{ exp.info.title }}
+    </span>
       </div>
     </div>
+
   </div>
 </div>
 <div *ngIf="isMobileView" class="timeline-label education-label-mobile">
