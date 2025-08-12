@@ -1,34 +1,9 @@
 # Portfolio
 
-<!-- TABLE OF CONTENTS -->
-<details>
-  <summary>Table of Contents</summary>
-  <ol>
-    <li>
-      <a href="#about-the-project">About The Project</a>
-      <ul>
-        <li><a href="#built-with">Built With</a></li>
-      </ul>
-    </li>
-    <li>
-      <a href="#getting-started">Getting Started</a>
-      <ul>
-        <li><a href="#development-server">Development Server</a></li>
-        <li><a href="#code-scaffolding">Code Scaffolding</a></li>
-        <li><a href="#building">Building</a></li>
-        <li><a href="#running-unit-tests">Running Unit Tests</a></li>
-        <li><a href="#running-end-to-end-tests">Running end-to-end tests</a></li>
-      </ul>
-    </li>
-    <li><a href="#roadmap">Roadmap</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#contact">Contact</a></li>
-  </ol>
-</details>
-
 ## About
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.
+This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.  
+It was built to create a personal portfolio website displaying personal information like interests, projects and work & education experience.
 
 ## Getting Started
 
@@ -86,20 +61,6 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
-## Additional Resources
-
-
-<!-- ROADMAP -->
-## Roadmap
-
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
-
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues)
-
-
 <!-- LICENSE -->
 ## License
 
@@ -109,6 +70,6 @@ Distributed under CC-0. See `LICENSE.txt` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Michael Redl - [@redl_m](https://www.instagram.com/redl__m/) - michael.redl14042004@gmail.com
+Michael Redl - [Personal Website](https://michaeljosefredl.at) - [@redl_m](https://www.instagram.com/redl__m/) - michael.redl14042004@gmail.com
 
 Project Link: [https://github.com/redl-m/Portfolio]((https://github.com/redl-m/Portfolio))
