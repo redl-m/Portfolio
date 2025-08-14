@@ -4,3 +4,6 @@ d3: https://d3js.org
 pytorch: https://pytorch.org
 captum: https://captum.ai
 fastai: https://fastai1.fast.ai/
+dlib: https://dlib.net
+ollama: https://ollama.com
+opencv: https://opencv.org
