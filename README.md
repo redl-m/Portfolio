@@ -3,7 +3,7 @@
 ## About
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.0.5.  
-It was built to create a personal portfolio website displaying personal information like interests, projects and work & education experience.
+It was built to create a personal portfolio website displaying personal information like interests, projects and education & work experience.
 
 ## Getting Started
 

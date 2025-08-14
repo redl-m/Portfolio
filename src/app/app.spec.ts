@@ -70,8 +70,6 @@ describe('App Component', () => {
     expect(component).toBeTruthy();
   });
 
-  // --- The rest of the test file remains the same ---
-
   describe('Initialization and Cleanup', () => {
     it('ngAfterViewInit should initialize sections from the DOM', () => {
       expect(document.querySelectorAll).toHaveBeenCalledWith('.section');
