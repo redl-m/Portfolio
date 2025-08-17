@@ -38,17 +38,20 @@ export class Projects {
   projects = [
 
     {
-      title: 'WIP: Emotion Detection',
-      description: 'Emotion classification using PyTorch, also evaluating emotions\' development over time and visualizing it using D3.',
+      title: 'Emotion Detection',
+      description: 'Emotion classification using PyTorch and attention estimation using OpenCV, also evaluating emotion and attention development over time, visualizing it using D3 and summarizing it using either a heuristic method, local LLM or remote LLM via an API.',
       imageUrl: '/assets/projects/neural_net.jpeg',
-      link: '#',
+      link: 'https://github.com/redl-m/Emotion-Detection',
       techStack: [
+        { name: 'PyTorch', iconUrl: '/assets/icons/pytorch.svg', link: 'https://pytorch.org' },
         { name: 'D3.js', iconUrl: '/assets/icons/d3.svg', link: 'https://d3js.org' },
-        { name: 'PyTorch', iconUrl: '/assets/icons/pytorch.svg', link: 'https://pytorch.org' }
+        { name: 'Dlib', iconUrl: '/assets/icons/dlib.svg', link: 'https://dlib.net' },
+        { name: 'OpenCV', iconUrl: '/assets/icons/opencv.svg', link: 'https://opencv.org' },
+        { name: 'transformers', iconUrl: '/assets/icons/huggingface.svg', link: 'https://huggingface.co' }
       ]
     },
     {
-      title: 'Coming Soon: AI-based candidate preselection',
+      title: 'Coming Spring 2026: AI-based candidate preselection',
       description: 'A system focussing on explainable AI for an AI-based candidate preselection program. The system was implemented and analyzed as part of my Bachelor\'s Thesis on XAI using PyTorch and Captum.',
       imageUrl: '/assets/projects/wave_equalizer.jpeg',
       link: '#',
@@ -59,12 +62,12 @@ export class Projects {
       ]
     },
     {
-      title: 'Coming Soon: Pneumonia Detection',
-      description: 'A FastAI-based pneumonia detection system that analyzes chest X-ray images.',
-      imageUrl: '/assets/projects/pneumonia_detection.jpeg',
+      title: 'WIP: Breast Cancer Detection',
+      description: 'A TensorFlow-based breast cancer detection system that analyzes mammogram images.',
+      imageUrl: '/assets/projects/breast_cancer_detection.jpeg',
       link: '#',
       techStack: [
-        { name: 'FastAI', iconUrl: '/assets/icons/fastai.svg', link: 'https://fastai1.fast.ai/' },
+        { name: 'FastAI', iconUrl: '/assets/icons/tensorflow.svg', link: 'https://www.tensorflow.org' },
       ]
     }
   ];
