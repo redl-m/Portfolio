@@ -120,6 +120,12 @@ export const photoManifest: { [key: string]: string[] } = {
     "assets/about/trips/Milan/APC_1511.jpg",
     "assets/about/trips/Milan/IMG_0595.jpg"
   ],
+  "Munich": [
+    "assets/about/trips/Munich/APC_5142.jpg",
+    "assets/about/trips/Munich/APC_5143.jpg",
+    "assets/about/trips/Munich/APC_5145.jpg",
+    "assets/about/trips/Munich/APC_5146.jpg"
+  ],
   "NewYork": [
     "assets/about/trips/NewYork/0.jpg",
     "assets/about/trips/NewYork/1.jpg",
@@ -142,6 +148,7 @@ export const photoManifest: { [key: string]: string[] } = {
     "assets/about/trips/NewYork/9.jpg"
   ],
   "Paris": [
+    "assets/about/trips/Paris/0.jpg",
     "assets/about/trips/Paris/1.jpg",
     "assets/about/trips/Paris/APC_0417.jpg",
     "assets/about/trips/Paris/APC_0449.jpg",
@@ -151,7 +158,15 @@ export const photoManifest: { [key: string]: string[] } = {
     "assets/about/trips/Paris/APC_0572.jpg",
     "assets/about/trips/Paris/APC_0573.jpg",
     "assets/about/trips/Paris/APC_0585.jpg",
-    "assets/about/trips/Paris/IMG_6425.jpg"
+    "assets/about/trips/Paris/APC_5010.jpg",
+    "assets/about/trips/Paris/APC_5011.jpg",
+    "assets/about/trips/Paris/APC_5034.jpg",
+    "assets/about/trips/Paris/APC_5056.jpg",
+    "assets/about/trips/Paris/APC_5058.jpg",
+    "assets/about/trips/Paris/APC_5059.jpg",
+    "assets/about/trips/Paris/APC_5069.jpg",
+    "assets/about/trips/Paris/APC_5076.jpg",
+    "assets/about/trips/Paris/APC_5083.jpg"
   ],
   "Prague": [
     "assets/about/trips/Prague/0.jpg",

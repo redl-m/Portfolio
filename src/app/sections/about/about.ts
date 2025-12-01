@@ -62,7 +62,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
   // Trips and their photos
   trips: Trip[] = [
     {name: 'Barcelona 2022', lat: 41.3874, lng: 2.1686, photos: photoManifest['Barcelona'] || []},
-    {name: 'Paris 2022', lat: 48.8566, lng: 2.3522, photos: photoManifest['Paris'] || []},
+    {name: 'Paris 2022 & 2025', lat: 48.8566, lng: 2.3522, photos: photoManifest['Paris'] || []},
     {name: 'Berlin 2023', lat: 52.52, lng: 13.405, photos: photoManifest['Berlin'] || []},
     {name: 'Brussels 2023', lat: 50.8477, lng: 4.3572, photos: photoManifest['Brussels'] || []},
     {name: 'London 2023', lat: 51.5072, lng: -0.1276, photos: photoManifest['London'] || []},
@@ -79,6 +79,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     {name: 'Lund 2024', lat: 55.7047, lng: 13.1910, photos: photoManifest['Lund'] || []},
     {name: 'Ystad 2024', lat: 55.4295, lng: 13.82, photos: photoManifest['Ystad'] || []},
     {name: 'Copenhagen 2024', lat: 55.6761, lng: 12.5683, photos: photoManifest['Copenhagen'] || []},
+    {name: 'Munich 2025', lat: 48.1351, lng: 11.5820, photos: photoManifest['Munich'] || []},
   ];
 
   // Arrays bound in the template
