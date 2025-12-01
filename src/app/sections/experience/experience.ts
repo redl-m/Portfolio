@@ -16,6 +16,8 @@ export interface ExperienceItem {
   endYear: number;
   type: 'work' | 'education';
   info: ExperienceInfo;
+  parentId?: number; // Nested events
+  isOverlay?: boolean;
 }
 
 // --- Component ---
@@ -41,6 +43,7 @@ export class Experience implements OnInit, OnDestroy {
   isMobileView = false;
   isWorkLabelHovered = false;
   isEducationLabelHovered = false;
+  instantHoverId: number | null = null;
 
   private resizeSubscription: Subscription | null = null;
 
@@ -155,42 +158,45 @@ export class Experience implements OnInit, OnDestroy {
   onHover(item: ExperienceItem | null): void {
     if (this.isMobileView) return;
 
-    const FADE_TRANSITION_DURATION = 200; // in milliseconds
+    // 1. Instant Visual State (Snappy animation)
+    this.instantHoverId = item ? item.id : null;
 
-    // Case 1: Mouse is hovering over a timeline bar.
+    // 2. Delayed Info Window State
+    const FADE_TRANSITION_DURATION = 200;
+
     if (item) {
+      // Work Logic
       if (item.type === 'work') {
-        clearTimeout(this.hideTimeoutWork); // Stop any pending hide for the work window.
+        clearTimeout(this.hideTimeoutWork);
 
-        // If a different work item is already shown, transition to the new one.
+        // Handle Work Window Transition
         if (this.hoveredWorkItem && this.hoveredWorkItem.id !== item.id) {
-          this.hoveredWorkItem = null; // Trigger fade-out.
-          setTimeout(() => {
-            this.hoveredWorkItem = item; // After a delay, fade in the new item.
-          }, FADE_TRANSITION_DURATION);
+          this.hoveredWorkItem = null;
+          setTimeout(() => { this.hoveredWorkItem = item; }, FADE_TRANSITION_DURATION);
         } else if (!this.hoveredWorkItem) {
-          // If no work window is visible, just show it.
           this.hoveredWorkItem = item;
         }
-        // If hovering the same item, do nothing.
-      } else { // item.type === 'education'
-        clearTimeout(this.hideTimeoutEducation); // Stop any pending hide for the education window.
 
-        // If a different education item is already shown, transition.
+        // Trigger leave of education
+        this.scheduleHide('education');
+
+        // Education logic
+      } else {
+        clearTimeout(this.hideTimeoutEducation);
+
+        // Handle Education Window Transition
         if (this.hoveredEducationItem && this.hoveredEducationItem.id !== item.id) {
-          this.hoveredEducationItem = null; // Trigger fade-out.
-          setTimeout(() => {
-            this.hoveredEducationItem = item; // After a delay, fade in the new item.
-          }, FADE_TRANSITION_DURATION);
+          this.hoveredEducationItem = null;
+          setTimeout(() => { this.hoveredEducationItem = item; }, FADE_TRANSITION_DURATION);
         } else if (!this.hoveredEducationItem) {
-          // If no education window is visible, just show it.
           this.hoveredEducationItem = item;
         }
+
+        // Trigger leave of work
+        this.scheduleHide('work');
       }
-    }
-    // Case 2: Mouse has left all timeline bars.
-    else {
-      // Schedule both windows to hide independently after their timers.
+    } else {
+      // Mouse leaves all items
       this.scheduleHide('work');
       this.scheduleHide('education');
     }
@@ -236,14 +242,27 @@ export class Experience implements OnInit, OnDestroy {
    */
   private scheduleHide(type: 'work' | 'education'): void {
     const delay = 1500;
-    if (type === 'work' && this.hoveredWorkItem && !this.isMouseInsideWorkInfoWindow) {
-      this.hideTimeoutWork = setTimeout(() => {
-        this.hoveredWorkItem = null;
-      }, delay);
-    } else if (type === 'education' && this.hoveredEducationItem && !this.isMouseInsideEducationInfoWindow) {
-      this.hideTimeoutEducation = setTimeout(() => {
-        this.hoveredEducationItem = null;
-      }, delay);
+
+    if (type === 'work') {
+      // Clear existing timer
+      clearTimeout(this.hideTimeoutWork);
+
+      //  Schedule new timer if conditions are met
+      if (this.hoveredWorkItem && !this.isMouseInsideWorkInfoWindow) {
+        this.hideTimeoutWork = setTimeout(() => {
+          this.hoveredWorkItem = null;
+        }, delay);
+      }
+    } else { // type === 'education'
+      // Clear existing timer
+      clearTimeout(this.hideTimeoutEducation);
+
+      // Schedule new timer if conditions are met
+      if (this.hoveredEducationItem && !this.isMouseInsideEducationInfoWindow) {
+        this.hideTimeoutEducation = setTimeout(() => {
+          this.hoveredEducationItem = null;
+        }, delay);
+      }
     }
   }
 
@@ -256,6 +275,21 @@ export class Experience implements OnInit, OnDestroy {
     const durationYears = Math.max(0, end - start);
     const durationMonths = durationYears * 12;
     return durationMonths < 6; // strictly less than 6 months
+  }
+
+
+  /**
+   * Helper to determine if a bar should be scaled visually.
+   * @param item The ExperienceItem to check.
+   */
+  shouldScale(item: ExperienceItem): boolean {
+    if (!this.instantHoverId) return false;
+
+    // 1. Direct Hover
+    if (this.instantHoverId === item.id) return true;
+
+    // 2. Parent is Hovered -> Child (Overlay) Scales too
+    return item.parentId === this.instantHoverId;
   }
 }
 
@@ -334,7 +368,35 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'BSc Informatics at TU Wien',
       description: 'Currently pursuing a Bachelor\'s degree with a focus on Artificial Intelligence and Machine Learning at TU Wien.',
-      links: [{url: 'https://informatics.tuwien.ac.at/bachelor/informatics/', text: 'Study Breakdown and Description'}]
+      links: [{url: 'https://informatics.tuwien.ac.at/bachelor/informatics', text: 'Study Breakdown and Description'}]
     }
   }
+  /*
+  ,
+  {
+    id: 8,
+    startYear: 2026.8,
+    endYear: 2029.58,
+    type: 'education',
+    info: {
+      title: 'MSc Logic and Artifical Intelligence at TU Wien',
+      description: 'Currently pursuing a Master\'s degree in Logic and AI at TU Wien.',
+      links: [{url: 'https://informatics.tuwien.ac.at/master/logic-and-artificial-intelligence', text: 'Study Breakdown and Description'}]
+    }
+  },
+  // Exchange Semester at Aalto University
+  {
+    id: 9,
+    startYear: 2027.2,
+    endYear: 2027.58,
+    type: 'education',
+    isOverlay: true,
+    parentId: 8,
+    info: {
+      title: 'Exchange semester at Aalto University',
+      description: 'Semester abroad focusing on Machine Learning.',
+      links: [{url: 'https://www.aalto.fi', text: 'University website'}]
+    }
+  }
+   */
 ];
