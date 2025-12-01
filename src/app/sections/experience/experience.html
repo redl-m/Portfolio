@@ -34,9 +34,18 @@
     </div>
   </div>
   <div class="bars">
-    <div *ngFor="let exp of experiences" class="bar-wrapper" [ngClass]="exp.type"
-         [ngStyle]="getDesktopBarStyle(exp.startYear, exp.endYear)" (mouseenter)="onHover(exp)"
+    <div *ngFor="let exp of experiences"
+         class="bar-wrapper"
+         [ngClass]="{
+         'work': exp.type === 'work',
+         'education': exp.type === 'education',
+         'overlay': exp.isOverlay,
+         'scaled': shouldScale(exp)
+       }"
+         [ngStyle]="getDesktopBarStyle(exp.startYear, exp.endYear)"
+         (mouseenter)="onHover(exp)"
          (mouseleave)="onHover(null)">
+
       <div class="experience-bar" [ngClass]="exp.type"></div>
     </div>
   </div>
