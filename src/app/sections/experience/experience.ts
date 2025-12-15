@@ -48,8 +48,8 @@ export class Experience implements OnInit, OnDestroy {
   private resizeSubscription: Subscription | null = null;
 
   // --- Hover Persistence Logic ---
-  private hideTimeoutWork: any;
-  private hideTimeoutEducation: any;
+  private hideTimeoutWork: any = null;
+  private hideTimeoutEducation: any = null;
   private isMouseInsideWorkInfoWindow = false;
   private isMouseInsideEducationInfoWindow = false;
 
@@ -158,45 +158,50 @@ export class Experience implements OnInit, OnDestroy {
   onHover(item: ExperienceItem | null): void {
     if (this.isMobileView) return;
 
-    // 1. Instant Visual State (Snappy animation)
     this.instantHoverId = item ? item.id : null;
-
-    // 2. Delayed Info Window State
     const FADE_TRANSITION_DURATION = 200;
 
+    // Mouse is hovering over a timeline bar
     if (item) {
-      // Work Logic
+      // Work logic
       if (item.type === 'work') {
-        clearTimeout(this.hideTimeoutWork);
+        // Clear work item timeout
+        if (this.hideTimeoutWork !== null) {
+          clearTimeout(this.hideTimeoutWork);
+          this.hideTimeoutWork = null;
+        }
 
-        // Handle Work Window Transition
+        // Transitioning to another work item
         if (this.hoveredWorkItem && this.hoveredWorkItem.id !== item.id) {
           this.hoveredWorkItem = null;
-          setTimeout(() => { this.hoveredWorkItem = item; }, FADE_TRANSITION_DURATION);
+          setTimeout(() => {
+            this.hoveredWorkItem = item;
+          }, FADE_TRANSITION_DURATION);
         } else if (!this.hoveredWorkItem) {
           this.hoveredWorkItem = item;
         }
 
-        // Trigger leave of education
-        this.scheduleHide('education');
-
         // Education logic
       } else {
-        clearTimeout(this.hideTimeoutEducation);
+        // Clear education item timeout
+        if (this.hideTimeoutEducation !== null) {
+          clearTimeout(this.hideTimeoutEducation);
+          this.hideTimeoutEducation = null;
+        }
 
-        // Handle Education Window Transition
+        // Transitioning to another education item
         if (this.hoveredEducationItem && this.hoveredEducationItem.id !== item.id) {
           this.hoveredEducationItem = null;
-          setTimeout(() => { this.hoveredEducationItem = item; }, FADE_TRANSITION_DURATION);
+          setTimeout(() => {
+            this.hoveredEducationItem = item;
+          }, FADE_TRANSITION_DURATION);
         } else if (!this.hoveredEducationItem) {
           this.hoveredEducationItem = item;
         }
-
-        // Trigger leave of work
-        this.scheduleHide('work');
       }
+      // Mouse has left all timeline bars
     } else {
-      // Mouse leaves all items
+      // Schedule both timers
       this.scheduleHide('work');
       this.scheduleHide('education');
     }
@@ -211,10 +216,16 @@ export class Experience implements OnInit, OnDestroy {
   onInfoEnter(type: 'work' | 'education'): void {
     if (type === 'work') {
       this.isMouseInsideWorkInfoWindow = true;
-      clearTimeout(this.hideTimeoutWork);
+      if (this.hideTimeoutWork !== null) {
+        clearTimeout(this.hideTimeoutWork);
+        this.hideTimeoutWork = null;
+      }
     } else {
       this.isMouseInsideEducationInfoWindow = true;
-      clearTimeout(this.hideTimeoutEducation);
+      if (this.hideTimeoutEducation !== null) {
+        clearTimeout(this.hideTimeoutEducation);
+        this.hideTimeoutEducation = null;
+      }
     }
   }
 
@@ -241,27 +252,29 @@ export class Experience implements OnInit, OnDestroy {
    * @param type The type of info window to schedule for hiding.
    */
   private scheduleHide(type: 'work' | 'education'): void {
-    const delay = 1500;
+    const HIDE_DELAY = 1500;
 
     if (type === 'work') {
-      // Clear existing timer
-      clearTimeout(this.hideTimeoutWork);
+      // Do not reset the counter if one is already running
+      if (this.hideTimeoutWork !== null) return;
 
-      //  Schedule new timer if conditions are met
+      // Only hide if the mouse is not currently inside the info window
       if (this.hoveredWorkItem && !this.isMouseInsideWorkInfoWindow) {
         this.hideTimeoutWork = setTimeout(() => {
           this.hoveredWorkItem = null;
-        }, delay);
+          this.hideTimeoutWork = null;
+        }, HIDE_DELAY);
       }
-    } else { // type === 'education'
-      // Clear existing timer
-      clearTimeout(this.hideTimeoutEducation);
+    } else {
+      // Do not reset the counter if one is already running
+      if (this.hideTimeoutEducation !== null) return;
 
-      // Schedule new timer if conditions are met
+      // Only hide if the mouse is not currently inside the info window
       if (this.hoveredEducationItem && !this.isMouseInsideEducationInfoWindow) {
         this.hideTimeoutEducation = setTimeout(() => {
           this.hoveredEducationItem = null;
-        }, delay);
+          this.hideTimeoutEducation = null;
+        }, HIDE_DELAY);
       }
     }
   }
