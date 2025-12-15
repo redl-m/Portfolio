@@ -3,6 +3,42 @@ import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import {Subscription} from 'rxjs';
 import {ViewportService} from '../../services/viewport.service';
 
+
+/**
+ * Calculates the precise float representation of a date (e.g., 2025.45).
+ * Handles leap years correctly.
+ *
+ * @param day The day of the month (1-31).
+ * @param month The month (1-12).
+ * @param year The full year (e.g., 2025).
+ * @param endOfDay (Optional) If true, calculates the end of that day.
+ * @returns A float representing the date as fraction of the year.
+ */
+function getYearFloat(day: number, month: number, year: number, endOfDay: boolean = false): number {
+
+  // Leap year check
+  const isLeap = (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+  const daysInYear = isLeap ? 366 : 365;
+
+  // Days in each month
+  const daysInMonth = [31, (isLeap ? 29 : 28), 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+  // Calculate the number of days
+  let dayOfYear = 0;
+  for (let i = 0; i < month - 1; i++) {
+    dayOfYear += daysInMonth[i];
+  }
+  dayOfYear += day; // Add the current days of this month
+
+  // Adjust for start or end of the day
+  const completedDays = endOfDay ? dayOfYear : (dayOfYear - 1);
+
+  // Calculate fraction and return
+  const yearFraction = completedDays / daysInYear;
+
+  return year + yearFraction;
+}
+
 // --- Data Structures ---
 export interface ExperienceInfo {
   title: string;
@@ -32,7 +68,7 @@ export class Experience implements OnInit, OnDestroy {
 
   // --- Timeline Configuration ---
   startYear = 2018;
-  endYear = 2026;  // This +1 gets displayed on the timeline
+  endYear = 2029;  // This +1 gets displayed on the timeline
   years: number[] = [];
 
   // --- State Management ---
@@ -310,8 +346,8 @@ export class Experience implements OnInit, OnDestroy {
 export const EXPERIENCES: ExperienceItem[] = [
   {
     id: 1,
-    startYear: 2020.5,
-    endYear: 2020.8,
+    startYear: getYearFloat(13, 7, 2020),
+    endYear: getYearFloat(7, 8, 2020, true),
     type: 'work',
     info: {
       title: 'Intern at SVS',
@@ -321,8 +357,8 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 2,
-    startYear: 2021.5,
-    endYear: 2021.75,
+    startYear: getYearFloat(1, 7, 2021),
+    endYear: getYearFloat(31, 7, 2021, true),
     type: 'work',
     info: {
       title: 'Intern at solvistas',
@@ -332,8 +368,8 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 3,
-    startYear: 2022.5,
-    endYear: 2022.75,
+    startYear: getYearFloat(11, 7, 2022),
+    endYear: getYearFloat(9, 9, 2022, true),
     type: 'work',
     info: {
       title: 'Software Development Intern at solvistas',
@@ -343,8 +379,8 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 4,
-    startYear: 2022.83,
-    endYear: 2023.58,
+    startYear: getYearFloat(3, 10, 2022),
+    endYear: getYearFloat(30, 7, 2023),
     type: 'work',
     info: {
       title: 'Civil Service in a Kindergarden',
@@ -353,8 +389,8 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 5,
-    startYear: 2024.5,
-    endYear: 2024.8,
+    startYear: getYearFloat(8, 7, 2024),
+    endYear: getYearFloat(19, 8, 2024),
     type: 'work',
     info: {
       title: 'Production Intern at BMW',
@@ -364,8 +400,8 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 6,
-    startYear: 2018,
-    endYear: 2022.5,
+    startYear: getYearFloat(1, 1, 2018),
+    endYear: getYearFloat(20, 6, 2022, true),
     type: 'education',
     info: {
       title: 'b[r]g Enns',
@@ -375,21 +411,44 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   {
     id: 7,
-    startYear: 2023.8,
-    endYear: 2026.58,
+    startYear: getYearFloat(2, 10, 2023),
+    endYear: getYearFloat(30, 6, 2026, true),
     type: 'education',
     info: {
       title: 'BSc Informatics at TU Wien',
       description: 'Currently pursuing a Bachelor\'s degree with a focus on Artificial Intelligence and Machine Learning at TU Wien.',
       links: [{url: 'https://informatics.tuwien.ac.at/bachelor/informatics', text: 'Study Breakdown and Description'}]
     }
-  }
+  },
   /*
-  ,
   {
     id: 8,
-    startYear: 2026.8,
-    endYear: 2029.58,
+    startYear: getYearFloat(16, 2, 2026),
+    endYear: getYearFloat(30, 6, 2026),
+    type: 'work',
+    info: {
+      title: 'Working Student at',
+      description: 'Working student in software development department.',
+      links: [{url: '', text: 'Company Website'}]
+    }
+  },
+  {
+    id: 9,
+    startYear: getYearFloat(1, 7, 2026),
+    endYear: getYearFloat(31, 8, 2026, true),
+    type: 'work',
+    info: {
+      title: 'AI/ML Intern at Robert Bosch AG',
+      description: 'Identification of use of cases of generative and agentic artificial intelligence for automotive safety.',
+      links: [{url: 'https://www.bosch.at', text: 'Company Website'}]
+    }
+  }
+
+  ,
+  {
+    id: 10,
+    startYear: getYearFloat(5, 10, 2026),
+    endYear: getYearFloat(30, 6, 2029),
     type: 'education',
     info: {
       title: 'MSc Logic and Artifical Intelligence at TU Wien',
@@ -399,17 +458,17 @@ export const EXPERIENCES: ExperienceItem[] = [
   },
   // Exchange Semester at Aalto University
   {
-    id: 9,
-    startYear: 2027.2,
-    endYear: 2027.58,
+    id: 11,
+    startYear: getYearFloat(10, 1, 2027),
+    endYear: getYearFloat(31, 5, 2027, true),
     type: 'education',
     isOverlay: true,
-    parentId: 8,
+    parentId: 10,
     info: {
       title: 'Exchange semester at Aalto University',
       description: 'Semester abroad focusing on Machine Learning.',
       links: [{url: 'https://www.aalto.fi', text: 'University website'}]
     }
   }
-   */
+  */
 ];
