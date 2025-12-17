@@ -65,7 +65,7 @@ export class Projects {
       title: 'WIP: Breast Cancer Detection',
       description: 'A TensorFlow-based breast cancer detection system that analyzes mammogram images.',
       imageUrl: '/assets/projects/breast_cancer_detection.jpeg',
-      link: '#',
+      link: 'https://github.com/redl-m/Breast-Cancer-Detection',
       techStack: [
         { name: 'FastAI', iconUrl: '/assets/icons/tensorflow.svg', link: 'https://www.tensorflow.org' },
       ]
