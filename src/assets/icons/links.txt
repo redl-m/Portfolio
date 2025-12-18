@@ -9,3 +9,5 @@ ollama: https://ollama.com
 opencv: https://opencv.org
 tensorflow: https://www.tensorflow.org
 huggingface: https://huggingface.co
+keras: https: https://keras.io
+matplotlib: https://matplotlib.org
