@@ -267,14 +267,14 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     // Vienna Home Marker
     const fg = L.featureGroup().addTo(map);
     L.circleMarker([48.2081, 16.3713], {
-      radius: 6, color: '#bf30b6', weight: 2, fillOpacity: 0.9
+      radius: 4, color: '#bf30b6', weight: 2, fillOpacity: 0.9
     }).addTo(fg);
 
     // Add travel destination markers
     this.zone.runOutsideAngular(() => {
       this.trips.forEach(trip => {
         const marker = L.circleMarker([trip.lat, trip.lng], {
-          radius: 6, color: '#2d1a61', weight: 2, fillOpacity: 0.9
+          radius: 4, color: '#2d1a61', weight: 2, fillOpacity: 0.9
         }).addTo(fg);
 
         marker.on('mouseover', ev => this.zone.run(() => {
