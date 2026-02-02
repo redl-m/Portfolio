@@ -108,7 +108,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
         this.selectedTile = null;
       }
     });
-    // New: listen to window resizes for tablet detection
+    // Listen to window resizes for tablet detection
     this.checkTablet();
     this.resizeSub = fromEvent(window, 'resize').subscribe(() => this.checkTablet());
     }
@@ -251,6 +251,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
         this.map.scrollWheelZoom.enable();
         zoomOverlay.style.opacity = '0';
       } else {
+        e.preventDefault()
         this.map.scrollWheelZoom.disable();
         zoomOverlay.style.opacity = '1';
         // Set a new timer to hide the zoomOverlay after 1 second
