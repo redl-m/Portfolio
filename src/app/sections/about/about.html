@@ -62,6 +62,9 @@
           <div class="mobile-tile-item" (click)="selectTile('travelling')">
             <span class="mobile-tile-label">Travel 🚆</span>
           </div>
+          <div class="mobile-tile-item" (click)="toggleMap()">
+            <span class="mobile-tile-label">Map 🗺️</span>
+          </div>
         </div>
 
         <div class="mobile-download-card" [@tileFade]>
@@ -71,12 +74,8 @@
             <a class="download-button disabled" href="#" title="Coming soon...">🎓 Bachelor’s Thesis</a>
           </div>
         </div>
-
-        <div class="mobile-action-card" (click)="toggleMap()" [@tileFade]>
-          <h3>Interactive Map 🗺️</h3>
-          <span>Tap to see my travel memories</span>
-        </div>
       </div>
+
 
       <div class="mobile-overlay-backdrop" *ngIf="selectedTile" (click)="selectTile(null)">
         <div class="mobile-overlay-card" (click)="$event.stopPropagation()">
