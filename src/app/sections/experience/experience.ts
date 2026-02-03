@@ -451,7 +451,7 @@ export const EXPERIENCES: ExperienceItem[] = [
     endYear: getYearFloat(30, 6, 2029),
     type: 'education',
     info: {
-      title: 'MSc Logic and Artifical Intelligence at TU Wien',
+      title: 'MSc Logic and Artificial Intelligence at TU Wien',
       description: 'Currently pursuing a Master\'s degree in Logic and AI at TU Wien.',
       links: [{url: 'https://informatics.tuwien.ac.at/master/logic-and-artificial-intelligence', text: 'Study Breakdown and Description'}]
     }
