@@ -43,21 +43,54 @@ $max-tablet-width: 1440px;
   --nav-bg: rgba(36, 36, 55, 0.3);
 }
 
-html,
+html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+
 body {
   height: 100%;
   margin: 0;
-  overscroll-behavior-y: none;
-  touch-action: none;
+
+  // Scrolling & Snapping (Native Mobile)
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+
+  // Global styles
   background-color: var(--bg-color);
   color: var(--text-color);
   font-family: 'Inter', sans-serif;
 }
 
-body {
-  overflow-y: scroll;
-  /* Let the browser do “soft” snapping when you’re close */
-  scroll-snap-type: y proximity;
+/* ---------------------------------------------------
+ * Custom Scrollbar Styling
+ * --------------------------------------------------- */
+
+/* Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-color);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--accent-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gradient-end);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-color) var(--bg-color);
 }
 
 /* ---------------------------------------------------
@@ -65,10 +98,10 @@ body {
  * --------------------------------------------------- */
 
 .section {
-  height: 100vh;
+  height: 100dvh;
   scroll-snap-align: start;
-  scroll-snap-stop: normal;
-  scroll-margin-top: calc(80px);
+  scroll-snap-stop: always;
+
   display: flex;
   justify-content: center;
   align-items: center;
