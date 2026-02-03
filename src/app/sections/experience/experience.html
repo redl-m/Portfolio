@@ -76,9 +76,15 @@
   </div>
 </div>
 
-<div *ngIf="isMobileView" class="timeline-label work-label-mobile">
-  <div class="experience-header"><h2>Work Experience</h2></div>
+<div *ngIf="isMobileView" class="mobile-labels-wrapper">
+  <div class="timeline-label education-label-mobile">
+    <div class="experience-header"><h2>Education</h2></div>
+  </div>
+  <div class="timeline-label work-label-mobile">
+    <div class="experience-header"><h2>Work Experience</h2></div>
+  </div>
 </div>
+
 <div *ngIf="isMobileView" class="timeline-container-mobile">
   <div class="timeline-line-mobile"></div>
   <div class="timeline-content">
@@ -91,19 +97,14 @@
          [ngClass]="exp.type"
          [class.short]="isLabelHidden(exp.startYear, exp.endYear)"
          [ngStyle]="getMobileBarStyle(exp.startYear, exp.endYear)"
-         (click)="onSelectItem(exp)"
-    >
+         (click)="onSelectItem(exp)">
       <div class="experience-bar-mobile">
-    <span class="bar-title" [attr.aria-hidden]="isLabelHidden(exp.startYear, exp.endYear) ? 'true' : null">
-      {{ exp.info.title }}
-    </span>
+        <span class="bar-title" [attr.aria-hidden]="isLabelHidden(exp.startYear, exp.endYear) ? 'true' : null">
+          {{ exp.info.title }}
+        </span>
       </div>
     </div>
-
   </div>
-</div>
-<div *ngIf="isMobileView" class="timeline-label education-label-mobile">
-  <div class="experience-header"><h2>Education</h2></div>
 </div>
 
 <div class="modal-overlay" *ngIf="selectedExperience" (click)="closeModal()">
