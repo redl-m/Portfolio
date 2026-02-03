@@ -6,7 +6,7 @@
 :host {
   display: flex;
   flex: 1 1 100%;
-  height: 100vh;
+  height: 100dvh;
   position: relative;
   font-family: sans-serif;
   font-size: 2.5em;
@@ -45,12 +45,20 @@
   align-self: center;
   top: 0;
   bottom: 0;
-  left: 50%; // Center the line
+  left: 50%;
   transform: translateX(-50%) translateY(8px);
   width: 4px;
   height: 90%;
-  background-color: var(--accent-color);
   border-radius: 2px;
+
+  // Timeline fade-in and fade-out
+  background: linear-gradient(
+      to bottom,
+      transparent 0%,
+      var(--accent-color) 15%,
+      var(--accent-color) 85%,
+      transparent 100%
+  );
 }
 
 .timeline-content {
@@ -61,7 +69,9 @@
 .year-tick-mobile {
   position: absolute;
   left: 50%;
-  transform: translateX(-50%); // Fully center the tick line & label
+
+  transform: translate(-50%, -7.5px);
+
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -86,23 +96,26 @@
 
 .bar-wrapper-mobile {
   position: absolute;
-  padding: 0.5rem 0;
+
+  padding: 0;
+
   box-sizing: border-box;
   cursor: pointer;
-  width: calc(50% - 30px); // Half the width minus some gap
+  width: calc(50% - 30px);
 
   .experience-bar-mobile {
     height: 100%;
-    padding: 0.75rem 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
     display: flex;
     align-items: center;
 
-    &:hover {
-      transform: scale(1.02);
-      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+    &:active {
+      transform: scale(0.96);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
   }
 
@@ -110,8 +123,8 @@
     left: 1rem;
 
     .experience-bar-mobile {
-      background: linear-gradient(135deg, #8e99f3, #6c5ce7);
-      justify-content: flex-end; // Align text to the right
+      background: linear-gradient(135deg, #6c5ce7, #2d1a61);
+      justify-content: flex-end;
     }
 
     .bar-title {
@@ -123,14 +136,15 @@
     left: calc(50% + 20px);
 
     .experience-bar-mobile {
-      background: linear-gradient(135deg, #9b59b6, #8e44ad);
+      background: linear-gradient(135deg, #8e44ad, #bf30b6);
     }
   }
 
   .bar-title {
-    color: white;
+    color: var(--text-color);
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
   }
 }
 
