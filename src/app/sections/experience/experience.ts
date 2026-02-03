@@ -322,8 +322,7 @@ export class Experience implements OnInit, OnDestroy {
    */
   isLabelHidden(start: number, end: number): boolean {
     const durationYears = Math.max(0, end - start);
-    const durationMonths = durationYears * 12;
-    return durationMonths < 6; // strictly less than 6 months
+    return durationYears < 1;
   }
 
 
