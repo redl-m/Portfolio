@@ -10,9 +10,10 @@ interface Library {
 interface Project {
   title: string;
   description: string;
+  shortDescription: string;
   imageUrl: string;
   link: string;
-  libraryStack: Library[];
+  techStack: Library[];
 }
 
 @Component({
@@ -40,6 +41,7 @@ export class Projects {
     {
       title: 'Emotion Detection',
       description: 'Emotion classification using PyTorch and attention estimation using OpenCV, also evaluating emotion and attention development over time, visualizing it using D3 and summarizing it using either a heuristic method, local LLM or remote LLM via an API.',
+      shortDescription: 'Emotion classification using PyTorch and OpenCV, featuring D3 data visualization and LLM-powered summarization.',
       imageUrl: '/assets/projects/neural_net.jpeg',
       link: 'https://github.com/redl-m/Emotion-Detection',
       techStack: [
@@ -53,6 +55,7 @@ export class Projects {
     {
       title: 'Coming Spring 2026: AI-based candidate preselection',
       description: 'A system focussing on explainable AI for an AI-based candidate preselection program. The system was implemented and analyzed as part of my Bachelor\'s Thesis on XAI using PyTorch and Captum.',
+      shortDescription: 'My Bachelor\'s Thesis project focusing on explainable AI for recruitment preselection.',
       imageUrl: '/assets/projects/wave_equalizer.jpeg',
       link: '#',
       techStack: [
@@ -64,6 +67,7 @@ export class Projects {
     {
       title: 'Breast Cancer Detection',
       description: 'A TensorFlow-based breast cancer detection system that analyzes mammogram images.',
+      shortDescription: 'A TensorFlow-based breast cancer detection system that analyzes mammogram images.',
       imageUrl: '/assets/projects/breast_cancer_detection.jpeg',
       link: 'https://github.com/redl-m/Breast-Cancer-Detection',
       techStack: [
