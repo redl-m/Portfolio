@@ -81,6 +81,7 @@ export class About implements AfterViewInit, OnInit, OnDestroy {
     {name: 'Copenhagen 2024', lat: 55.6761, lng: 12.5683, photos: photoManifest['Copenhagen'] || []},
     {name: 'Munich 2025', lat: 48.1351, lng: 11.5820, photos: photoManifest['Munich'] || []},
     {name: 'Athens 2025', lat: 37.9838, lng: 23.7275, photos: photoManifest['Athens'] || []},
+    {name: 'Dublin 2026', lat: 53.3498, lng: -6.2603, photos: photoManifest['Dublin'] || []},
   ];
 
   // Arrays bound in the template

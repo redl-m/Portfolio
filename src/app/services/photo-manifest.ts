@@ -73,6 +73,23 @@ export const photoManifest: { [key: string]: string[] } = {
     "assets/about/trips/Copenhagen/APC_4835.jpg",
     "assets/about/trips/Copenhagen/APC_4839.jpg"
   ],
+  "Dublin": [
+    "assets/about/trips/Dublin/APC_5308.jpg",
+    "assets/about/trips/Dublin/APC_5316.jpg",
+    "assets/about/trips/Dublin/APC_5333.jpg",
+    "assets/about/trips/Dublin/APC_5351.jpg",
+    "assets/about/trips/Dublin/APC_5352.jpg",
+    "assets/about/trips/Dublin/APC_5362.jpg",
+    "assets/about/trips/Dublin/APC_5369.jpg",
+    "assets/about/trips/Dublin/APC_5379.jpg",
+    "assets/about/trips/Dublin/APC_5380.jpg",
+    "assets/about/trips/Dublin/APC_5386.jpg",
+    "assets/about/trips/Dublin/APC_5389.jpg",
+    "assets/about/trips/Dublin/APC_5392.jpg",
+    "assets/about/trips/Dublin/APC_5411.jpg",
+    "assets/about/trips/Dublin/APC_5437.jpg",
+    "assets/about/trips/Dublin/IMG_1881.jpg"
+  ],
   "Edinburgh": [
     "assets/about/trips/Edinburgh/APC_1029.jpg",
     "assets/about/trips/Edinburgh/APC_1041.jpg",
