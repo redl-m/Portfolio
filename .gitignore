@@ -46,4 +46,5 @@ Thumbs.db
 /playwright-report/
 /playwright/.cache/
 
+# Trip photos
 src/assets/about/trips/
