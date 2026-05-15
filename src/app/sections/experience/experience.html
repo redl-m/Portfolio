@@ -62,16 +62,84 @@
                                                                        target="_blank">{{ link.text }}</a></div>
     </div>
   </div>
-  <div class="info-window education" [class.visible]="hoveredEducationItem" (mouseenter)="onInfoEnter('education')"
-       (mouseleave)="onInfoLeave('education')">
+  <div class="info-window education" [class.visible]="hoveredEducationItem" (mouseenter)="onInfoEnter('education')" (mouseleave)="onInfoLeave('education')">
     <svg class="info-window-border" preserveAspectRatio="none">
       <rect width="100%" height="100%"/>
     </svg>
+
     <div class="info-window-content" *ngIf="hoveredEducationItem">
       <h3>{{ hoveredEducationItem.info.title }}</h3>
-      <p>{{ hoveredEducationItem.info.description }}</p>
-      <div class="links" *ngIf="hoveredEducationItem.info.links?.length"><a
-        *ngFor="let link of hoveredEducationItem.info.links" [href]="link.url" target="_blank">{{ link.text }}</a></div>
+
+      <ng-container *ngIf="!hoveredEducationItem.info.academicDetails">
+        <p>{{ hoveredEducationItem.info.description }}</p>
+        <div class="links" *ngIf="hoveredEducationItem.info.links?.length">
+          <a *ngFor="let link of hoveredEducationItem.info.links" [href]="link.url" target="_blank">{{ link.text }}</a>
+        </div>
+      </ng-container>
+
+      <ng-container *ngIf="hoveredEducationItem.info.academicDetails as academics">
+        <div class="tabs-container">
+          <button class="tab-btn" [class.active]="activeTab === 'overview'" (click)="setActiveTab('overview')">Overview & Skills</button>
+          <button class="tab-btn" [class.active]="activeTab === 'journey'" (click)="setActiveTab('journey')">Study Journey</button>
+          <button class="tab-btn" [class.active]="activeTab === 'thesis'" (click)="setActiveTab('thesis')">{{ academics.thesisType }}</button>
+        </div>
+
+        <div class="tab-pane" *ngIf="activeTab === 'overview'">
+          <p class="description-text">{{ hoveredEducationItem.info.description }}</p>
+          <div class="skills-dashboard">
+            <div class="tile-grid">
+              <div *ngFor="let skill of academics.skills; let i = index"
+                   class="skill-tile" [class.active]="activeSkillIndex === i" (click)="setActiveSkill(i)">
+                {{ skill.name }}
+              </div>
+            </div>
+            <div class="bar-chart-container">
+              <div class="bar-row" *ngFor="let tool of academics.skills[activeSkillIndex]?.tools">
+                <span class="bar-label">{{ tool.name }}</span>
+                <div class="bar-track">
+                  <div class="bar-fill" [style.width.%]="tool.proficiency"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane" *ngIf="activeTab === 'journey'">
+          <div class="tracker-phases">
+            <div *ngFor="let phase of academics.phases; let i = index"
+                 class="phase-tile" [class.active]="activePhaseIndex === i" (click)="setActivePhase(i)">
+              {{ phase.title }}
+            </div>
+          </div>
+          <div class="course-grid">
+            <div *ngFor="let course of academics.phases[activePhaseIndex]?.courses" class="course-sub-tile">
+              {{ course }}
+            </div>
+          </div>
+        </div>
+
+        <div class="tab-pane thesis-pane" *ngIf="activeTab === 'thesis'">
+          <div class="thesis-layout">
+            <div class="book-container">
+              <div class="book">
+                <div class="book-front">
+                  <span class="book-title">{{ academics.thesis.title }}</span>
+                  <span class="book-author">{{ academics.thesisType }}</span>
+                </div>
+                <div class="book-edge"></div>
+              </div>
+            </div>
+            <div class="thesis-info">
+              <h4>{{ academics.thesis.title }}</h4>
+              <p>{{ academics.thesis.abstract }}</p>
+              <div class="grade-badge" *ngIf="academics.thesis.grade">Grade: {{ academics.thesis.grade }}</div>
+              <div class="links">
+                <a *ngFor="let link of academics.thesis.links" [href]="link.url" target="_blank">{{ link.text }}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-container>
     </div>
   </div>
 </div>
