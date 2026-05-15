@@ -53,15 +53,18 @@ export class Projects {
       ]
     },
     {
-      title: 'Coming Spring 2026: AI-based candidate preselection',
-      description: 'A system focussing on explainable AI for an AI-based candidate preselection program. The system was implemented and analyzed as part of my Bachelor\'s Thesis on XAI using PyTorch and Captum.',
+      title: 'AI-based candidate preselection',
+      description: 'A system focussing on explainable AI for an AI-based candidate preselection program. The system was implemented and analyzed as part of my Bachelor\'s Thesis on XAI using FastAPI.',
       shortDescription: 'My Bachelor\'s Thesis project focusing on explainable AI for recruitment preselection.',
       imageUrl: '/assets/projects/wave_equalizer.jpeg',
-      link: '#',
+      link: 'https://github.com/redl-m/TUW-BT',
       techStack: [
-        { name: 'Angular', iconUrl: '/assets/icons/angular.svg', link: 'https://angular.io' },
         { name: 'PyTorch', iconUrl: '/assets/icons/pytorch.svg', link: 'https://pytorch.org' },
-        { name: 'Captum', iconUrl: '/assets/icons/captum.svg', link: 'https://captum.ai' }
+        { name: 'transformers', iconUrl: '/assets/icons/huggingface.svg', link: 'https://huggingface.co' },
+        { name: 'FastAPI', iconUrl: '/assets/icons/fastapi.svg', link: 'https://fastapi.tiangolo.com' },
+        { name: 'Angular', iconUrl: '/assets/icons/angular.svg', link: 'https://angular.io' },
+        { name: 'Pydantic', iconUrl: '/assets/icons/pydantic.svg', link: 'https://docs.pydantic.dev/latest' },
+        { name: 'Matplotlib', iconUrl: '/assets/icons/matplotlib.svg', link: 'https://matplotlib.org' },
       ]
     },
     {
