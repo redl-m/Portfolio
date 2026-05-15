@@ -39,11 +39,41 @@ function getYearFloat(day: number, month: number, year: number, endOfDay: boolea
   return year + yearFraction;
 }
 
+// --- Support Interfaced for Data Structures ---
+
+export interface Link {
+  url: string;
+  text: string;
+}
+
+export interface Tool {
+  name: string;
+  proficiency: number; // 0 to 100
+}
+
+export interface Skill {
+  name: string;
+  tools: Tool[];
+}
+
+export interface Phase {
+  title: string;
+  courses: string[];
+}
+
+export interface Thesis {
+  title: string;
+  abstract: string;
+  grade?: string | number;
+  links?: Link[];
+}
+
 // --- Data Structures ---
 export interface ExperienceInfo {
   title: string;
   description: string;
   links?: { url: string; text: string }[];
+  academicDetails?: AcademicDetails;
 }
 
 export interface ExperienceItem {
@@ -54,6 +84,13 @@ export interface ExperienceItem {
   info: ExperienceInfo;
   parentId?: number; // Nested events
   isOverlay?: boolean;
+}
+
+export interface AcademicDetails {
+  thesisType: string; // e.g., "Bachelor's Thesis" or "Master's Thesis"
+  skills: Skill[];
+  phases: Phase[];
+  thesis: Thesis;
 }
 
 // --- Component ---
@@ -68,7 +105,7 @@ export class Experience implements OnInit, OnDestroy {
 
   // --- Timeline Configuration ---
   startYear = 2018;
-  endYear = 2026;  // This +1 gets displayed on the timeline
+  endYear = 2029;  // This +1 gets displayed on the timeline
   years: number[] = [];
 
   // --- State Management ---
@@ -88,6 +125,11 @@ export class Experience implements OnInit, OnDestroy {
   private hideTimeoutEducation: any = null;
   private isMouseInsideWorkInfoWindow = false;
   private isMouseInsideEducationInfoWindow = false;
+
+  // --- Info Window Tabbing Logic ---
+  activeTab: 'overview' | 'journey' | 'thesis' = 'overview';
+  activeSkillIndex: number = 0; // Defaults to the first skill tile
+  activePhaseIndex: number = 0; // Defaults to the first study phase
 
 
   /**
@@ -339,6 +381,38 @@ export class Experience implements OnInit, OnDestroy {
     // 2. Parent is Hovered -> Child (Overlay) Scales too
     return item.parentId === this.instantHoverId;
   }
+
+  /**
+   * Sets the currently active tab.
+   *
+   * @param {('overview' | 'journey' | 'thesis')} tab - The name of the tab to set as active.
+   * @return {void} Does not return a value.
+   */
+  setActiveTab(tab: 'overview' | 'journey' | 'thesis'): void {
+    this.activeTab = tab;
+  }
+
+
+  /**
+   * Sets the active skill by updating the activeSkillIndex property.
+   *
+   * @param {number} index - The index of the skill to set as active.
+   * @return {void} This method does not return a value.
+   */
+  setActiveSkill(index: number): void {
+    this.activeSkillIndex = index;
+  }
+
+
+  /**
+   * Updates the active phase by setting the activePhaseIndex property to the specified index.
+   *
+   * @param {number} index - The index of the phase to be set as active.
+   * @return {void} Does not return a value.
+   */
+  setActivePhase(index: number): void {
+    this.activePhaseIndex = index;
+  }
 }
 
 // --- Data ---
@@ -416,23 +490,103 @@ export const EXPERIENCES: ExperienceItem[] = [
     info: {
       title: 'BSc Informatics at TU Wien',
       description: 'Currently pursuing a Bachelor\'s degree with a focus on Artificial Intelligence and Machine Learning at TU Wien.',
-      links: [{url: 'https://informatics.tuwien.ac.at/bachelor/informatics', text: 'Study Breakdown and Description'}]
+      links: [{url: 'https://informatics.tuwien.ac.at/bachelor/informatics', text: 'Study Breakdown and Description'}],
+      academicDetails: {
+        thesisType: "Bachelor's Thesis",
+        skills: [
+          {
+            name: 'Generative AI & LLMs',
+            tools: [
+              { name: 'Local LLMs', proficiency: 95 },
+              { name: 'XAI Frameworks', proficiency: 95 },
+              { name: 'Quantization & Optimization', proficiency: 85 },
+              { name: 'API Integration', proficiency: 90 },
+              { name: 'Prompt Engineering', proficiency: 95 }
+            ]
+          },
+          {
+            name: 'Scientific Research',
+            tools: [
+              { name: 'Hybrid XAI Frameworks', proficiency: 95 },
+              { name: 'HPC/GPU Clusters', proficiency: 85 },
+              { name: 'Conducting and Evaluating User Studies', proficiency: 90 },
+              { name: 'Academic Writing', proficiency: 95 }
+            ]
+          },
+          {
+            name: 'Applied Deep Learning',
+            tools: [
+              { name: 'PyTorch Ecosystem', proficiency: 90 },
+              { name: 'TensorFlow', proficiency: 75 },
+              { name: 'Computer Vision', proficiency: 85 },
+              { name: 'Audio Processing (Wav2Vec2)', proficiency: 80 }
+            ]
+          },
+          {
+            name: 'Full Stack Engineering',
+            tools: [
+              { name: 'Angular & TypeScript', proficiency: 90 },
+              { name: 'Python', proficiency: 95 },
+              { name: 'Java', proficiency: 85 },
+              { name: 'Docker & Containerization', proficiency: 70 },
+              { name: 'SCSS / UI Design', proficiency: 85 }
+            ]
+          }
+        ],
+        phases: [
+          {
+            title: 'Foundations & Mathematics',
+            courses: [
+              'Programming I & II',
+              'Algorithms & Data Structures',
+              'Algebra & Discrete Mathematics',
+              'Analysis, Statistics & Probability'
+            ]
+          },
+          {
+            title: 'Core Computer Science',
+            courses: [
+              'Software Engineering & Paradigms',
+              'Database Systems',
+              'Operating Systems',
+              'Theoretical Computer Science',
+              'Digital Systems Architecture'
+            ]
+          },
+          {
+            title: 'Logic & AI Foundations',
+            courses: [
+              'Introduction to Artificial Intelligence',
+              'Logic & Reasoning in Computer Science',
+              'Logic Programming & Constraints',
+              'Human-centered AI'
+            ]
+          },
+          {
+            title: 'ML & Advanced Computing',
+            courses: [
+              'Machine Learning & Deep Learning',
+              'Information Retrieval',
+              'Visual Computing & Visualization',
+              'Scientific Research Methods'
+            ]
+          }
+        ],
+        thesis: {
+          title: 'Beyond Passive Explainability',
+          abstract: 'Implementing and Evaluating a Human-in-the-Loop AI Recruitment System.',
+          grade: 'TBD',
+          links: [
+            // { url: '#', text: 'View Application' },
+            // { url: '#', text: 'Download PDF' }
+          ]
+        }
+      }
     }
   },
-  /*
+
   {
     id: 8,
-    startYear: getYearFloat(16, 2, 2026),
-    endYear: getYearFloat(30, 6, 2026),
-    type: 'work',
-    info: {
-      title: 'Working Student at',
-      description: 'Working student in software development department.',
-      links: [{url: '', text: 'Company Website'}]
-    }
-  },
-  {
-    id: 9,
     startYear: getYearFloat(1, 7, 2026),
     endYear: getYearFloat(31, 8, 2026, true),
     type: 'work',
@@ -441,9 +595,20 @@ export const EXPERIENCES: ExperienceItem[] = [
       description: 'Identification of use of cases of generative and agentic artificial intelligence for automotive safety.',
       links: [{url: 'https://www.bosch.at', text: 'Company Website'}]
     }
-  }
-
-  ,
+  },
+  /*
+  {
+    id: 9,
+    startYear: getYearFloat(1, 4, 2026),
+    endYear: getYearFloat(31, 12, 2027),
+    type: 'work',
+    info: {
+      title: 'Working Student at',
+      description: 'Working student for AI Integration \& Automation.',
+      links: [{url: '', text: 'Company Website'}]
+    }
+  },
+  */
   {
     id: 10,
     startYear: getYearFloat(5, 10, 2026),
@@ -451,22 +616,37 @@ export const EXPERIENCES: ExperienceItem[] = [
     type: 'education',
     info: {
       title: 'MSc Logic and Artificial Intelligence at TU Wien',
-      description: 'Currently pursuing a Master\'s degree in Logic and AI at TU Wien.',
-      links: [{url: 'https://informatics.tuwien.ac.at/master/logic-and-artificial-intelligence', text: 'Study Breakdown and Description'}]
+      description: 'Will be starting a Master\'s degree in Logic and AI at TU Wien in fall 2026.',
+      links: [{url: 'https://informatics.tuwien.ac.at/master/logic-and-artificial-intelligence', text: 'Study Breakdown'}],
+      academicDetails: {
+        thesisType: "Master's Thesis",
+        skills: [
+          // Different MSc level skills here
+        ],
+        phases: [
+           // MSc curriculum phases
+        ],
+        thesis: {
+          title: 'Upcoming Master Thesis',
+          abstract: 'Topic TBD',
+          links: []
+        }
+      }
     }
   },
-  // Exchange Semester at Aalto University
+  /*
+  // Exchange Semester at Tokyo University
   {
     id: 11,
-    startYear: getYearFloat(10, 1, 2027),
-    endYear: getYearFloat(31, 5, 2027, true),
+    startYear: getYearFloat(1, 3, 2029),
+    endYear: getYearFloat(30, 6, 2029, true),
     type: 'education',
     isOverlay: true,
     parentId: 10,
     info: {
-      title: 'Exchange semester at Aalto University',
-      description: 'Semester abroad focusing on Machine Learning.',
-      links: [{url: 'https://www.aalto.fi', text: 'University website'}]
+      title: 'Exchange semester at Tokyo University',
+      description: 'Writing Master's Thesis in Tokyo, Japan.',
+      links: [{url: '', text: 'University website'}]
     }
   }
   */
