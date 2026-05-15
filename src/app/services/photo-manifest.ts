@@ -239,6 +239,25 @@ export const photoManifest: { [key: string]: string[] } = {
     "assets/about/trips/Stockholm/APC_4199.jpg",
     "assets/about/trips/Stockholm/APC_4216.jpg"
   ],
+  "Trieste": [
+    "assets/about/trips/Trieste/APC_0008.jpg",
+    "assets/about/trips/Trieste/APC_0010.jpg",
+    "assets/about/trips/Trieste/APC_0026.jpg",
+    "assets/about/trips/Trieste/APC_0032.jpg",
+    "assets/about/trips/Trieste/APC_0039.jpg",
+    "assets/about/trips/Trieste/APC_0041.jpg",
+    "assets/about/trips/Trieste/APC_0042.jpg",
+    "assets/about/trips/Trieste/APC_0046.jpg",
+    "assets/about/trips/Trieste/APC_0059.jpg",
+    "assets/about/trips/Trieste/APC_0076.jpg",
+    "assets/about/trips/Trieste/APC_0077.jpg",
+    "assets/about/trips/Trieste/APC_0082.jpg",
+    "assets/about/trips/Trieste/APC_0089.jpg",
+    "assets/about/trips/Trieste/APC_0113.jpg",
+    "assets/about/trips/Trieste/APC_0115.jpg",
+    "assets/about/trips/Trieste/APC_0158.jpg",
+    "assets/about/trips/Trieste/APC_0165.jpg"
+  ],
   "Venice": [
     "assets/about/trips/Venice/APC_1325.jpg",
     "assets/about/trips/Venice/APC_1327.jpg",
