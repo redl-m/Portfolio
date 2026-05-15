@@ -11,3 +11,5 @@ tensorflow: https://www.tensorflow.org
 huggingface: https://huggingface.co
 keras: https: https://keras.io
 matplotlib: https://matplotlib.org
+fastapi: https://fastapi.tiangolo.com
+pydantic: https://docs.pydantic.dev/latest
