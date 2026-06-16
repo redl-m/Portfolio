@@ -7,13 +7,14 @@ import {Experience} from './sections/experience/experience';
 import {LeafletModule} from '@bluehalo/ngx-leaflet';
 import { ViewportService } from './services/viewport.service';
 import { Subscription } from 'rxjs';
+import {Research} from './sections/research/research';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [
     Navbar, Hero, About, Projects, Experience,
-    LeafletModule
+    LeafletModule, Research
   ],
   templateUrl: './app.html',
   styleUrls: ['./app.scss', '../styles.scss']

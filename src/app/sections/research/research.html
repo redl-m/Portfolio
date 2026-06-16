@@ -1,0 +1,53 @@
+<section class="research-container" id="research">
+  <div class="research-header">
+    <h2>Research & Publications</h2>
+    <p>My academic contributions and ongoing research.</p>
+  </div>
+
+  <div class="publications-list">
+    <div *ngFor="let pub of publications; let i = index"
+         class="pub-card"
+         [style.animation-delay]="i * 0.2 + 's'">
+
+      <div class="pub-header">
+        <h3>{{ pub.title }}</h3>
+        <span class="status-badge" [ngClass]="getStatusClass(pub.status)">
+          {{ pub.status }}
+        </span>
+      </div>
+
+      <div class="pub-body">
+
+        <div class="pub-col authors-col">
+          <h4>Authors</h4>
+          <p>
+            <ng-container *ngFor="let author of pub.authors; let last = last">
+              <span [class.is-user]="author.isUser">{{ author.name }}</span><span *ngIf="!last">, </span>
+            </ng-container>
+          </p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="pub-col tldr-col">
+          <h4>TL;DR</h4>
+          <p>{{ pub.tldr }}</p>
+        </div>
+
+        <div class="divider"></div>
+
+        <div class="pub-col conf-col">
+          <h4>Venue</h4>
+          <p class="conf-name"><strong>{{ pub.conference.name }}</strong> ({{ pub.conference.shortName }})</p>
+          <p class="conf-meta">{{ pub.conference.location }} • {{ pub.conference.dates }}</p>
+          <p class="conf-publisher">Published by <span class="publisher-name">{{ pub.conference.publisher }}</span></p>
+
+          <a *ngIf="pub.link && pub.status !== 'In Preparation'" [href]="pub.link" target="_blank" class="project-link">
+            View Paper →
+          </a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>

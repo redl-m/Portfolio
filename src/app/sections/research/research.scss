@@ -1,0 +1,245 @@
+@use "styles.scss" as *;
+
+:host {
+  /* Light‑mode defaults */
+  --pub-glow: rgba(100, 125, 255, 0.08);
+  --glass-bg: rgba(255, 255, 255, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --divider-color: var(--accent-color);
+
+  /* Status Colors */
+  --status-acc-bg: rgba(46, 204, 113, 0.15);
+  --status-acc-text: #1e8449;
+  --status-prep-bg: rgba(241, 196, 15, 0.15);
+  --status-prep-text: #b7950b;
+}
+
+:host-context(.dark) {
+  /* Dark‑mode overrides */
+  --pub-glow: rgba(136, 164, 255, 0.15);
+  --glass-bg: rgba(30, 30, 45, 0.5);
+  --glass-border: rgba(255, 255, 255, 0.08);
+
+  /* Status Colors */
+  --status-acc-bg: rgba(46, 204, 113, 0.2);
+  --status-acc-text: #58d68d;
+  --status-prep-bg: rgba(241, 196, 15, 0.2);
+  --status-prep-text: #f4d03f;
+}
+
+.research-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 80px 5%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.research-header {
+  text-align: center;
+  margin-bottom: 60px;
+  max-width: 600px;
+
+  h2 {
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--text-color);
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--secondary-text-color, #777);
+  }
+}
+
+.publications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.pub-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  border-radius: 20px;
+  padding: 35px 40px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  position: relative;
+
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn-up 0.6s ease forwards;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1), 0 0 30px var(--pub-glow);
+
+    .project-link::after {
+      width: 100%;
+    }
+  }
+}
+
+.pub-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 25px;
+  gap: 20px;
+
+  h3 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: var(--text-color);
+    margin: 0;
+    line-height: 1.4;
+  }
+}
+
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+
+  &.status-accepted, &.status-published {
+    background: var(--status-acc-bg);
+    color: var(--status-acc-text);
+  }
+
+  &.status-prep, &.status-review {
+    background: var(--status-prep-bg);
+    color: var(--status-prep-text);
+  }
+}
+
+.pub-body {
+  display: flex;
+  align-items: stretch;
+  gap: 30px;
+}
+
+.pub-col {
+  display: flex;
+  flex-direction: column;
+
+  h4 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--accent-color);
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-color);
+    margin: 0 0 8px 0;
+    opacity: 0.9;
+  }
+}
+
+.authors-col {
+  flex: 1;
+
+  .is-user {
+    font-weight: 700;
+    color: var(--accent-color);
+  }
+}
+
+.tldr-col {
+  flex: 1.8;
+}
+
+.conf-col {
+  flex: 1.2;
+
+  .conf-name { margin-bottom: 4px; }
+  .conf-meta {
+    font-size: 0.9rem;
+    opacity: 0.7;
+    margin-bottom: 10px;
+  }
+  .publisher-name {
+    font-weight: 600;
+  }
+}
+
+.divider {
+  width: 2px;
+  background: var(--divider-color);
+  opacity: 0.3;
+  border-radius: 2px;
+}
+
+.project-link {
+  display: inline-block;
+  color: var(--accent-color);
+  font-weight: 600;
+  text-decoration: none;
+  position: relative;
+  padding-bottom: 4px;
+  margin-top: auto;
+  align-self: flex-start;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.3s ease-out;
+  }
+}
+
+@keyframes fadeIn-up {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ----------------------------------------------- */
+/* --- Responsive / Mobile View --- */
+/* ----------------------------------------------- */
+@media (max-width: $max-mobile-width) {
+  .pub-card {
+    padding: 25px 20px;
+  }
+
+  .pub-header {
+    flex-direction: column-reverse;
+    gap: 15px;
+
+    h3 {
+      font-size: 1.3rem;
+    }
+  }
+
+  .pub-body {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .divider {
+    width: 100%;
+    height: 1px;
+    margin: 5px 0;
+  }
+}

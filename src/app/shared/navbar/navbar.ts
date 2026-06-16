@@ -66,7 +66,7 @@ export class Navbar implements AfterViewInit, OnDestroy {
    * Sets up intersection observer and smooth scrolling.
    */
   ngAfterViewInit(): void {
-    const sectionIds = ['start', 'about', 'projects', 'experience'];
+    const sectionIds = ['start', 'about', 'research', 'projects', 'experience'];
 
     // Set up intersection observer to track active section
     this.#io = new IntersectionObserver(
