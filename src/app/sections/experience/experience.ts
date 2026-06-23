@@ -575,7 +575,7 @@ export const EXPERIENCES: ExperienceItem[] = [
         thesis: {
           title: 'Beyond Passive Explainability',
           abstract: 'Implementing and Evaluating a Human-in-the-Loop AI Recruitment System.',
-          grade: 'TBD',
+          grade: '1 "Excellent"',
           links: [
             // { url: '#', text: 'View Application' },
             // { url: '#', text: 'Download PDF' }
@@ -625,6 +625,14 @@ export const EXPERIENCES: ExperienceItem[] = [
         ],
         phases: [
            // MSc curriculum phases
+          {
+            title: 'Foundations & Mathematics',
+            courses: [
+              'Algorithmics',
+              'Logic and Computability',
+              'Discrete Mathematics'
+            ]
+          },
         ],
         thesis: {
           title: 'Upcoming Master Thesis',
