@@ -35,7 +35,7 @@ export class Research {
   publications: Publication[] = [
     {
       title: 'Deploying Privacy-Preserving Local LLMs: A Comparative Study Under Realistic Hardware Constraints',
-      status: 'Accepted',
+      status: 'Published',
       authors: [
         { name: 'Michael J. Redl', isUser: true },
         { name: 'Florian Michahelles', isUser: false }
@@ -48,7 +48,7 @@ export class Research {
         dates: 'September 2026',
         publisher: 'Springer Nature'
       },
-      link: '#'
+      link: 'https://doi.org/10.1007/978-3-032-34044-3_9'
     },
     {
       title: 'Beyond Passive Explainability: Implementing and Evaluating a Human-in-the-Loop AI Recruitment System',

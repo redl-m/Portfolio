@@ -591,24 +591,22 @@ export const EXPERIENCES: ExperienceItem[] = [
     endYear: getYearFloat(31, 8, 2026, true),
     type: 'work',
     info: {
-      title: 'AI/ML Intern at Robert Bosch AG',
-      description: 'Identification of use of cases of generative and agentic artificial intelligence for automotive safety.',
+      title: 'Summer Intern at Robert Bosch AG',
+      description: 'Tool creation for efficiency gains in safety and function development teams.',
       links: [{url: 'https://www.bosch.at', text: 'Company Website'}]
     }
   },
-  /*
   {
     id: 9,
-    startYear: getYearFloat(1, 4, 2026),
-    endYear: getYearFloat(31, 12, 2027),
+    startYear: getYearFloat(1, 10, 2026),
+    endYear: getYearFloat(30, 6, 2029),
     type: 'work',
     info: {
-      title: 'Working Student at',
-      description: 'Working student for AI Integration \& Automation.',
+      title: 'AI Intern at Robert Bosch AG',
+      description: 'Introducing ways of integrating AI in basic software development team, test station management and tool creation for efficiency gains.',
       links: [{url: '', text: 'Company Website'}]
     }
   },
-  */
   {
     id: 10,
     startYear: getYearFloat(5, 10, 2026),
